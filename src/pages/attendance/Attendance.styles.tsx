@@ -3,6 +3,8 @@ import styled from 'styled-components';
 export const Container = styled.div`
   padding: 2.5rem;
   background-color: #ffffff;
+  flex-grow: 1;
+  width: 100%;
 `;
 
 export const AttendanceTitle = styled.h1`
@@ -18,31 +20,15 @@ export const AttendanceTitle = styled.h1`
 
 export const ButtonGroup = styled.div`
   display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
+  justify-content: space-between;
   margin-bottom: 0.94rem;
-  
-  button:first-child {
-    display: flex;
-    width: 10rem;
-    justify-content: center;
-    align-items: center;
-    margin-right: 31.19rem; 
-    flex-shrink: 0;
-  }
-
-  button:nth-child(2) {
-    display: flex;
-    width: 15.4375rem;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  button:nth-child(3) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 `;
 
+export const LeftButtons = styled.div`
+  display: flex;
+`;
+
+export const RightButtons = styled.div`
+  display: flex;
+  gap: 1.25rem;
+`;
