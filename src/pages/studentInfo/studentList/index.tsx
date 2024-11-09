@@ -45,7 +45,7 @@ function StudentList() {
           }
           borderColor='#999999'
           isBorder={selectedRows.length > 0 ? false : true}
-          onClick={() => {}}
+          onClick={() => { }}
         />
       </PS.ButtonWrapper>
       <S.Table>
