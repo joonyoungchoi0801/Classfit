@@ -17,7 +17,7 @@ export const SeachContainer = styled.div`
   align-items: center;
   gap: 0.625rem;
   border-radius: 0.3125rem;
-  background: #EDEDED;
+  background: var(--color-gray);
 `;
 
 export const SearchIcon = styled.img`
@@ -28,5 +28,27 @@ export const SearchIcon = styled.img`
 export const SearchInput = styled.input`
   width: 7.875rem;
   border: transparent;
-  background-color: #EDEDED;
+  background-color: var(--color-gray);
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const PaginationItem = styled.div`
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.25rem;
+  margin: 0 4.2rem; /*임의로 간격 설정 */
+`;
+
+export const ArrowButton = styled.img`
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1.38rem;
+  margin-left: 1.38rem;
 `;
