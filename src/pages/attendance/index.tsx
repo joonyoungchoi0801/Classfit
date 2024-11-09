@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import * as S from './Attendance.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import ManageLayout from '@/components/layout/managelayout';
 import dropdwon from '@/assets/dropdown.svg';
+import { AttendanceTableProps } from '@/components/attendanceTable/AttendanceTable.types';
 
 function Attendance() {
   const currentMonth = new Date().getMonth() + 1;
@@ -48,7 +49,7 @@ function Attendance() {
             <button>편집</button>
           </S.RightButtons>
         </S.ButtonGroup>
-        <AttendanceTable />
+        <AttendanceTable selectedMonth={selectedMonth} />
       </S.Container>
     </ManageLayout>
   )
