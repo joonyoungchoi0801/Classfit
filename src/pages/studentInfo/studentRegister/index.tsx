@@ -90,9 +90,9 @@ function StudentRegister() {
             backgroundColor='var(--color-white)'
             isBorder={true}
             borderColor='#D7D7D7'
-            onClick={() => {}}
+            onClick={() => { }}
           />
-          <Button title='저장' onClick={() => {}} />
+          <Button title='저장' onClick={() => { }} />
         </S.ButtonWrapper>
       </PS.ButtonWrapper>
     </PS.Container>
