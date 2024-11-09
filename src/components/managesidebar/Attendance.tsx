@@ -33,7 +33,9 @@ function Attendance() {
     class?: string;
   }>();
   const navigate = useNavigate();
-  const [selectedGrade, setSelectedGrade] = useState<number>(Number(grade));
+  const [selectedGrade, setSelectedGrade] = useState<number>(
+    Number(grade?.replace(/[^0-9]/g, ''))
+  );
   const [selectedClass, setSelectedClass] = useState<string>(className || '');
 
   const handleGradeClick = (grade: number) => {
