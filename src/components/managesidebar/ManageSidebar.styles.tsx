@@ -4,10 +4,12 @@ export const ManageSidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 24rem;
+  min-width: 24rem;
   height: calc(100vh - 7rem);
   background: var(--color-white);
   padding: 3.5rem 0rem;
   background: #f2f5fc;
+  overflow-y: auto;
 `;
 
 export const SidebarItem = styled.div<{ $isSelected?: boolean }>`

@@ -37,13 +37,13 @@ function Attendance() {
   const [selectedClass, setSelectedClass] = useState<string>(className || '');
 
   const handleGradeClick = (grade: number) => {
-    navigate(`/manage/attendance/${grade}`);
+    navigate(`/manage/attendance/${grade}학년`);
     setSelectedGrade(grade);
     setSelectedClass('');
   };
 
   const handleClassClick = (grade: number, className: string) => {
-    navigate(`/manage/attendance/${grade}/${className}`);
+    navigate(`/manage/attendance/${grade}학년/${className}`);
     setSelectedClass(className);
   };
 
@@ -52,11 +52,8 @@ function Attendance() {
       <S.AttendanceWrapper>
         <S.AttendanceBtn>전체학생</S.AttendanceBtn>
         {gradeData.map((data, index) => (
-          <S.ManageWrapper>
-            <S.GradeWrapper
-              key={data.grade}
-              onClick={() => handleGradeClick(data.grade)}
-            >
+          <S.ManageWrapper key={data.grade + index}>
+            <S.GradeWrapper onClick={() => handleGradeClick(data.grade)}>
               <S.Grade>
                 <S.Icon
                   src={selectedGrade === data.grade ? downArrow : rightArrow}
@@ -72,7 +69,7 @@ function Attendance() {
             </S.GradeWrapper>
             {data.class.map((classData) => (
               <S.ClassWrapper
-                key={classData.class}
+                key={classData.class + index}
                 $isSelected={data.grade === selectedGrade}
                 onClick={() => handleClassClick(data.grade, classData.class)}
               >
