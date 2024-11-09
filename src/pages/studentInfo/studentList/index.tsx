@@ -42,7 +42,7 @@ function StudentList() {
           }
           borderColor='#999999'
           isBorder={selectedRows.length > 0 ? false : true}
-          onClick={() => {}}
+          onClick={() => { }}
         />
       </S.ButtonWrapper>
       <S.Table>
