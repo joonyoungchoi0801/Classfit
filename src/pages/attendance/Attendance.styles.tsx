@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   padding: 2.5rem;
   background-color: var(--color-white);
+  background-color: var(--color-white);
   flex-grow: 1;
   width: 100%;
 `;
@@ -78,6 +79,7 @@ export const DownloadContainer = styled.div`
   border-radius: 1rem;
   border: 1px solid var(--color-blue);
 `;
+
 
 export const DropdownButton = styled.button`
   display: flex;
