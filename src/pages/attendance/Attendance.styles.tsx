@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   padding: 2.5rem;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   flex-grow: 1;
   width: 100%;
 `;
 
 export const AttendanceTitle = styled.h1`
-  color: #121212;
+  color: var(--color-black);
   font-family: "Pretendard Variable";
   font-size: 1.875rem;
   font-style: normal;
@@ -36,13 +36,27 @@ export const RightButtons = styled.div`
 
 export const DownloadContainer = styled.div`
   position: relative; 
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15.4375rem;
+  height: 3rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--color-blue);
 `;
 
+
 export const DropdownButton = styled.button`
-  padding: 0.94rem 1.25rem; 
+  display: flex; 
+  align-items: center;
   border: none; 
-  color: #0056F6;
+  color: var(--color-blue);
+  background-color: transparent;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.12rem;
+  gap: 0.5rem;
   cursor: pointer;
 
   img {
@@ -72,8 +86,13 @@ export const DropdownItem = styled.li`
 `;
 
 export const FileDownloadButton = styled.button`
-  padding: 0.94rem 1.25rem; 
   border: none; 
-  color: #0056F6;
+  color: var(--color-blue);
+  background-color: transparent;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.12rem;
+  margin-left: 1.25rem;
   cursor: pointer;
 `
