@@ -12,7 +12,7 @@ export const LabelWrapper = styled.div`
 `;
 
 export const LabelMessage = styled.p`
-  color: #121212;
+  color: var(--color-black);
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 500;
