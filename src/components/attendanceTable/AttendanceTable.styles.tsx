@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const TableHeader = styled.div`
   display: flex;
+  height: 3.75rem;
   padding: 0.625rem;
   align-items: center;
   gap: 1.375rem;
@@ -42,7 +43,7 @@ export const PaginationItem = styled.div`
   flex-grow: 1;
   text-align: center;
   font-size: 1.25rem;
-  margin: 0 4.2rem; /*임의로 간격 설정 */
+  margin: 0 2.2rem; /*임의로 간격 설정 */
 `;
 
 export const ArrowButton = styled.img`
