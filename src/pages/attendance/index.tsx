@@ -23,7 +23,7 @@ function Attendance() {
   return (
     <ManageLayout>
       <S.Container>
-        <p>학생관리 {'>'} 1학년 {'>'} A반</p>
+        <p>학생관리 &gt; 1학년 &gt; A반</p>
         <S.AttendanceTitle>학생 출결 관리</S.AttendanceTitle>
         <S.ButtonGroup>
           <S.LeftButtons>

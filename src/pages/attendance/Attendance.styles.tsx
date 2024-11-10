@@ -10,7 +10,7 @@ export const Container = styled.div`
 export const AttendanceTitle = styled.h1`
   color: var(--color-black);
   font-family: "Pretendard Variable";
-  font-size: 1.875rem;
+  font-size: 3rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -55,7 +55,7 @@ export const DropdownButton = styled.button`
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.12rem;
+  line-height: 1.792rem;
   gap: 0.5rem;
   cursor: pointer;
 
