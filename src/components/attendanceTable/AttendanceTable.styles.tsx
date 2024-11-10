@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Table = styled.table`
+export const Table = styled.div`
   display: flex;
   width: 102rem;
   flex-direction: column;
@@ -11,7 +11,7 @@ export const Table = styled.table`
   background: var(--color-white);
 `;
 
-export const TableHeader = styled.thead`
+export const TableHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 1.375rem;
@@ -20,7 +20,7 @@ export const TableHeader = styled.thead`
   width: 100%;
 `;
 
-export const SearchContainer = styled.th`
+export const SearchContainer = styled.div`
   display: flex;
   width: 17.4rem;
   height: 4rem;
@@ -56,14 +56,14 @@ export const SearchInput = styled.input`
   }
 `;
 
-export const Pagination = styled.th`
+export const Pagination = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 `;
 
-export const PaginationItem = styled.th`
+export const PaginationItem = styled.div`
   flex-grow: 1;
   text-align: center;
   font-size: 1.25rem;
@@ -78,25 +78,37 @@ export const ArrowButton = styled.img`
   margin-left: 1.38rem;
 `;
 
-export const TableBody = styled.tbody`
+export const TableBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   overflow-y: auto;
+  height: calc(100vh - 34.3rem);
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
+  }
 `;
 
-export const TableRow = styled.tr`
+export const TableRow = styled.div`
   display: flex;
   width: 100%;
   border-bottom: 0.1rem solid #e7e7e7;
-  gap: 6.5rem;
+  gap: 1.375rem;
   padding: 1rem;
   &:last-child {
     border-bottom: none;
   }
 `;
 
-export const StudentName = styled.td`
+export const StudentName = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -118,7 +130,7 @@ export const StatusIcon = styled.img`
   height: 2rem;
 `;
 
-export const Blank = styled.th`
+export const Blank = styled.div`
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 1.38rem;
