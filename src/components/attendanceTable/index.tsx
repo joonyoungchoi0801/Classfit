@@ -97,6 +97,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
 
       const month = date.getMonth() + 1;
       const day = date.getDate();
+
       const formattedDay = day < 10 ? `0${day}` : `${day}`;
       const dayLabel = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'][
         date.getDay()
@@ -159,7 +160,6 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     );
   };
 
-
   return (
     <S.Table>
       <S.TableHeader>
@@ -183,7 +183,11 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
         {weekDates.map(({ date, isToday }, index) => (
           <S.PaginationItem key={index} style={{ color: isToday ? 'var(--color-blue)' : 'var(--color-black)' }}>{date}</S.PaginationItem>
         ))}
-        <S.ArrowButton src={paginationRight} alt='Next Week' onClick={handleNextWeek} />
+        <S.ArrowButton
+          src={paginationRight}
+          alt='Next Week'
+          onClick={handleNextWeek}
+        />
       </S.TableHeader>
 
       <S.TableBody>
