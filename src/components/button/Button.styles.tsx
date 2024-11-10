@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const ButtonWrapper = styled.button<{
   $textColor: string;
   $backgroundColor: string;
+  $borderColor: string;
   $isBorder: boolean;
 }>`
   display: inline-flex;
@@ -15,7 +16,7 @@ export const ButtonWrapper = styled.button<{
   color: ${(props) => props.$textColor};
   border: ${(props) =>
     props.$isBorder
-      ? `0.15rem solid ${props.$textColor}`
+      ? `0.15rem solid ${props.$borderColor}`
       : `0.15rem solid ${props.$backgroundColor}`};
   font-size: 1.5rem;
   font-style: normal;
