@@ -40,6 +40,7 @@ function StudentList() {
           backgroundColor={
             selectedRows.length > 0 ? 'var(--color-blue)' : 'var(--color-white)'
           }
+          borderColor='#999999'
           isBorder={selectedRows.length > 0 ? false : true}
           onClick={() => {}}
         />
