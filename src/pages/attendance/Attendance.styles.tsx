@@ -9,7 +9,6 @@ export const Container = styled.div`
 
 export const AttendanceTitle = styled.h1`
   color: var(--color-black);
-  font-family: "Pretendard Variable";
   font-size: 3rem;
   font-style: normal;
   font-weight: 600;
@@ -35,7 +34,7 @@ export const RightButtons = styled.div`
 `;
 
 export const DownloadContainer = styled.div`
-  position: relative; 
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,11 +44,10 @@ export const DownloadContainer = styled.div`
   border: 1px solid var(--color-blue);
 `;
 
-
 export const DropdownButton = styled.button`
-  display: flex; 
+  display: flex;
   align-items: center;
-  border: none; 
+  border: none;
   color: var(--color-blue);
   background-color: transparent;
   font-size: 1.25rem;
@@ -66,27 +64,27 @@ export const DropdownButton = styled.button`
 `;
 
 export const DropdownList = styled.ul`
-  position: absolute; 
-  top: 100%; 
-  left: 0; 
-  background-color: #fff; 
-  border: 1px solid #ccc; 
-  list-style: none; 
-  padding: 0; 
-  margin: 0; 
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
   z-index: 1;
 `;
 
-export const DropdownItem = styled.li` 
-  padding: 10px; 
-  cursor: pointer; 
-  &:hover { 
-    background-color: #f0f0f0; 
-  } 
+export const DropdownItem = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 export const FileDownloadButton = styled.button`
-  border: none; 
+  border: none;
   color: var(--color-blue);
   background-color: transparent;
   font-size: 1.25rem;
@@ -95,4 +93,4 @@ export const FileDownloadButton = styled.button`
   line-height: 1.12rem;
   margin-left: 1.25rem;
   cursor: pointer;
-`
+`;
