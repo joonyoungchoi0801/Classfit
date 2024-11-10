@@ -1,9 +1,11 @@
 import * as S from './StudentList.styles';
+import * as PS from '@/pages/studentInfo/StudentInfo.styles';
 import Button from '@/components/button';
 import { useState } from 'react';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import SearchIcon from '@/assets/info/search.svg';
+import Path from '@/components/path';
 
 function StudentList() {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -29,11 +31,12 @@ function StudentList() {
   };
 
   return (
-    <S.Container>
-      <S.TitleWrapper>
-        <S.Title>학생목록</S.Title>
-      </S.TitleWrapper>
-      <S.ButtonWrapper>
+    <PS.Container>
+      <Path />
+      <PS.TitleWrapper>
+        <PS.Title>학생목록</PS.Title>
+      </PS.TitleWrapper>
+      <PS.ButtonWrapper>
         <Button
           title='삭제'
           textColor={selectedRows.length > 0 ? 'var(--color-white)' : '#999999'}
@@ -44,7 +47,7 @@ function StudentList() {
           isBorder={selectedRows.length > 0 ? false : true}
           onClick={() => {}}
         />
-      </S.ButtonWrapper>
+      </PS.ButtonWrapper>
       <S.Table>
         <S.TableHeader>
           <S.TableCell $isHeader={true}>
@@ -88,7 +91,7 @@ function StudentList() {
           </S.TableRow>
         ))}
       </S.Table>
-    </S.Container>
+    </PS.Container>
   );
 }
 
