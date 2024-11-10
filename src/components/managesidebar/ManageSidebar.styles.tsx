@@ -11,6 +11,17 @@ export const ManageSidebarWrapper = styled.div`
   padding: 3.5rem 0rem;
   background: #f2f5fc;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
+  }
 `;
 
 export const SidebarItem = styled.div<{ $isSelected?: boolean }>`
