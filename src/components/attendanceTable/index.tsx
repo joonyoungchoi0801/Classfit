@@ -23,6 +23,7 @@ interface Student {
 function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
   const [students, setStudents] = useState<Student[]>(mockData);
   const [currentDate, setCurrentDate] = useState(new Date());
+  console.log(students);
 
   useEffect(() => {
     if (selectedMonth !== currentDate.getMonth() + 1) {
@@ -44,7 +45,6 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
 
       const month = date.getMonth() + 1;
       const day = date.getDate();
-
       const formattedDay = day < 10 ? `0${day}` : `${day}`;
       const dayLabel = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'][
         date.getDay()
@@ -75,25 +75,26 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
       prevStudents.map((student) =>
         student.name === studentName
           ? {
-              ...student,
-              attendance: student.attendance.map((attendanceRecord) =>
-                attendanceRecord.date === date
-                  ? {
-                      ...attendanceRecord,
-                      status:
-                        attendanceRecord.status === '출석'
-                          ? '지각'
-                          : attendanceRecord.status === '지각'
-                            ? '결석'
-                            : '출석',
-                    }
-                  : attendanceRecord
-              ),
-            }
+            ...student,
+            attendance: student.attendance.map((attendanceRecord) =>
+              attendanceRecord.date === date
+                ? {
+                  ...attendanceRecord,
+                  status:
+                    attendanceRecord.status === '출석'
+                      ? '지각'
+                      : attendanceRecord.status === '지각'
+                        ? '결석'
+                        : '출석',
+                }
+                : attendanceRecord
+            ),
+          }
           : student
       )
     );
   };
+
 
   return (
     <S.Table>
@@ -102,22 +103,14 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
           <S.SearchInput placeholder='이름검색' />
           <S.SearchIcon src={search} alt='search icon' />
         </S.SearchContainer>
-        <S.ArrowButton
-          src={paginationLeft}
-          alt='Previous Week'
-          onClick={handlePrevWeek}
-        />
+        <S.ArrowButton src={paginationLeft} alt='Previous Week' onClick={handlePrevWeek} />
         {weekDates.map((date, index) => (
           <S.PaginationItem key={index}>{date}</S.PaginationItem>
         ))}
-        <S.ArrowButton
-          src={paginationRight}
-          alt='Next Week'
-          onClick={handleNextWeek}
-        />
+        <S.ArrowButton src={paginationRight} alt='Next Week' onClick={handleNextWeek} />
       </S.TableHeader>
       <S.TableBody>
-        {mockData.map((student) => (
+        {students.map((student) => (
           <S.TableRow key={student.name}>
             <S.StudentName>
               <S.CheckBox type='checkbox' />
@@ -125,9 +118,7 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
             </S.StudentName>
             <S.Blank />
             {weekDates.map((date) => {
-              const attendanceRecord = student.attendance.find(
-                (record) => record.date === date.slice(0, 5)
-              );
+              const attendanceRecord = student.attendance.find((record) => record.date === date.slice(0, 5));
               let statusIcon;
               switch (attendanceRecord?.status) {
                 case '출석':
@@ -148,7 +139,7 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
                   <S.StatusIcon
                     src={statusIcon}
                     alt={attendanceRecord?.status}
-                    onClick={() => handleStatusClick(student.name, date)}
+                    onClick={() => handleStatusClick(student.name, date.slice(0, 5))}
                   />
                 </S.PaginationItem>
               );
