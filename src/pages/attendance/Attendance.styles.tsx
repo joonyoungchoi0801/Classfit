@@ -80,7 +80,6 @@ export const DownloadContainer = styled.div`
   border: 1px solid var(--color-blue);
 `;
 
-
 export const DropdownButton = styled.button`
   display: flex;
   align-items: center;

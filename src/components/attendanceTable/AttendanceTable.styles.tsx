@@ -11,7 +11,7 @@ export const Table = styled.div`
   background: var(--color-white);
 `;
 
-export const TableHeader = styled.thead`
+export const TableHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 1.375rem;
@@ -47,14 +47,14 @@ export const SearchInput = styled.input`
   }
 `;
 
-export const Pagination = styled.th`
+export const Pagination = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 `;
 
-export const PaginationItem = styled.th`
+export const PaginationItem = styled.div`
   flex-grow: 1;
   text-align: center;
   font-size: 2rem;
