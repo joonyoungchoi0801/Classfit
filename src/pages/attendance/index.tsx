@@ -21,7 +21,7 @@ interface Student {
 
 function Attendance() {
   const currentMonth = new Date().getMonth() + 1;
-  const months = Array.from({ length: currentMonth }, (_, i) => i + 1);
+  const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(Math.max(0, currentMonth - 6));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
