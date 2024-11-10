@@ -4,6 +4,7 @@ import GlobalStyles from './styles/GlobalStyles';
 
 import Home from './pages/home';
 import StudentInfo from './pages/studentInfo';
+import Sms from './pages/sms';
 
 export default function Router() {
   return (
@@ -13,6 +14,7 @@ export default function Router() {
         <Route path='/' element={<Home />} />
         <Route path='/manage' element={<Home />} />
         <Route path='/manage/attendance/:grade/:class' element={<Home />} />
+        <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
         <Route path='/manage/attendance/:grade' element={<Home />} />
         <Route path='/manage/attendance' element={<Home />} />
         <Route path='/manage/achievement' element={<Home />} />
