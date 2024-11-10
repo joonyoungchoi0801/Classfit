@@ -18,10 +18,6 @@ interface Student {
   attendance: AttendanceRecord[];
 }
 
-interface ExcelDownloadProps {
-  data: Student[];
-}
-
 const mockData: Student[] = [
   {
     name: '최준영',
