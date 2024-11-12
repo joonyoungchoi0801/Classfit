@@ -85,7 +85,6 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     });
   };
 
-
   const calculateWeekDates = (currentDate: Date) => {
     const weekDates = [];
     const dayOfWeek = currentDate.getDay() === 0 ? 7 : currentDate.getDay();
