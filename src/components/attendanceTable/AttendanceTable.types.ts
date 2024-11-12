@@ -6,4 +6,5 @@ export interface Student {
 
 export interface AttendanceTableProps {
   selectedMonth: number;
+  isEditMode: boolean;
 }

@@ -96,7 +96,7 @@ export const TableRow = styled.div<{
   width: 100%;
   border-bottom: 0.1rem solid #e7e7e7;
   gap: 1.375rem;
-  padding: 1rem;
+  padding: 2rem;
   background-color: ${(props) => (props.$isSelected ? '#e3f2fd' : 'white')};
   &:hover {
     background-color: #f5f5f5;
