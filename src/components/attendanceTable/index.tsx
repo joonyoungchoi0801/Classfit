@@ -21,7 +21,7 @@ interface Student {
   isChecked: boolean;
 }
 
-function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
+function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
   const [originalStudents, setOriginalStudents] = useState<Student[]>(mockData.map(student => ({
     ...student,
@@ -112,6 +112,7 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
   };
 
   const handleStatusClick = (studentName: string, date: string) => {
+    if (!isEditMode) return;
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
         student.name === studentName
@@ -187,6 +188,7 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
                 (record) => record.date === date.date.slice(0, 5)
               );
               let statusIcon;
+              let iconColor = isEditMode ? 'var(--color-blue)' : 'var(--color-black)'; // 아이콘 이미지라 색상 변경으로 안됨. 추후 변경
               switch (attendanceRecord?.status) {
                 case '출석':
                   statusIcon = circle;
@@ -206,9 +208,8 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
                   <S.StatusIcon
                     src={statusIcon}
                     alt={attendanceRecord?.status}
-                    onClick={() =>
-                      handleStatusClick(student.name, date.date.slice(0, 5))
-                    }
+                    onClick={() => handleStatusClick(student.name, date.date.slice(0, 5))}
+                    style={{ color: iconColor }} // 이 부분도 마찬가지
                   />
                 </S.PaginationItem>
               );

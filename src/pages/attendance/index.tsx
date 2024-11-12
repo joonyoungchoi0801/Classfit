@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as S from './Attendance.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import ManageLayout from '@/components/layout/managelayout';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
-import { AttendanceTableProps } from '@/components/attendanceTable/AttendanceTable.types';
 import { useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
 import * as XLSX from 'xlsx';
@@ -26,6 +25,7 @@ function Attendance() {
   const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(Math.max(0, currentMonth - 6));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const navigate = useNavigate();
 
@@ -81,6 +81,10 @@ function Attendance() {
     URL.revokeObjectURL(url);
   };
 
+  const toggleEditMode = () => {
+    setIsEditMode((prevMode) => !prevMode);
+  };
+
   return (
     <ManageLayout>
       <S.Container>
@@ -112,10 +116,12 @@ function Attendance() {
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
-            <S.WhiteButton>편집</S.WhiteButton>
+            <S.WhiteButton onClick={toggleEditMode}>
+              {isEditMode ? '저장' : '편집'}
+            </S.WhiteButton>
           </S.RightButtons>
         </S.ButtonGroup>
-        <AttendanceTable selectedMonth={selectedMonth} />
+        <AttendanceTable selectedMonth={selectedMonth} isEditMode={isEditMode} />
       </S.Container>
     </ManageLayout>
   );
