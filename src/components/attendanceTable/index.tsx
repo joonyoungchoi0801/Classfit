@@ -71,7 +71,6 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
     });
   };
 
-
   const calculateWeekDates = (currentDate: Date) => {
     const weekDates = [];
     const dayOfWeek = currentDate.getDay() === 0 ? 7 : currentDate.getDay();
@@ -90,7 +89,9 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
         date.getDay()
       ];
 
-      weekDates.push(`${month}/${formattedDay}${dayLabel}`);
+      const isToday = date.toDateString() === new Date().toDateString();
+
+      weekDates.push({ date: `${month}/${formattedDay}${dayLabel}`, isToday });
     }
 
     return weekDates;
@@ -155,8 +156,8 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
           alt='Previous Week'
           onClick={handlePrevWeek}
         />
-        {weekDates.map((date, index) => (
-          <S.PaginationItem key={index}>{date}</S.PaginationItem>
+        {weekDates.map(({ date, isToday }, index) => (
+          <S.PaginationItem key={index} style={{ color: isToday ? 'var(--color-blue)' : 'var(--color-black)' }}>{date}</S.PaginationItem>
         ))}
         <S.ArrowButton
           src={paginationRight}
@@ -183,7 +184,7 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
             <S.Blank />
             {weekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
-                (record) => record.date === date.slice(0, 5)
+                (record) => record.date === date.date.slice(0, 5)
               );
               let statusIcon;
               switch (attendanceRecord?.status) {
@@ -201,12 +202,12 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
               }
 
               return (
-                <S.PaginationItem key={date}>
+                <S.PaginationItem key={date.date}>
                   <S.StatusIcon
                     src={statusIcon}
                     alt={attendanceRecord?.status}
                     onClick={() =>
-                      handleStatusClick(student.name, date.slice(0, 5))
+                      handleStatusClick(student.name, date.date.slice(0, 5))
                     }
                   />
                 </S.PaginationItem>
