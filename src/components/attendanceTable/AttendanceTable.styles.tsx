@@ -24,20 +24,12 @@ export const SearchContainer = styled.div`
   display: flex;
   width: 17.4rem;
   height: 4rem;
-  padding: 0.5rem 3rem;
+  padding: 1rem 1rem;
   align-items: center;
   border-radius: 0.5rem;
   background: var(--color-gray);
   position: relative;
-`;
-
-export const SearchIcon = styled.img`
-  position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 1rem;
+  gap: 1rem;
 `;
 
 export const SearchInput = styled.input`
@@ -48,11 +40,10 @@ export const SearchInput = styled.input`
   outline: none;
   &::placeholder {
     color: #999;
-    font-size: 1.2rem;
+    font-size: 1.7rem;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    margin-left: 4.8rem;
   }
 `;
 
@@ -113,7 +104,7 @@ export const StudentName = styled.div`
   align-items: center;
   gap: 1rem;
   width: 17.4rem;
-  color: #000;
+  color: var(--color-black);
   font-size: 2rem;
   font-style: normal;
   font-weight: 500;
@@ -121,8 +112,8 @@ export const StudentName = styled.div`
 `;
 
 export const CheckBox = styled.input`
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
 `;
 
 export const StatusIcon = styled.img`
