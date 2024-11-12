@@ -28,6 +28,41 @@ export const LeftButtons = styled.div`
   gap: 1.25rem;
 `;
 
+export const BlueButton = styled.div`
+  display: flex;
+  width: 15rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  border: 1px solid var(--color-blue);
+  background-color: var(--color-blue);
+  cursor: pointer;
+  color: var(--color-white);
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
+`;
+
+export const WhiteButton = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  border: 1px solid var(--color-blue);
+  color: var(--color-blue);
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
+  cursor: pointer;
+`;
+
 export const RightButtons = styled.div`
   display: flex;
   gap: 1.25rem;
@@ -38,9 +73,9 @@ export const DownloadContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 15.4375rem;
-  height: 3rem;
-  border-radius: 0.625rem;
+  width: 23rem;
+  height: 4.8rem;
+  border-radius: 1rem;
   border: 1px solid var(--color-blue);
 `;
 
@@ -50,7 +85,7 @@ export const DropdownButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.25rem;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
@@ -58,8 +93,8 @@ export const DropdownButton = styled.button`
   cursor: pointer;
 
   img {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.4rem;
+    height: 2.4rem;
   }
 `;
 
@@ -67,16 +102,24 @@ export const DropdownList = styled.ul`
   position: absolute;
   top: 100%;
   left: 0;
+  width: 7.2rem;
   background-color: #fff;
   border: 1px solid #ccc;
+  border-radius: 0rem 0rem 1rem 1rem;
   list-style: none;
   padding: 0;
   margin: 0;
   z-index: 1;
+  text-align: center;
 `;
 
 export const DropdownItem = styled.li`
   padding: 10px;
+  color: var(--color-blue);
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 500;
+  
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
@@ -87,10 +130,10 @@ export const FileDownloadButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.25rem;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.12rem;
-  margin-left: 1.25rem;
+  margin-left: 1rem;
   cursor: pointer;
 `;
