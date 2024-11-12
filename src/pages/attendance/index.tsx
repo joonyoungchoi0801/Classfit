@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
-import Button from '@/components/button';
 
 interface AttendanceRecord {
   date: string;

@@ -58,6 +58,7 @@ export const PaginationItem = styled.div`
   flex-grow: 1;
   text-align: center;
   font-size: 2rem;
+  font-weight: 500;
   margin: 0 2.2rem; /*임의로 간격 설정 */
 `;
 
