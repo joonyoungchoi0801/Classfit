@@ -6,7 +6,6 @@ import Home from './pages/home';
 import StudentInfo from './pages/studentInfo';
 import Sms from './pages/sms';
 import Attendance from './pages/attendance';
-import StudentInfo from './pages/studentInfo';
 
 export default function Router() {
   return (
