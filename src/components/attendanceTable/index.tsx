@@ -9,6 +9,7 @@ import absent from '@/assets/attendanceTable/absent.svg';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import mockData from '@/constants/tabledata';
+import StudentInfoModal from '../modal/studentInfoModal';
 
 interface AttendanceRecord {
   date: string;
@@ -30,6 +31,8 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [students, setStudents] = useState<Student[]>(originalStudents);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<string>('');
 
   useEffect(() => {
     if (selectedMonth !== currentDate.getMonth() + 1) {
@@ -111,6 +114,15 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     setCurrentDate(newDate);
   };
 
+  const handleStudentNameClick = (name: string) => {
+    setSelectedStudent(name);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleStatusClick = (studentName: string, date: string) => {
     if (!isEditMode) return;
     setStudents((prevStudents) =>
@@ -173,7 +185,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
             key={student.name + i}
             $isSelected={student.isChecked}
           >
-            <S.StudentName>
+            <S.StudentName onClick={() => handleStudentNameClick(student.name)}>
               <S.CheckBox
                 as="img"
                 src={student.isChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
@@ -218,6 +230,9 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
           </S.TableRow>
         ))}
       </S.TableBody>
+      {isModalOpen && (
+        <StudentInfoModal name={selectedStudent} gender='여' grade={1} className='A' tags='수학반' studentPhone='010-0000-0000' parentPhone='010-0000-0000' address='서울시' detailInfo='서울고 재학' counseling='' isOpen={isModalOpen} onClose={handleCloseModal} />
+      )}
     </S.Table>
   );
 }
