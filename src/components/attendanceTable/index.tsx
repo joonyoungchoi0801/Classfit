@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import * as S from './AttendanceTable.styles';
 import type { AttendanceTableProps } from './AttendanceTable.types';
-import search from '@/assets/attendanceTable/search.svg';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
 import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import circle from '@/assets/attendanceTable/circle.svg';
 import triangle from '@/assets/attendanceTable/triangle.svg';
 import absent from '@/assets/attendanceTable/absent.svg';
-import attendance from '@/pages/attendance';
 import mockData from '@/constants/tabledata';
 
 interface AttendanceRecord {
@@ -18,13 +16,18 @@ interface AttendanceRecord {
 interface Student {
   name: string;
   attendance: AttendanceRecord[];
+  isChecked: boolean;
 }
 
 function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
-  const [originalStudents, setOriginalStudents] = useState<Student[]>(mockData);
-  const [students, setStudents] = useState<Student[]>(mockData);
+  const [originalStudents, setOriginalStudents] = useState<Student[]>(mockData.map(student => ({
+    ...student,
+    isChecked: false,
+  })));
+  const [students, setStudents] = useState<Student[]>(originalStudents);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isAllChecked, setIsAllChecked] = useState(false);
 
   useEffect(() => {
     if (selectedMonth !== currentDate.getMonth() + 1) {
@@ -43,6 +46,21 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
+  };
+
+  const handleAllCheck = () => {
+    setIsAllChecked(!isAllChecked);
+    setStudents(students.map(student => ({
+      ...student,
+      isChecked: !isAllChecked,
+    })));
+  };
+
+  const handleStudentCheck = (name: string) => {
+    setStudents(students.map(student =>
+      student.name === name ? { ...student, isChecked: !student.isChecked } : student
+    ));
+    setIsAllChecked(students.every(student => student.isChecked));
   };
 
   const calculateWeekDates = (currentDate: Date) => {
@@ -112,11 +130,11 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
     <S.Table>
       <S.TableHeader>
         <S.SearchContainer>
+          <S.CheckBox type='checkbox' checked={isAllChecked} onChange={handleAllCheck} />
           <S.SearchInput
             placeholder='이름검색'
             onChange={handleKeywordChange}
           />
-          <S.SearchIcon src={search} alt='search icon' />
         </S.SearchContainer>
         <S.ArrowButton
           src={paginationLeft}
@@ -136,7 +154,11 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
         {students.map((student, i) => (
           <S.TableRow key={student.name + i}>
             <S.StudentName>
-              <S.CheckBox type='checkbox' />
+              <S.CheckBox
+                type="checkbox"
+                checked={student.isChecked}
+                onChange={() => handleStudentCheck(student.name)}
+              />
               {student.name}
             </S.StudentName>
             <S.Blank />
