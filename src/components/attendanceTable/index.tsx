@@ -196,7 +196,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
             key={student.name + i}
             $isSelected={student.isChecked}
           >
-            <S.StudentName>
+            <S.StudentName onClick={() => handleStudentNameClick(student.name)}>
               <S.CheckBox
                 as="img"
                 src={student.isChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
