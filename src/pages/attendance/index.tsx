@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import * as S from './Attendance.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import ManageLayout from '@/components/layout/managelayout';
-import dropdwon from '@/assets/dropdown.svg';
+import dropdwon from '@/assets/buttonIcon/dropdown.svg';
+import sms from '@/assets/buttonIcon/sms.svg';
+import statistics from '@/assets/buttonIcon/statistics.svg';
 import { AttendanceTableProps } from '@/components/attendanceTable/AttendanceTable.types';
 import { useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
+import Button from '@/components/button';
 
 interface AttendanceRecord {
   date: string;
@@ -83,11 +86,11 @@ function Attendance() {
     <ManageLayout>
       <S.Container>
         <Path />
-        <S.AttendanceTitle>학생 출결 관리</S.AttendanceTitle>
+        <S.AttendanceTitle>학생출결관리</S.AttendanceTitle>
         <S.ButtonGroup>
           <S.LeftButtons>
-            <button onClick={() => navigate('./sms')}>SMS 보내기</button>
-            <button>통계</button>
+            <S.BlueButton onClick={() => navigate('./sms')}><img src={sms} alt='sms icon' />SMS보내기</S.BlueButton>
+            <S.WhiteButton><img src={statistics} alt='statistics icon' />통계</S.WhiteButton>
           </S.LeftButtons>
           <S.RightButtons>
             <S.DownloadContainer>
@@ -110,7 +113,7 @@ function Attendance() {
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
-            <button>편집</button>
+            <S.WhiteButton>편집</S.WhiteButton>
           </S.RightButtons>
         </S.ButtonGroup>
         <AttendanceTable selectedMonth={selectedMonth} />
