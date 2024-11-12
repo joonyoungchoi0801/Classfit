@@ -6,6 +6,8 @@ import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import circle from '@/assets/attendanceTable/circle.svg';
 import triangle from '@/assets/attendanceTable/triangle.svg';
 import absent from '@/assets/attendanceTable/absent.svg';
+import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
+import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import mockData from '@/constants/tabledata';
 
 interface AttendanceRecord {
@@ -57,11 +59,18 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
   };
 
   const handleStudentCheck = (name: string) => {
-    setStudents(students.map(student =>
-      student.name === name ? { ...student, isChecked: !student.isChecked } : student
-    ));
-    setIsAllChecked(students.every(student => student.isChecked));
+    setStudents((prevStudents) => {
+      const updatedStudents = prevStudents.map((student) =>
+        student.name === name ? { ...student, isChecked: !student.isChecked } : student
+      );
+
+      const allChecked = updatedStudents.every(student => student.isChecked);
+      setIsAllChecked(allChecked);
+
+      return updatedStudents;
+    });
   };
+
 
   const calculateWeekDates = (currentDate: Date) => {
     const weekDates = [];
@@ -130,7 +139,12 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
     <S.Table>
       <S.TableHeader>
         <S.SearchContainer>
-          <S.CheckBox type='checkbox' checked={isAllChecked} onChange={handleAllCheck} />
+          <S.CheckBox
+            as="img"
+            src={isAllChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
+            alt="Select All"
+            onClick={handleAllCheck}
+          />
           <S.SearchInput
             placeholder='이름검색'
             onChange={handleKeywordChange}
@@ -150,14 +164,19 @@ function AttendanceTable({ selectedMonth }: AttendanceTableProps) {
           onClick={handleNextWeek}
         />
       </S.TableHeader>
+
       <S.TableBody>
         {students.map((student, i) => (
-          <S.TableRow key={student.name + i}>
+          <S.TableRow
+            key={student.name + i}
+            $isSelected={student.isChecked}
+          >
             <S.StudentName>
               <S.CheckBox
-                type="checkbox"
-                checked={student.isChecked}
-                onChange={() => handleStudentCheck(student.name)}
+                as="img"
+                src={student.isChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
+                alt="Check Student"
+                onClick={() => handleStudentCheck(student.name)}
               />
               {student.name}
             </S.StudentName>
