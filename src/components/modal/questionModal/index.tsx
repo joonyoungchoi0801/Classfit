@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import type { QuestionModalProps } from './QuestionModal.types';
 import * as S from './QuestionModal.styles';
 import * as PS from '@/components/modal/Modal.styles';
@@ -8,8 +9,10 @@ function QuestionModal({
   message,
   onConfirm,
   onCancel,
+  isOpen,
 }: QuestionModalProps) {
-  return (
+  if (!isOpen) return null;
+  return ReactDOM.createPortal(
     <PS.ModalWrapper>
       <PS.ModalContainer>
         <PS.Message>{title}</PS.Message>
@@ -28,7 +31,8 @@ function QuestionModal({
           </S.ButtonWrapper>
         </PS.ButtonWrapper>
       </PS.ModalContainer>
-    </PS.ModalWrapper>
+    </PS.ModalWrapper>,
+    document.getElementById('modal-root') as HTMLElement
   );
 }
 
