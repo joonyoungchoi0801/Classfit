@@ -3,91 +3,25 @@ import * as S from './Sms.styles';
 
 import Path from '@/components/path';
 import ManageLayout from '@/components/layout/managelayout';
+import Label from '@/components/label';
 
 const mockData = [
-  { name: '최준영' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '최준영' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '최준영' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '최준영' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '최준영' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
-  { name: '김민수' },
-  { name: '김민지' },
+  { name: '최준영', phone: '010-1234-5678' },
+  { name: '김민수', phone: '010-1234-5678' },
+  { name: '이지훈', phone: '010-1234-5678' },
+  { name: '김민지', phone: '010-1234-5678' },
+  { name: '박지윤', phone: '010-1234-5678' },
+  { name: '심유정', phone: '010-1234-5678' },
+  { name: '임소현', phone: '010-1234-5678' },
 ];
 
 function Sms() {
   const [message, setMessage] = useState('');
+  const [phoneData, setPhoneData] = useState(mockData);
+
+  const handlePhoneNumberChange = (name: string) => {
+    setPhoneData(phoneData.filter((data) => data.name !== name));
+  };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
@@ -107,8 +41,12 @@ function Sms() {
             <S.Bar />
           </S.Area>
           <S.RecipientArea>
-            {mockData.map((data) => (
-              <S.NameBtn>{data.name}</S.NameBtn>
+            {phoneData.map((data) => (
+              <Label
+                key={data.name}
+                title={data.name}
+                onClose={() => handlePhoneNumberChange(data.name)}
+              />
             ))}
           </S.RecipientArea>
           <S.BtnArea>
