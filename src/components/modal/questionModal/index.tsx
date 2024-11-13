@@ -3,11 +3,17 @@ import * as S from './QuestionModal.styles';
 import * as PS from '@/components/modal/Modal.styles';
 import Button from '@/components/button';
 
-function QuestionModal({ message, onConfirm, onCancel }: QuestionModalProps) {
+function QuestionModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+}: QuestionModalProps) {
   return (
     <PS.ModalWrapper>
       <PS.ModalContainer>
-        <PS.Message>{message}</PS.Message>
+        <PS.Message>{title}</PS.Message>
+        <S.Message>{message}</S.Message>
         <PS.ButtonWrapper>
           <S.ButtonWrapper>
             <Button
