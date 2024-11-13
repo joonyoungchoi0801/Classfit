@@ -47,11 +47,13 @@ function Attendance() {
     navigate(`/manage/attendance/${grade}학년`);
     setSelectedGrade(grade);
     setSelectedClass('');
+    setIsPopupOpen(false);
   };
 
   const handleClassClick = (grade: number, className: string) => {
     navigate(`/manage/attendance/${grade}학년/${className}`);
     setSelectedClass(className);
+    setIsPopupOpen(false);
   };
 
   const handleClassDelete = () => {
@@ -63,6 +65,7 @@ function Attendance() {
         ),
       }))
     );
+    setIsPopupOpen(false);
     navigate(`/manage/attendance/${selectedGrade}학년`);
   };
 
