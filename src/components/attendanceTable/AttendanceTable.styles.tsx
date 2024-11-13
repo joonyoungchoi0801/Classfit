@@ -116,6 +116,14 @@ export const StudentName = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+`;
+
+export const CheckBox = styled.input`
+  width: 2.2rem;
+  height: 2.2rem;
+`;
+
+export const StudentNameText = styled.span`
   cursor: pointer;
 
   &:hover {
