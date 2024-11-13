@@ -137,3 +137,21 @@ export const FileDownloadButton = styled.button`
   margin-left: 1rem;
   cursor: pointer;
 `;
+
+export const EditButton = styled.div<{ isEditMode: boolean }>`
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  border: 1px solid var(--color-blue);
+  color: ${({ isEditMode }) => (isEditMode ? 'var(--color-white)' : 'var(--color-blue)')};
+  background-color: ${({ isEditMode }) => (isEditMode ? 'var(--color-blue)' : 'var(--color-white)')};
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
+  cursor: pointer;
+`;
