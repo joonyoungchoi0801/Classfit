@@ -10,6 +10,7 @@ export const ManageSidebarWrapper = styled.div`
   padding: 3.5rem 0rem;
   background: #f2f5fc;
   overflow-y: auto;
+  overflow: visible;
 `;
 
 export const SidebarItem = styled.div<{ $isSelected?: boolean }>`
@@ -27,6 +28,7 @@ export const SidebarItem = styled.div<{ $isSelected?: boolean }>`
   line-height: 1.792rem;
   background: ${(props) => (props.$isSelected ? '#0056f6' : 'inherit')};
   cursor: pointer;
+  min-height: 5rem;
 `;
 
 export const AttendanceWrapper = styled.div`
@@ -103,6 +105,8 @@ export const ClassWrapper = styled.div<{ $isSelected?: boolean }>`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  position: relative;
+  overflow: visible;
 `;
 
 export const Class = styled.div<{ $isSelected?: boolean }>`
@@ -125,6 +129,17 @@ export const Class = styled.div<{ $isSelected?: boolean }>`
       props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
+`;
+
+export const ClassInput = styled.input`
+  border-radius: 0.5rem;
+  border: 0.1rem solid #afafaf;
+  background-color: inherit;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.792rem;
+  width: 100%;
 `;
 
 export const KebabIcon = styled.img<{ $isSelected?: boolean }>`
