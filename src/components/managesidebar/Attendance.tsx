@@ -6,6 +6,7 @@ import plusIcon from '@/assets/managesidebar/plus.svg';
 import bluePlusIcon from '@/assets/managesidebar/blueplus.svg';
 import kebabIcon from '@/assets/managesidebar/kebab.svg';
 import { useNavigate, useParams } from 'react-router-dom';
+import Popup from '@/components/popup';
 
 const gradeData = [
   {
@@ -36,7 +37,11 @@ function Attendance() {
   const [selectedGrade, setSelectedGrade] = useState<number>(
     Number(grade?.replace(/[^0-9]/g, ''))
   );
+  const [classData, setClassData] = useState(gradeData);
   const [selectedClass, setSelectedClass] = useState<string>(className || '');
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [tempClassName, setTempClassName] = useState<string>('');
 
   const handleGradeClick = (grade: number) => {
     navigate(`/manage/attendance/${grade}학년`);
@@ -49,11 +54,38 @@ function Attendance() {
     setSelectedClass(className);
   };
 
+  const handleClassDelete = () => {
+    setClassData((prev) =>
+      prev.map((data) => ({
+        ...data,
+        class: data.class.filter(
+          (classData) => classData.class !== selectedClass
+        ),
+      }))
+    );
+    navigate(`/manage/attendance/${selectedGrade}학년`);
+  };
+
+  const handleClassEdit = (name: string) => {
+    setClassData((prev) =>
+      prev.map((data) => ({
+        ...data,
+        class: data.class.map((classData) => ({
+          ...classData,
+          class: classData.class === selectedClass ? name : classData.class,
+        })),
+      }))
+    );
+    setTempClassName('');
+    setIsPopupOpen(false);
+    navigate(`/manage/attendance/${selectedGrade}학년/${name}`);
+  };
+
   return (
     <>
       <S.AttendanceWrapper>
         <S.AttendanceBtn>전체학생</S.AttendanceBtn>
-        {gradeData.map((data, index) => (
+        {classData.map((data, index) => (
           <S.ManageWrapper key={data.grade + index}>
             <S.GradeWrapper onClick={() => handleGradeClick(data.grade)}>
               <S.Grade>
@@ -76,13 +108,34 @@ function Attendance() {
                 onClick={() => handleClassClick(data.grade, classData.class)}
               >
                 <S.Class $isSelected={classData.class === selectedClass}>
-                  {classData.class}
+                  {isEditMode && classData.class === selectedClass ? (
+                    <S.ClassInput
+                      type='text'
+                      onChange={(e) => setTempClassName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setIsEditMode(false);
+                          handleClassEdit(tempClassName);
+                        }
+                      }}
+                    />
+                  ) : (
+                    classData.class
+                  )}
                 </S.Class>
                 <S.KebabIcon
                   src={kebabIcon}
                   alt='kebab icon'
                   $isSelected={classData.class === selectedClass}
+                  onClick={() => setIsPopupOpen(!isPopupOpen)}
                 />
+                {isPopupOpen && (
+                  <Popup
+                    isOpen={isPopupOpen && classData.class === selectedClass}
+                    onDelete={() => handleClassDelete()}
+                    onEdit={() => setIsEditMode(true)}
+                  />
+                )}
               </S.ClassWrapper>
             ))}
           </S.ManageWrapper>
