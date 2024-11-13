@@ -3,11 +3,15 @@ import * as S from './AttendanceTable.styles';
 import type { AttendanceTableProps } from './AttendanceTable.types';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
 import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
-import circle from '@/assets/attendanceTable/circle.svg';
-import triangle from '@/assets/attendanceTable/triangle.svg';
-import absent from '@/assets/attendanceTable/absent.svg';
+import circle_Black from '@/assets/attendanceTable/circle_Black.svg';
+import circle_Blue from '@/assets/attendanceTable/circle_Blue.svg';
+import triangle_Black from '@/assets/attendanceTable/triangle_Black.svg';
+import triangle_Blue from '@/assets/attendanceTable/triangle_Blue.svg';
+import absent_Black from '@/assets/attendanceTable/absent_Black.svg';
+import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
+
 import mockData from '@/constants/tabledata';
 import StudentInfoModal from '../modal/studentInfoModal';
 
@@ -33,6 +37,13 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string>('');
+
+  const getIconByStatus = (status: string, isEditMode: boolean) => {
+    if (status === '출석') return isEditMode ? circle_Black : circle_Blue;
+    if (status === '지각') return isEditMode ? triangle_Black : triangle_Blue;
+    if (status === '결석') return isEditMode ? absent_Black : absent_Blue;
+    return undefined;
+  };
 
   useEffect(() => {
     if (selectedMonth !== currentDate.getMonth() + 1) {
@@ -185,35 +196,23 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
             key={student.name + i}
             $isSelected={student.isChecked}
           >
-            <S.StudentName onClick={() => handleStudentNameClick(student.name)}>
+            <S.StudentName>
               <S.CheckBox
                 as="img"
                 src={student.isChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
                 alt="Check Student"
                 onClick={() => handleStudentCheck(student.name)}
               />
-              {student.name}
+              <S.StudentNameText onClick={() => handleStudentNameClick(student.name)}>
+                {student.name}
+              </S.StudentNameText>
             </S.StudentName>
             <S.Blank />
             {weekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
                 (record) => record.date === date.date.slice(0, 5)
               );
-              let statusIcon;
-              let iconColor = isEditMode ? 'var(--color-blue)' : 'var(--color-black)'; // 아이콘 이미지라 색상 변경으로 안됨. 추후 변경
-              switch (attendanceRecord?.status) {
-                case '출석':
-                  statusIcon = circle;
-                  break;
-                case '지각':
-                  statusIcon = triangle;
-                  break;
-                case '결석':
-                  statusIcon = absent;
-                  break;
-                default:
-                  statusIcon = undefined;
-              }
+              const statusIcon = getIconByStatus(attendanceRecord?.status || '', isEditMode);
 
               return (
                 <S.PaginationItem key={date.date}>
@@ -221,7 +220,6 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
                     src={statusIcon}
                     alt={attendanceRecord?.status}
                     onClick={() => handleStatusClick(student.name, date.date.slice(0, 5))}
-                    style={{ color: iconColor }} // 이 부분도 마찬가지
                   />
                 </S.PaginationItem>
               );

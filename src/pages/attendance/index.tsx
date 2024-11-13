@@ -116,9 +116,9 @@ function Attendance() {
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
-            <S.WhiteButton onClick={toggleEditMode}>
+            <S.EditButton onClick={toggleEditMode} isEditMode={isEditMode}>
               {isEditMode ? '저장' : '편집'}
-            </S.WhiteButton>
+            </S.EditButton>
           </S.RightButtons>
         </S.ButtonGroup>
         <AttendanceTable selectedMonth={selectedMonth} isEditMode={isEditMode} />
