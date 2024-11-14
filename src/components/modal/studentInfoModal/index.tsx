@@ -6,16 +6,7 @@ import type { StudentInfoModalProps } from './StudentInfoModal.types';
 import GirlIcon from '@/assets/modal/girl.svg';
 
 const StudentInfoModal = ({
-  name,
-  gender,
-  grade,
-  className,
-  tags,
-  studentPhone,
-  parentPhone,
-  address,
-  detailInfo,
-  counseling,
+  studentDetailData,
   isOpen,
   onClose,
 }: StudentInfoModalProps) => {
@@ -32,38 +23,43 @@ const StudentInfoModal = ({
           <S.InfoWrapper>
             <S.Info>
               <S.FieldWrapper>
-                <S.FieldValue>{name}</S.FieldValue>
+                <S.FieldValue>{studentDetailData.name}</S.FieldValue>
                 <S.Separator>|</S.Separator>
-                <S.FieldValue>{gender}</S.FieldValue>
+                <S.FieldValue>
+                  {studentDetailData.gender == 'FEMALE' ? '여' : '남'}
+                </S.FieldValue>
               </S.FieldWrapper>
               <S.FieldWrapper>
-                <S.FieldValue>{grade}학년</S.FieldValue>
+                <S.FieldValue>{studentDetailData.grade}</S.FieldValue>
                 <S.Separator>|</S.Separator>
-                <S.FieldValue>{className}반</S.FieldValue>
+                <S.FieldValue>{studentDetailData.subClassList[0]}</S.FieldValue>
               </S.FieldWrapper>
-              <S.FieldValue>{tags}</S.FieldValue>
+              {/* <S.FieldValue>{studentDetailData.}</S.FieldValue> */}
             </S.Info>
           </S.InfoWrapper>
         </S.Content>
         <S.MoreInfoWrapper>
           <S.FieldLabel>학생 연락처</S.FieldLabel>
-          <S.InputField value={studentPhone} readOnly />
+          <S.InputField value={studentDetailData.studentNumber} readOnly />
         </S.MoreInfoWrapper>
         <S.MoreInfoWrapper>
           <S.FieldLabel>학부모 연락처</S.FieldLabel>
-          <S.InputField value={parentPhone} readOnly />
+          <S.InputField value={studentDetailData.parentNumber} readOnly />
         </S.MoreInfoWrapper>
         <S.MoreInfoWrapper>
           <S.FieldLabel>주소</S.FieldLabel>
-          <S.InputField value={address} readOnly />
+          <S.InputField value={studentDetailData.address} readOnly />
         </S.MoreInfoWrapper>
         <S.MoreInfoWrapper>
           <S.FieldLabel>상세정보</S.FieldLabel>
-          <S.TextArea value={detailInfo} readOnly />
+          <S.TextArea value={studentDetailData.remark} readOnly />
         </S.MoreInfoWrapper>
         <S.MoreInfoWrapper>
           <S.FieldLabel>상담일지</S.FieldLabel>
-          <S.TextArea placeholder='정보를 입력해주세요' value={counseling} />
+          <S.TextArea
+            placeholder='정보를 입력해주세요'
+            value={studentDetailData.counselingLog}
+          />
         </S.MoreInfoWrapper>
         <S.Footer>
           <Button

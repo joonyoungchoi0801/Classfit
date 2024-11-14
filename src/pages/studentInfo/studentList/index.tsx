@@ -1,34 +1,17 @@
 import * as S from './StudentList.styles';
 import * as PS from '@/pages/studentInfo/StudentInfo.styles';
 import Button from '@/components/button';
-import { useState } from 'react';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import SearchIcon from '@/assets/info/search.svg';
 import Path from '@/components/path';
+import useStudentList from '@/hooks/useStudentList';
+import QuestionModal from '@/components/modal/questionModal';
+import Modal from '@/components/modal';
+import StudentInfoModal from '@/components/modal/studentInfoModal';
 
 function StudentList() {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
-  const students = [
-    { id: 1, name: '김예은', status: '휴원생', phone: '010-0000-0000' },
-    { id: 2, name: '방예원', status: '재원생', phone: '010-0000-0000' },
-    { id: 3, name: '백재혁', status: '휴원생', phone: '010-0000-0000' },
-    { id: 4, name: '심유정', status: '재원생', phone: '010-0000-0000' },
-    { id: 5, name: '손화영', status: '휴원생', phone: '010-0000-0000' },
-    { id: 6, name: '이예린', status: '휴원생', phone: '010-0000-0000' },
-    { id: 7, name: '임소현', status: '재원생', phone: '010-0000-0000' },
-    { id: 8, name: '최준영', status: '재원생', phone: '010-0000-0000' },
-    { id: 9, name: '이예린', status: '휴원생', phone: '010-0000-0000' },
-    { id: 10, name: '임소현', status: '재원생', phone: '010-0000-0000' },
-    { id: 11, name: '최준영', status: '재원생', phone: '010-0000-0000' },
-  ];
-
-  const handleSelect = (id: number) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-    );
-  };
+  const studentListHandler = useStudentList();
 
   return (
     <PS.Container>
@@ -39,13 +22,19 @@ function StudentList() {
       <PS.ButtonWrapper>
         <Button
           title='삭제'
-          textColor={selectedRows.length > 0 ? 'var(--color-white)' : '#999999'}
+          textColor={
+            studentListHandler.studentIds.length > 0
+              ? 'var(--color-white)'
+              : '#999999'
+          }
           backgroundColor={
-            selectedRows.length > 0 ? 'var(--color-blue)' : 'var(--color-white)'
+            studentListHandler.studentIds.length > 0
+              ? 'var(--color-blue)'
+              : 'var(--color-white)'
           }
           borderColor='#999999'
-          isBorder={selectedRows.length > 0 ? false : true}
-          onClick={() => { }}
+          isBorder={studentListHandler.studentIds.length > 0 ? false : true}
+          onClick={studentListHandler.handleOnDelete}
         />
       </PS.ButtonWrapper>
       <S.Table>
@@ -53,7 +42,16 @@ function StudentList() {
           <S.TableCell $isHeader={true}>
             <S.InputContainer>
               <S.BtnIcon src={SearchIcon} />
-              <S.Input placeholder='이름, 클래스명 등 자유롭게 검색해보세요 !' />
+              <S.Input
+                placeholder='이름을 검색해보세요.'
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    console.log('e', e);
+                    studentListHandler.handleOnSearch(e);
+                  }
+                }}
+                onChange={(e) => studentListHandler.handleOnSearchChange(e)}
+              />
             </S.InputContainer>
           </S.TableCell>
           <S.TableCell $isHeader={true}>상태</S.TableCell>
@@ -61,36 +59,73 @@ function StudentList() {
           <S.TableCell $isHeader={true}>관리</S.TableCell>
         </S.TableHeader>
 
-        {students.map((student) => (
+        {studentListHandler.studentVisibleData.map((student) => (
           <S.TableRow
-            key={student.id}
-            $isSelected={selectedRows.includes(student.id)}
+            key={student.studentId}
+            $isSelected={studentListHandler.studentIds.includes(
+              student.studentId
+            )}
           >
             <S.TableCell $alignLeft={true}>
-              <S.IconWrapper
-                $alignLeft={true}
-                onClick={() => handleSelect(student.id)}
-              >
-                {selectedRows.includes(student.id) ? (
-                  <S.BtnIcon src={SelectedCheckBoxIcon} />
-                ) : (
-                  <S.BtnIcon src={CheckBoxIcon} />
-                )}
-                {student.name}
-              </S.IconWrapper>
+              <S.nameWrapper>
+                <S.IconWrapper
+                  $alignLeft={true}
+                  onClick={() =>
+                    studentListHandler.handleOnSelectDelete(student.studentId)
+                  }
+                >
+                  {studentListHandler.studentIds.includes(student.studentId) ? (
+                    <S.BtnIcon src={SelectedCheckBoxIcon} />
+                  ) : (
+                    <S.BtnIcon src={CheckBoxIcon} />
+                  )}
+                </S.IconWrapper>
+                <S.EditButton
+                  onClick={() => {
+                    studentListHandler.handleOnName(student.studentId);
+                  }}
+                  $color='var(--color-black)'
+                >
+                  {student.name}
+                </S.EditButton>
+              </S.nameWrapper>
             </S.TableCell>
-            <S.TableCell>{student.status}</S.TableCell>
-            <S.TableCell>{student.phone}</S.TableCell>
+            <S.TableCell>{student.isStudent ? '재학생' : '휴학생'}</S.TableCell>
+            <S.TableCell>{student.studentNumber}</S.TableCell>
             <S.TableCell>
               <S.EditWrapper>
-                <S.EditButton>수정</S.EditButton>
+                <S.EditButton $color='#7d7d7d'>수정</S.EditButton>
                 <S.EditDivider>|</S.EditDivider>
-                <S.EditButton>삭제</S.EditButton>
+                <S.EditButton
+                  onClick={() => {
+                    studentListHandler.handleOnSideDelete(student.studentId);
+                  }}
+                  $color='#7d7d7d'
+                >
+                  삭제
+                </S.EditButton>
               </S.EditWrapper>
             </S.TableCell>
           </S.TableRow>
         ))}
       </S.Table>
+      <Modal
+        message={studentListHandler.modalMessage}
+        onClose={studentListHandler.handleOnModalClose}
+        isOpen={studentListHandler.isModalVisible}
+      />
+      <QuestionModal
+        title={studentListHandler.questionModalTitle}
+        message={studentListHandler.questionModalMessage}
+        onConfirm={studentListHandler.handleOnModalConfirm}
+        isOpen={studentListHandler.isQuestionModalVisible}
+        onCancel={studentListHandler.handleOnModalClose}
+      />
+      <StudentInfoModal
+        studentDetailData={studentListHandler.studentDetailData!}
+        isOpen={studentListHandler.isStudentModalVisible}
+        onClose={studentListHandler.handleOnModalClose}
+      />
     </PS.Container>
   );
 }

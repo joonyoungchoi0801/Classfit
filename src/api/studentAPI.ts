@@ -2,9 +2,16 @@ import instance from './instance';
 
 import { API_STUDENT } from '@/constants/API';
 
-import type { PatchedStudentData, StudentData } from '@/types/student.type';
+import type {
+  GetStudentDetailResponse,
+  GetStudentResponse,
+  GetStudentSearchResponse,
+  PatchedStudentData,
+  StudentData,
+} from '@/types/student.type';
+import { AxiosResponse } from 'axios';
 
-export const getStudent = () => {
+export const getStudent = (): Promise<AxiosResponse<GetStudentResponse>> => {
   return instance({
     url: API_STUDENT.STUDENT,
     method: 'GET',
@@ -19,7 +26,9 @@ export const postStudent = (data: StudentData) => {
   });
 };
 
-export const getStudentDetail = (studentId: number) => {
+export const getStudentDetail = (
+  studentId: number
+): Promise<AxiosResponse<GetStudentDetailResponse>> => {
   return instance({
     url: API_STUDENT.STUDENTDETAIL(studentId),
     method: 'GET',
@@ -27,10 +36,11 @@ export const getStudentDetail = (studentId: number) => {
 };
 
 export const deleteStudent = (studentIds: number[]) => {
+  const params = new URLSearchParams();
+  studentIds.forEach((id) => params.append('studentIds', id.toString()));
   return instance({
-    url: API_STUDENT.STUDENT,
+    url: `${API_STUDENT.STUDENT}?${params.toString()}`,
     method: 'DELETE',
-    params: { studentIds: studentIds },
   });
 };
 
@@ -45,7 +55,9 @@ export const patchStudentDetail = (
   });
 };
 
-export const getStudentSearch = (name: string) => {
+export const getStudentSearch = (
+  name: string
+): Promise<AxiosResponse<GetStudentSearchResponse>> => {
   return instance({
     url: API_STUDENT.STUDENTSEARCH,
     method: 'GET',
