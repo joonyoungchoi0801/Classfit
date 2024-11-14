@@ -5,4 +5,5 @@ export const Layout = styled.div`
   margin-top: 7rem;
   width: 100vw;
   height: 100vh;
+  min-width: 144rem;
 `;

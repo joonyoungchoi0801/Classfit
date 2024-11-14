@@ -9,7 +9,6 @@ export const LabelWrapper = styled.div`
   gap: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid #c3c3c3;
-  background: var(--color-skyblue);
 `;
 
 export const LabelMessage = styled.p`
