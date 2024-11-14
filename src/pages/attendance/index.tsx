@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './Attendance.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import ManageLayout from '@/components/layout/managelayout';
@@ -10,6 +10,7 @@ import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
+import { StudentData } from '@/types/attendance.type';
 
 interface AttendanceRecord {
   date: string;
@@ -29,13 +30,15 @@ function Attendance() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<StudentData[]>([]);
+  const [smsQuery, setSmsQuery] = useState('');
   const { grade, class: classParam } = useParams();
-
   const navigate = useNavigate();
   const location = useLocation();
   const url = location.pathname;
   const isTableOpen = url === '/manage/attendance/all' || !!classParam;
-  const isSmsButtonEnabled = !!classParam || location.pathname === '/manage/attendance/all';
+  const isSmsButtonEnabled =
+    !!classParam || location.pathname === '/manage/attendance/all';
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -89,6 +92,10 @@ function Attendance() {
     URL.revokeObjectURL(url);
   };
 
+  useEffect(() => {
+    const query = selectedStudent.map((student) => student.id).join(',');
+    setSmsQuery(query);
+  }, [selectedStudent]);
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
   };
@@ -103,7 +110,7 @@ function Attendance() {
             <S.BlueButton
               as='button'
               disabled={!isSmsButtonEnabled}
-              onClick={() => navigate('./sms')}
+              onClick={() => navigate(`./sms?studentId=${smsQuery}`)}
             >
               <img src={sms} alt='sms icon' />
               SMS보내기
@@ -143,6 +150,7 @@ function Attendance() {
           <AttendanceTable
             selectedMonth={selectedMonth}
             isEditMode={isEditMode}
+            setStudentData={setSelectedStudent}
           />
         ) : (
           <>

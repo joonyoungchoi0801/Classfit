@@ -19,7 +19,11 @@ import { AttendanceResponse, StudentData } from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
 
-function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
+function AttendanceTable({
+  selectedMonth,
+  isEditMode,
+  setStudentData,
+}: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
   const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [students, setStudents] = useState<StudentData[]>([]);
@@ -38,7 +42,6 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
 
   const location = useLocation();
   const url = location.pathname;
-  console.log(mainClassId, subClassId);
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
@@ -98,7 +101,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     if (status === '결석') return isEditMode ? absent_Black : absent_Blue;
     return circle_Blue;
   };
-  console.log(students);
+
   useEffect(() => {
     if (selectedMonth !== currentDate.getMonth() + 1) {
       const newDate = new Date();
@@ -113,6 +116,11 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     );
     setStudents(filteredStudents);
   }, [keyword]);
+
+  useEffect(() => {
+    const checkedStudents = students.filter((student) => student.isChecked);
+    setStudentData(checkedStudents);
+  }, [students]);
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
