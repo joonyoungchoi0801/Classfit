@@ -8,7 +8,7 @@ import QuestionModal from '@/components/modal/questionModal';
 import Modal from '@/components/modal';
 import { useLocation } from 'react-router-dom';
 import { SmsData } from '@/types/sms.type';
-import { getStudentDetail } from '@/api/studentAPI';
+import { getStudentDetail, getStudentDetailById } from '@/api/studentAPI';
 import { postSms } from '@/api/smsAPI';
 
 function Sms() {
@@ -65,7 +65,7 @@ function Sms() {
   useEffect(() => {
     const fetchStudentData = async () => {
       for (const id of studentArray) {
-        const res = await getStudentDetail(Number(id));
+        const res = await getStudentDetailById(Number(id));
         const { studentId, name } = res.data.data;
         addStudentData(studentId, name, '');
       }
