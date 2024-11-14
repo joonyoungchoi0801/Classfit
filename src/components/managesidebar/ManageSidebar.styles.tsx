@@ -11,6 +11,7 @@ export const ManageSidebarWrapper = styled.div`
   padding: 3.5rem 0rem;
   background: #f2f5fc;
   overflow-y: auto;
+  overflow: visible;
   &::-webkit-scrollbar {
     width: 0.8rem;
     height: 0.8rem;
@@ -111,13 +112,20 @@ export const PlusIcon = styled.img<{ $isSelected?: boolean }>`
 export const ClassWrapper = styled.div<{ $isSelected?: boolean }>`
   display: ${(props) => (props.$isSelected ? 'flex' : 'none')};
   width: 100%;
-  height: 5rem;
   padding: 1rem 0;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   cursor: pointer;
   position: relative;
   overflow: visible;
+  flex-direction: column;
+  gap: 3rem;
+`;
+
+export const ClassContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 export const Class = styled.div<{ $isSelected?: boolean }>`
@@ -137,7 +145,7 @@ export const Class = styled.div<{ $isSelected?: boolean }>`
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;
@@ -151,6 +159,8 @@ export const ClassInput = styled.input`
   font-weight: 400;
   line-height: 1.792rem;
   width: 100%;
+  outline: none;
+  border: none;
 `;
 
 export const KebabIcon = styled.img<{ $isSelected?: boolean }>`
@@ -184,7 +194,20 @@ export const Info = styled.div<{ $isSelected?: boolean }>`
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
+`;
+
+export const MainClassInput = styled.input`
+  display: flex;
+  color: var(--color-black);
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.792rem;
+  outline: none;
+  border: none;
+  background: inherit;
+  width: 100%;
 `;

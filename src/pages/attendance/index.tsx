@@ -23,7 +23,9 @@ interface Student {
 
 function Attendance() {
   const currentMonth = new Date().getMonth() + 1;
-  const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(Math.max(0, currentMonth - 6));
+  const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(
+    Math.max(0, currentMonth - 6)
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -95,8 +97,18 @@ function Attendance() {
         <S.AttendanceTitle>학생출결관리</S.AttendanceTitle>
         <S.ButtonGroup>
           <S.LeftButtons>
-            <S.BlueButton as="button" disabled={!isSmsButtonEnabled} onClick={() => navigate('./sms')}><img src={sms} alt='sms icon' />SMS보내기</S.BlueButton>
-            <S.WhiteButton><img src={statistics} alt='statistics icon' />통계</S.WhiteButton>
+            <S.BlueButton
+              as='button'
+              disabled={!isSmsButtonEnabled}
+              onClick={() => navigate('./sms')}
+            >
+              <img src={sms} alt='sms icon' />
+              SMS보내기
+            </S.BlueButton>
+            <S.WhiteButton>
+              <img src={statistics} alt='statistics icon' />
+              통계
+            </S.WhiteButton>
           </S.LeftButtons>
           <S.RightButtons>
             <S.DownloadContainer>
@@ -105,7 +117,7 @@ function Attendance() {
               </S.DropdownButton>
               {isDropdownOpen && (
                 <S.DropdownList>
-                  {months.map((month) => (
+                  {months?.map((month) => (
                     <S.DropdownItem
                       key={month}
                       onClick={() => handleMonthSelect(month)}
@@ -119,12 +131,15 @@ function Attendance() {
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
-            <S.EditButton onClick={toggleEditMode} isEditMode={isEditMode}>
+            <S.EditButton onClick={toggleEditMode} $isEditMode={isEditMode}>
               {isEditMode ? '저장' : '편집'}
             </S.EditButton>
           </S.RightButtons>
         </S.ButtonGroup>
-        <AttendanceTable selectedMonth={selectedMonth} isEditMode={isEditMode} />
+        <AttendanceTable
+          selectedMonth={selectedMonth}
+          isEditMode={isEditMode}
+        />
       </S.Container>
     </ManageLayout>
   );

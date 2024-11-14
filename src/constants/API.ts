@@ -1,33 +1,34 @@
 export const API_SUBCLASS = Object.freeze({
-  SUBCLASS: '/home/sub-category',
-  SUBCLASSEDIT: (subClassId: number) => `/home/sub-category/${subClassId}`,
+  SUBCLASS: '/v1/home/sub-category',
+  SUBCLASSEDIT: (subClassId: number) => `/v1/home/sub-category/${subClassId}`,
 });
 
 export const API_ATTENDANCE = Object.freeze({
-  ATTENDANCE: '/home',
+  ATTENDANCE: '/v1/home',
   ATTENDANCEDETAIL: (mainClassId: number, subClassId: number) =>
-    `/manage/attendance/${mainClassId}/${subClassId}`,
+    `/v1/manage/attendance/${mainClassId}/${subClassId}`,
 });
 
 export const API_MAINCLASS = Object.freeze({
-  MAINCLASS: '/home/main-category',
-  MAINCLASSEDIT: (mainClassId: number) => `/home/main-category/${mainClassId}`,
+  MAINCLASS: '/v1/home/main-category',
+  MAINCLASSEDIT: (mainClassId: number) =>
+    `/v1/home/main-category/${mainClassId}`,
 });
 
 export const API_STUDENT = Object.freeze({
-  STUDENT: '/student',
-  STUDENTDETAIL: (studentId: number) => `/student/${studentId}`,
-  STUDENTSEARCH: '/student/search',
+  STUDENT: '/v1/student',
+  STUDENTDETAIL: (studentId: number) => `/v1/student/${studentId}`,
+  STUDENTSEARCH: '/v1/student/search',
 });
 
 export const API_CLASS = Object.freeze({
-  CLASS: '/home/class-info',
+  CLASS: '/v1/home/class-info',
 });
 
 export const API_SMS = Object.freeze({
-  SMS: '/send-many',
+  SMS: '/v1/send-many',
 });
 
 export const API_EXCEL = Object.freeze({
-  EXCEL: '/home/excel/download',
+  EXCEL: '/v1/home/excel/download',
 });

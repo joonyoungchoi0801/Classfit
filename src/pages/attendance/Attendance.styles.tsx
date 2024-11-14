@@ -119,7 +119,7 @@ export const DropdownItem = styled.li`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 500;
-  
+
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
@@ -138,7 +138,7 @@ export const FileDownloadButton = styled.button`
   cursor: pointer;
 `;
 
-export const EditButton = styled.div<{ isEditMode: boolean }>`
+export const EditButton = styled.div<{ $isEditMode: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -147,8 +147,10 @@ export const EditButton = styled.div<{ isEditMode: boolean }>`
   align-items: center;
   border-radius: 1rem;
   border: 1px solid var(--color-blue);
-  color: ${({ isEditMode }) => (isEditMode ? 'var(--color-white)' : 'var(--color-blue)')};
-  background-color: ${({ isEditMode }) => (isEditMode ? 'var(--color-blue)' : 'var(--color-white)')};
+  color: ${(props) =>
+    props.$isEditMode ? 'var(--color-white)' : 'var(--color-blue)'};
+  background-color: ${(props) =>
+    props.$isEditMode ? 'var(--color-blue)' : 'var(--color-white)'};
   font-size: 2rem;
   font-style: normal;
   font-weight: 600;
