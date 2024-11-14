@@ -6,6 +6,7 @@ export const SidebarWrapper = styled.div`
   width: 10rem;
   min-width: 10rem;
   height: calc(100vh - 7rem);
+  overflow-y: auto;
   background: var(--color-white);
   padding: 3rem 2rem;
   gap: 2rem;

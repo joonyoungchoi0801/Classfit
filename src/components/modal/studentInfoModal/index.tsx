@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import Button from '@/components/button';
 import * as S from './StudentInfoModal.styles';
 import type { StudentInfoModalProps } from './StudentInfoModal.types';
@@ -19,7 +21,7 @@ const StudentInfoModal = ({
 }: StudentInfoModalProps) => {
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <S.ModalWrapper>
       <S.ModalContainer>
         <S.Header>학생정보</S.Header>
@@ -73,7 +75,8 @@ const StudentInfoModal = ({
           />
         </S.Footer>
       </S.ModalContainer>
-    </S.ModalWrapper>
+    </S.ModalWrapper>,
+    document.getElementById('modal-root') as HTMLElement
   );
 };
 

@@ -7,7 +7,7 @@ function Button({
   backgroundColor = 'var(--color-blue)',
   borderColor = 'var(--color-black)',
   isBorder = false,
-  onClick = () => {},
+  onClick = () => { },
 }: ButtonProps) {
   return (
     <S.ButtonWrapper
