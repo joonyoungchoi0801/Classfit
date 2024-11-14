@@ -64,3 +64,10 @@ export const getStudentSearch = (
     params: { name: name },
   });
 };
+
+export const getStudentDetailById = (studentId: number) => {
+  return instance({
+    url: API_STUDENT.STUDENTDETAIL(studentId),
+    method: 'GET',
+  });
+};

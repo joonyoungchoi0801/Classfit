@@ -11,3 +11,9 @@ export const getClassInfo = (): Promise<
     method: 'GET',
   });
 };
+
+export const getClassList = () => {
+  return instance({
+    url: API_CLASS.CLASS,
+  });
+};

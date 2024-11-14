@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './ManageSidebar.styles';
 import downArrow from '@/assets/managesidebar/downarrow.svg';
 import rightArrow from '@/assets/managesidebar/rightarrow.svg';
@@ -7,26 +7,11 @@ import bluePlusIcon from '@/assets/managesidebar/blueplus.svg';
 import kebabIcon from '@/assets/managesidebar/kebab.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import Popup from '@/components/popup';
-
-const gradeData = [
-  {
-    grade: 1,
-    class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
-  },
-  {
-    grade: 2,
-    class: [
-      { class: 'A반' },
-      { class: 'B반' },
-      { class: 'C반' },
-      { class: 'D반' },
-    ],
-  },
-  {
-    grade: 3,
-    class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
-  },
-];
+import { ClassData, ClassDataForm } from './Attendance.type';
+import { getClassList } from '@/api/classAPI';
+import { deleteSubClass, patchSubClass, postSubClass } from '@/api/subclassAPI';
+import { postMainClass } from '@/api/mainclassAPI';
+import axios from 'axios';
 
 function Attendance() {
   const { grade, class: className } = useParams<{
@@ -34,116 +19,260 @@ function Attendance() {
     class?: string;
   }>();
   const navigate = useNavigate();
-  const [selectedGrade, setSelectedGrade] = useState<number>(
-    Number(grade?.replace(/[^0-9]/g, ''))
-  );
-  const [classData, setClassData] = useState(gradeData);
+  const [selectedGrade, setSelectedGrade] = useState<string>('');
+  const [classData, setClassData] = useState<ClassDataForm[] | undefined>();
   const [selectedClass, setSelectedClass] = useState<string>(className || '');
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [tempClassName, setTempClassName] = useState<string>('');
+  const [tempNewClassName, setTempNewClassName] = useState<string>('');
+  const [tempMainClassName, setTempMainClassName] = useState<string>('');
+  const [isMainClassAdd, setIsMainClassAdd] = useState<boolean>(false);
+  const [isSubClassAdd, setIsSubClassAdd] = useState<boolean>(false);
+  const fetchClassList = async () => {
+    try {
+      const res = await getClassList();
+      setClassData(res.data.data);
+    } catch (error) {
+      alert('반 정보를 불러오는데 실패했습니다.');
+    }
+  };
 
-  const handleGradeClick = (grade: number) => {
-    navigate(`/manage/attendance/${grade}학년`);
+  useEffect(() => {
+    fetchClassList();
+  }, []);
+
+  const handleGradeClick = (grade: string) => {
+    navigate(`/manage/attendance/${grade}`);
     setSelectedGrade(grade);
     setSelectedClass('');
     setIsPopupOpen(false);
+    setIsSubClassAdd(false);
+    setIsMainClassAdd(false);
   };
 
-  const handleClassClick = (grade: number, className: string) => {
-    navigate(`/manage/attendance/${grade}학년/${className}`);
+  const handleClassClick = (grade: string, className: string) => {
+    navigate(`/manage/attendance/${grade}/${className}`);
     setSelectedClass(className);
     setIsPopupOpen(false);
+    setIsSubClassAdd(false);
+    setIsMainClassAdd(false);
   };
 
-  const handleClassDelete = () => {
-    setClassData((prev) =>
-      prev.map((data) => ({
-        ...data,
-        class: data.class.filter(
-          (classData) => classData.class !== selectedClass
-        ),
-      }))
-    );
-    setIsPopupOpen(false);
-    navigate(`/manage/attendance/${selectedGrade}학년`);
+  const handleClassDelete = async (subClassId: number) => {
+    try {
+      await deleteSubClass(1, subClassId);
+      setClassData((prev) => {
+        if (!prev) return prev;
+
+        return prev.map((data) => ({
+          ...data,
+          subClasses: data.subClasses.filter(
+            (classData) => classData.subClassName !== selectedClass
+          ),
+        }));
+      });
+      navigate(`/manage/attendance`);
+      fetchClassList();
+    } catch (error) {
+      alert('반 정보를 삭제하는데 실패했습니다.');
+    } finally {
+      setIsPopupOpen(false);
+    }
   };
 
-  const handleClassEdit = (name: string) => {
-    setClassData((prev) =>
-      prev.map((data) => ({
-        ...data,
-        class: data.class.map((classData) => ({
-          ...classData,
-          class: classData.class === selectedClass ? name : classData.class,
-        })),
-      }))
-    );
-    setTempClassName('');
+  const handleClassEdit = async (
+    name: string,
+    subClassId: number,
+    mainClassId: number
+  ) => {
+    try {
+      const reqData = {
+        mainClassId: mainClassId,
+        subClassName: name,
+      };
+      await patchSubClass(reqData, 1, subClassId);
+      setClassData((prev) => {
+        if (!prev) return prev;
+
+        return prev.map((data) => ({
+          ...data,
+          subClasses: data.subClasses.filter(
+            (classData) => classData.subClassName !== selectedClass
+          ),
+        }));
+      });
+      navigate(`/manage/attendance`);
+      fetchClassList();
+    } catch (error) {
+      alert('반 정보를 수정하는데 실패했습니다.');
+    } finally {
+      setIsPopupOpen(false);
+      setTempClassName('');
+    }
+  };
+  const handleClickSubPopUp = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPopupOpen(!isPopupOpen);
+    setIsSubClassAdd(false);
+    setIsMainClassAdd(false);
+  };
+
+  const handleSubClassBtnClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSubClassAdd(!isSubClassAdd);
     setIsPopupOpen(false);
-    navigate(`/manage/attendance/${selectedGrade}학년/${name}`);
+    setIsMainClassAdd(false);
+  };
+
+  const handleSubClassAdd = async (
+    mainClassId: number,
+    subClassName: string
+  ) => {
+    try {
+      const reqData = {
+        mainClassId: mainClassId,
+        subClassName: subClassName,
+      };
+      await postSubClass(reqData, 1);
+      fetchClassList();
+    } catch (e) {
+      alert('반 정보를 추가하는데 실패했습니다.');
+    }
+  };
+
+  const handleMainClassAdd = async (mainClassName: string) => {
+    try {
+      const reqData = {
+        mainClassName: mainClassName,
+      };
+      await postMainClass(1, reqData);
+      fetchClassList();
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response?.status === 409) {
+        alert('이미 존재하는 메인 클래스입니다.');
+      } else {
+        alert('메인 클래스를 추가하는데 실패했습니다.');
+      }
+    }
+  };
+  const handleMainAddBtnClick = () => {
+    setIsMainClassAdd(!isMainClassAdd);
+    setIsPopupOpen(false);
+    setIsSubClassAdd(false);
   };
 
   return (
     <>
       <S.AttendanceWrapper>
         <S.AttendanceBtn>전체학생</S.AttendanceBtn>
-        {classData.map((data, index) => (
-          <S.ManageWrapper key={data.grade + index}>
-            <S.GradeWrapper onClick={() => handleGradeClick(data.grade)}>
+        {classData?.map((data, index) => (
+          <S.ManageWrapper key={data.mainClassId}>
+            <S.GradeWrapper
+              onClick={() => handleGradeClick(data.mainClassName)}
+            >
               <S.Grade>
                 <S.Icon
-                  src={selectedGrade === data.grade ? downArrow : rightArrow}
+                  src={grade === data.mainClassName ? downArrow : rightArrow}
                   alt='down arrow'
                 />
-                {data.grade}학년
+                {data.mainClassName}
               </S.Grade>
               <S.PlusIcon
                 src={plusIcon}
-                alt='plus icon'
-                $isSelected={selectedGrade === data.grade}
+                alt='plusIcon'
+                $isSelected={grade === data.mainClassName}
+                onClick={(e) => handleSubClassBtnClick(e)}
               />
             </S.GradeWrapper>
-            {data.class.map((classData) => (
-              <S.ClassWrapper
-                key={classData.class + index}
-                $isSelected={data.grade === selectedGrade}
-                onClick={() => handleClassClick(data.grade, classData.class)}
-              >
-                <S.Class $isSelected={classData.class === selectedClass}>
-                  {isEditMode && classData.class === selectedClass ? (
+
+            <S.ClassWrapper $isSelected={data.mainClassName === grade}>
+              {data.subClasses.map((classData) => (
+                <S.ClassContainer
+                  key={classData.subClassId + classData.mainClassId}
+                  onClick={() =>
+                    handleClassClick(data.mainClassName, classData.subClassName)
+                  }
+                >
+                  <S.Class
+                    $isSelected={classData.subClassName === selectedClass}
+                  >
+                    {isEditMode && classData.subClassName === selectedClass ? (
+                      <S.ClassInput
+                        type='text'
+                        onChange={(e) => setTempClassName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setIsEditMode(false);
+                            handleClassEdit(
+                              tempClassName,
+                              classData.subClassId,
+                              classData.mainClassId
+                            );
+                          }
+                        }}
+                      />
+                    ) : (
+                      classData.subClassName
+                    )}
+                  </S.Class>
+                  <S.KebabIcon
+                    src={kebabIcon}
+                    alt='kebab icon'
+                    $isSelected={classData.subClassName === selectedClass}
+                    onClick={(e) => handleClickSubPopUp(e)}
+                  />
+                  {isPopupOpen && (
+                    <Popup
+                      isOpen={
+                        isPopupOpen && classData.subClassName === selectedClass
+                      }
+                      onDelete={() => handleClassDelete(classData.subClassId)}
+                      onEdit={() => setIsEditMode(true)}
+                    />
+                  )}
+                </S.ClassContainer>
+              ))}
+              {isSubClassAdd && (
+                <S.ClassContainer>
+                  <S.Class>
                     <S.ClassInput
                       type='text'
-                      onChange={(e) => setTempClassName(e.target.value)}
+                      placeholder='하위 클래스 입력'
+                      onChange={(e) => setTempNewClassName(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          setIsEditMode(false);
-                          handleClassEdit(tempClassName);
+                          setIsSubClassAdd(false);
+                          handleSubClassAdd(data.mainClassId, tempNewClassName);
                         }
                       }}
                     />
-                  ) : (
-                    classData.class
-                  )}
-                </S.Class>
-                <S.KebabIcon
-                  src={kebabIcon}
-                  alt='kebab icon'
-                  $isSelected={classData.class === selectedClass}
-                  onClick={() => setIsPopupOpen(!isPopupOpen)}
-                />
-                {isPopupOpen && (
-                  <Popup
-                    isOpen={isPopupOpen && classData.class === selectedClass}
-                    onDelete={() => handleClassDelete()}
-                    onEdit={() => setIsEditMode(true)}
-                  />
-                )}
-              </S.ClassWrapper>
-            ))}
+                  </S.Class>
+                </S.ClassContainer>
+              )}
+            </S.ClassWrapper>
           </S.ManageWrapper>
         ))}
-        <S.AttendanceBtn>
+        {isMainClassAdd && (
+          <S.GradeWrapper>
+            <S.Grade>
+              <S.Icon src={rightArrow} alt='right arrow' />
+              <S.MainClassInput
+                type='text'
+                placeholder='메인 클래스 입력'
+                onChange={(e) => setTempMainClassName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setIsMainClassAdd(false);
+                    handleMainClassAdd(tempMainClassName);
+                  }
+                }}
+              />
+            </S.Grade>
+          </S.GradeWrapper>
+        )}
+        <S.AttendanceBtn onClick={() => handleMainAddBtnClick()}>
           <S.BtnIcon src={bluePlusIcon} alt='plus icon' />
         </S.AttendanceBtn>
       </S.AttendanceWrapper>
