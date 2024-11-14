@@ -8,6 +8,7 @@ const pathMappings: Record<string, string> = {
   sms: 'SMS',
   studentinfo: '학생정보',
   list: '학생목록',
+  edit: '학생목록',
   register: '학생등록',
   achievement: '성적관리',
 };
