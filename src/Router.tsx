@@ -10,12 +10,17 @@ export default function Router() {
     <BrowserRouter>
       <GlobalStyles />
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/manage' element={<Home />} />
-        <Route path='/manage/attendance/:grade/:class' element={<Attendance />} />
-        <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
-        <Route path='/manage/attendance/:grade' element={<Attendance />} />
+        <Route path='/' element={<Attendance />} />
+        <Route path='/manage' element={<Attendance />} />
         <Route path='/manage/attendance' element={<Attendance />} />
+        <Route path='/manage/attendance/all' element={<Attendance />} />
+        <Route path='/manage/attendance/all/sms' element={<Sms />} />
+        <Route path='/manage/attendance/:grade' element={<Attendance />} />
+        <Route
+          path='/manage/attendance/:grade/:class'
+          element={<Attendance />}
+        />
+        <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
         <Route path='/manage/achievement' element={<Home />} />
         <Route path='/manage/studentinfo/:type' element={<StudentInfo />} />
         <Route path='/calendar' element={<Home />} />

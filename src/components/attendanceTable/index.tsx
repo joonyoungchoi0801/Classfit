@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import * as S from './AttendanceTable.styles';
 import type { AttendanceTableProps } from './AttendanceTable.types';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
@@ -12,39 +13,93 @@ import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 
-import mockData from '@/constants/tabledata';
+import { AxiosResponse } from 'axios';
+import { getAllAttendance, getAllAttendanceDetail } from '@/api/attendanceAPI';
+import { AttendanceResponse, StudentData } from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
+import useClassStore from '@/store/classStore';
 
-interface AttendanceRecord {
-  date: string;
-  status: string;
-}
-
-interface Student {
-  name: string;
-  attendance: AttendanceRecord[];
-  isChecked: boolean;
-}
-
-function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
+function AttendanceTable({
+  selectedMonth,
+  isEditMode,
+  setStudentData,
+}: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
-  const [originalStudents, setOriginalStudents] = useState<Student[]>(
-    mockData.map((student) => ({
-      ...student,
-      isChecked: false,
-    }))
-  );
-  const [students, setStudents] = useState<Student[]>(originalStudents);
+  const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
+  const [students, setStudents] = useState<StudentData[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<string>('');
+  const [selectedStudentId, setSelectedStudentId] = useState<number>();
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [page, setPage] = useState(0);
+  const { grade, class: className } = useParams<{
+    grade?: string;
+    class?: string;
+  }>();
+
+  const { mainClassId, subClassId } = useClassStore();
+
+  const location = useLocation();
+  const url = location.pathname;
+
+  useEffect(() => {
+    const fetchAttendanceData = async () => {
+      try {
+        if (url === '/manage/attendance/all') {
+          const response: AxiosResponse<AttendanceResponse> =
+            await getAllAttendance(weekOffset, page);
+          const attendanceData = response.data;
+          if (attendanceData.statusCode === 200) {
+            const formattedData = attendanceData.data.map((student) => ({
+              ...student,
+              isChecked: false,
+              attendance: student.attendance.map((record) => ({
+                ...record,
+                status: record.status || '출석',
+              })),
+            }));
+            setOriginalStudents(formattedData);
+            setStudents(formattedData);
+          } else {
+            console.error('Error:', attendanceData.error.message);
+          }
+        } else if (!!grade && !!className) {
+          const response: AxiosResponse<AttendanceResponse> =
+            await getAllAttendanceDetail(
+              weekOffset,
+              page,
+              mainClassId,
+              subClassId
+            );
+          const attendanceData = response.data;
+          if (attendanceData.statusCode === 200) {
+            const formattedData = attendanceData.data.map((student) => ({
+              ...student,
+              isChecked: false,
+              attendance: student.attendance.map((record) => ({
+                ...record,
+                status: record.status || '출석',
+              })),
+            }));
+            setOriginalStudents(formattedData);
+            setStudents(formattedData);
+          } else {
+            console.error('Error:', attendanceData.error.message);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching attendance data:', error);
+      }
+    };
+    fetchAttendanceData();
+  }, [weekOffset, page, url]);
 
   const getIconByStatus = (status: string, isEditMode: boolean) => {
     if (status === '출석') return isEditMode ? circle_Black : circle_Blue;
     if (status === '지각') return isEditMode ? triangle_Black : triangle_Blue;
     if (status === '결석') return isEditMode ? absent_Black : absent_Blue;
-    return undefined;
+    return circle_Blue;
   };
 
   useEffect(() => {
@@ -61,6 +116,11 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     );
     setStudents(filteredStudents);
   }, [keyword]);
+
+  useEffect(() => {
+    const checkedStudents = students.filter((student) => student.isChecked);
+    setStudentData(checkedStudents);
+  }, [students]);
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -123,16 +183,18 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
     const newDate = new Date(currentDate);
     newDate.setDate(currentDate.getDate() - 7);
     setCurrentDate(newDate);
+    setWeekOffset(weekOffset - 1);
   };
 
   const handleNextWeek = () => {
     const newDate = new Date(currentDate);
     newDate.setDate(currentDate.getDate() + 7);
     setCurrentDate(newDate);
+    setWeekOffset(weekOffset + 1);
   };
 
-  const handleStudentNameClick = (name: string) => {
-    setSelectedStudent(name);
+  const handleStudentNameClick = (id: number) => {
+    setSelectedStudentId(id);
     setIsModalOpen(true);
   };
 
@@ -141,7 +203,6 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   };
 
   const handleStatusClick = (studentName: string, date: string) => {
-    if (!isEditMode) return;
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
         student.name === studentName
@@ -214,7 +275,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
                 onClick={() => handleStudentCheck(student.name)}
               />
               <S.StudentNameText
-                onClick={() => handleStudentNameClick(student.name)}
+                onClick={() => handleStudentNameClick(student.id)}
               >
                 {student.name}
               </S.StudentNameText>
@@ -245,9 +306,13 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
           </S.TableRow>
         ))}
       </S.TableBody>
-      {/* {isModalOpen && (
-        <StudentInfoModal name={selectedStudent} gender='여' grade={1} className='A' tags='수학반' studentPhone='010-0000-0000' parentPhone='010-0000-0000' address='서울시' detailInfo='서울고 재학' counseling='' isOpen={isModalOpen} onClose={handleCloseModal} />
-      )} */}
+      {isModalOpen && (
+        <StudentInfoModal
+          studentId={selectedStudentId || 0}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </S.Table>
   );
 }

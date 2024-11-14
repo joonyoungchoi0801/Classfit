@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './Attendance.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import ManageLayout from '@/components/layout/managelayout';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
-import { useNavigate } from 'react-router-dom';
+import defaultImg from '@/assets/attendanceTable/default.svg';
 import Path from '@/components/path';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
+import { StudentData } from '@/types/attendance.type';
 
 interface AttendanceRecord {
   date: string;
@@ -29,10 +30,15 @@ function Attendance() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<StudentData[]>([]);
+  const [smsQuery, setSmsQuery] = useState('');
   const { grade, class: classParam } = useParams();
-  const isSmsButtonEnabled = !!classParam;
-
   const navigate = useNavigate();
+  const location = useLocation();
+  const url = location.pathname;
+  const isTableOpen = url === '/manage/attendance/all' || !!classParam;
+  const isSmsButtonEnabled =
+    !!classParam || location.pathname === '/manage/attendance/all';
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -86,8 +92,21 @@ function Attendance() {
     URL.revokeObjectURL(url);
   };
 
+  useEffect(() => {
+    const query = selectedStudent.map((student) => student.id).join(',');
+    setSmsQuery(query);
+  }, [selectedStudent]);
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
+  };
+  console.log('selectedStudent', selectedStudent);
+
+  const handleSmsButtonClick = () => {
+    if (selectedStudent.length === 0) {
+      alert('학생을 선택해주세요.');
+      return;
+    }
+    navigate(`./sms?studentId=${smsQuery}`);
   };
 
   return (
@@ -100,7 +119,7 @@ function Attendance() {
             <S.BlueButton
               as='button'
               disabled={!isSmsButtonEnabled}
-              onClick={() => navigate('./sms')}
+              onClick={() => handleSmsButtonClick()}
             >
               <img src={sms} alt='sms icon' />
               SMS보내기
@@ -136,10 +155,22 @@ function Attendance() {
             </S.EditButton>
           </S.RightButtons>
         </S.ButtonGroup>
-        <AttendanceTable
-          selectedMonth={selectedMonth}
-          isEditMode={isEditMode}
-        />
+        {isTableOpen ? (
+          <AttendanceTable
+            selectedMonth={selectedMonth}
+            isEditMode={isEditMode}
+            setStudentData={setSelectedStudent}
+          />
+        ) : (
+          <>
+            <S.DefaultImageWrapper>
+              <S.DefaultImage src={defaultImg} />
+              <S.DefaultText>
+                클래스를 추가해 자유롭게 관리하세요 !
+              </S.DefaultText>
+            </S.DefaultImageWrapper>
+          </>
+        )}
       </S.Container>
     </ManageLayout>
   );
