@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { StudentListData } from '@/types/student.type';
+import type { StudentData, StudentListData } from '@/types/student.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteStudent, getStudent } from '@/api/studentAPI';
+import { deleteStudent, getStudent, getStudentDetail } from '@/api/studentAPI';
 
 function useStudentList() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -12,8 +12,12 @@ function useStudentList() {
   const [questionModalTitle, setQuestionModalTitle] = useState<string>('');
   const [questionModalMessage, setQuestionModalMessage] = useState<string>('');
 
+  const [isStudentModalVisible, setIsStudentModalVisible] =
+    useState<boolean>(false);
+
   const [studentListData, setStudentListData] = useState<StudentListData[]>([]);
   const [studentIds, setStudentIds] = useState<number[]>([]);
+  const [studentDetailData, setStudentDetailData] = useState<StudentData>();
 
   const {
     data: tempStudentList,
@@ -52,6 +56,20 @@ function useStudentList() {
     },
   });
 
+  const { mutateAsync: getStudentDetailData } = useMutation({
+    mutationFn: async (studentId: number) => {
+      return getStudentDetail(studentId);
+    },
+    onError: () => {
+      setModalMessage('학생 정보 조회에 실패했습니다.');
+      setIsModalVisible(true);
+    },
+    onSuccess: (data) => {
+      setStudentDetailData(data.data.data);
+      setIsStudentModalVisible(true);
+    },
+  });
+
   const handleOnSelectDelete = (id: number) => {
     setStudentIds((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
@@ -79,6 +97,10 @@ function useStudentList() {
     await refetchStudentList();
   };
 
+  const handleOnName = async (studentId: number) => {
+    await getStudentDetailData(studentId);
+  };
+
   const handleOnModalConfirm = () => {
     setIsQuestionModalVisible(false);
     _handleOnDelete();
@@ -88,19 +110,23 @@ function useStudentList() {
     setStudentIds([]);
     setIsModalVisible(false);
     setIsQuestionModalVisible(false);
+    setIsStudentModalVisible(false);
   };
 
   return {
     studentListData,
+    studentDetailData,
     studentIds,
     modalMessage,
     isModalVisible,
+    isStudentModalVisible,
     isQuestionModalVisible,
     questionModalTitle,
     questionModalMessage,
     handleOnDelete,
     handleOnSideDelete,
     handleOnSelectDelete,
+    handleOnName,
     handleOnModalConfirm,
     handleOnModalClose,
   };

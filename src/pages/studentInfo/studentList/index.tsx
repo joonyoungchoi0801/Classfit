@@ -8,6 +8,7 @@ import Path from '@/components/path';
 import useStudentList from '@/hooks/useStudentList';
 import QuestionModal from '@/components/modal/questionModal';
 import Modal from '@/components/modal';
+import StudentInfoModal from '@/components/modal/studentInfoModal';
 
 function StudentList() {
   const studentListHandler = useStudentList();
@@ -57,30 +58,40 @@ function StudentList() {
             )}
           >
             <S.TableCell $alignLeft={true}>
-              <S.IconWrapper
-                $alignLeft={true}
-                onClick={() =>
-                  studentListHandler.handleOnSelectDelete(student.studentId)
-                }
-              >
-                {studentListHandler.studentIds.includes(student.studentId) ? (
-                  <S.BtnIcon src={SelectedCheckBoxIcon} />
-                ) : (
-                  <S.BtnIcon src={CheckBoxIcon} />
-                )}
-                {student.name}
-              </S.IconWrapper>
+              <S.nameWrapper>
+                <S.IconWrapper
+                  $alignLeft={true}
+                  onClick={() =>
+                    studentListHandler.handleOnSelectDelete(student.studentId)
+                  }
+                >
+                  {studentListHandler.studentIds.includes(student.studentId) ? (
+                    <S.BtnIcon src={SelectedCheckBoxIcon} />
+                  ) : (
+                    <S.BtnIcon src={CheckBoxIcon} />
+                  )}
+                </S.IconWrapper>
+                <S.EditButton
+                  onClick={() => {
+                    studentListHandler.handleOnName(student.studentId);
+                  }}
+                  $color='var(--color-black)'
+                >
+                  {student.name}
+                </S.EditButton>
+              </S.nameWrapper>
             </S.TableCell>
             <S.TableCell>{student.isStudent ? '재학생' : '휴학생'}</S.TableCell>
             <S.TableCell>{student.studentNumber}</S.TableCell>
             <S.TableCell>
               <S.EditWrapper>
-                <S.EditButton>수정</S.EditButton>
+                <S.EditButton $color='#7d7d7d'>수정</S.EditButton>
                 <S.EditDivider>|</S.EditDivider>
                 <S.EditButton
                   onClick={() => {
                     studentListHandler.handleOnSideDelete(student.studentId);
                   }}
+                  $color='#7d7d7d'
                 >
                   삭제
                 </S.EditButton>
@@ -100,6 +111,11 @@ function StudentList() {
         onConfirm={studentListHandler.handleOnModalConfirm}
         isOpen={studentListHandler.isQuestionModalVisible}
         onCancel={studentListHandler.handleOnModalClose}
+      />
+      <StudentInfoModal
+        studentDetailData={studentListHandler.studentDetailData!}
+        isOpen={studentListHandler.isStudentModalVisible}
+        onClose={studentListHandler.handleOnModalClose}
       />
     </PS.Container>
   );

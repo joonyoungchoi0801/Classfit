@@ -28,10 +28,16 @@ export const IconWrapper = styled.div<{
 }>`
   display: flex;
   align-items: center;
-  gap: 1rem;
   justify-content: ${(props) => (props.$alignLeft ? 'flex-start' : 'center')};
+  margin-right: 1rem;
+  cursor: pointer;
+`;
+
+export const nameWrapper = styled.div`
+  display: flex;
+  align-items: center;
   width: 100%;
-  margin: 0 1rem;
+  justify-content: flex-start;
 `;
 
 export const TableHeader = styled.div`
@@ -68,13 +74,19 @@ export const EditWrapper = styled.div`
   justify-content: center;
 `;
 
-export const EditButton = styled.div`
-  color: #7d7d7d;
+export const EditButton = styled.div<{
+  $color: string;
+}>`
+  color: ${(props) => props.$color};
   font-size: 2rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   cursor: pointer;
+  &:hover {
+    color: var(--color-blue);
+    border-bottom: 0.1rem solid var(--color-blue);
+  }
 `;
 
 export const EditDivider = styled.div`

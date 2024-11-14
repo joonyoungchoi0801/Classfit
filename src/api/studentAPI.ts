@@ -3,6 +3,7 @@ import instance from './instance';
 import { API_STUDENT } from '@/constants/API';
 
 import type {
+  GetStudentDetailResponse,
   GetStudentResponse,
   PatchedStudentData,
   StudentData,
@@ -24,7 +25,9 @@ export const postStudent = (data: StudentData) => {
   });
 };
 
-export const getStudentDetail = (studentId: number) => {
+export const getStudentDetail = (
+  studentId: number
+): Promise<AxiosResponse<GetStudentDetailResponse>> => {
   return instance({
     url: API_STUDENT.STUDENTDETAIL(studentId),
     method: 'GET',

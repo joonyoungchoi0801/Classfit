@@ -6,6 +6,14 @@ export interface GetStudentResponse {
   message: string;
 }
 
+export interface GetStudentDetailResponse {
+  statusCode: number;
+  resultType: string;
+  data: StudentData;
+  error: { message: string };
+  message: string;
+}
+
 export interface StudentListData {
   studentId: number;
   name: string;
