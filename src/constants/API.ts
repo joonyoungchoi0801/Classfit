@@ -4,7 +4,7 @@ export const API_SUBCLASS = Object.freeze({
 });
 
 export const API_ATTENDANCE = Object.freeze({
-  ATTENDANCE: '/home',
+  ATTENDANCE: '/home/',
   ATTENDANCEDETAIL: (mainClassId: number, subClassId: number) =>
     `/manage/attendance/${mainClassId}/${subClassId}`,
 });

@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAllAttendance } from '@/api/attendanceAPI';
+import { Student, AttendanceResponse } from '@/types/attendance.type';
+import { AxiosResponse } from 'axios';
 import * as S from './ManageSidebar.styles';
 import downArrow from '@/assets/managesidebar/downarrow.svg';
 import rightArrow from '@/assets/managesidebar/rightarrow.svg';
@@ -42,6 +45,23 @@ function Attendance() {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [tempClassName, setTempClassName] = useState<string>('');
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => { fetchAttendanceData(); }, []);
+
+  const fetchAttendanceData = async () => {
+    try {
+      const response: AxiosResponse<AttendanceResponse> = await getAllAttendance(0, 0);
+      if (response.data.resultType === 'SUCCESS') {
+        setStudents(response.data.data);
+      }
+      else {
+        console.error('Failed to fetch attendance data:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+    }
+  };
 
   const handleGradeClick = (grade: number) => {
     navigate(`/manage/attendance/${grade}학년`);
@@ -87,7 +107,7 @@ function Attendance() {
   return (
     <>
       <S.AttendanceWrapper>
-        <S.AttendanceBtn>전체학생</S.AttendanceBtn>
+        <S.AttendanceBtn onClick={fetchAttendanceData}>전체학생</S.AttendanceBtn>
         {classData.map((data, index) => (
           <S.ManageWrapper key={data.grade + index}>
             <S.GradeWrapper onClick={() => handleGradeClick(data.grade)}>
