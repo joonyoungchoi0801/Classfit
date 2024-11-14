@@ -70,9 +70,7 @@ function StudentRegister() {
               options={Object.keys(studentRegisterHandler.classInfo)}
               value={studentRegisterHandler.studentData.grade}
               placeholder='학년 선택'
-              onChange={(
-                value //1학년
-              ) =>
+              onChange={(value) =>
                 studentRegisterHandler.handleOnChangeValue(
                   STUDENT_FIELD.GRADE,
                   value
@@ -88,7 +86,7 @@ function StudentRegister() {
                   studentRegisterHandler.studentData.grade
                 ]
               }
-              value={studentRegisterHandler.studentData.subClassList}
+              // value={studentRegisterHandler.studentData.subClassList}
               placeholder='클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeSubClassValue(

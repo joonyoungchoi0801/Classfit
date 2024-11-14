@@ -92,7 +92,7 @@ function useStudentRegister() {
   };
 
   const handleOnChangeGenderValue = (field: string, value: string) => {
-    if (value === '남자') {
+    if (value === '남') {
       setStudentData((prevData) => ({
         ...prevData,
         [field]: 'MALE',
