@@ -8,7 +8,7 @@ function Info() {
     <S.InfoWrapper>
       <S.Info
         onClick={() => navigate('/manage/studentinfo/list')}
-        $isSelected={type === 'list'}
+        $isSelected={type === 'list' || type === 'edit'}
       >
         학생목록
       </S.Info>

@@ -286,7 +286,7 @@ function AttendanceTable({
                 (record) => record.date === date.date.slice(0, 5)
               );
               const statusIcon = getIconByStatus(
-                attendanceRecord?.status || '출석',
+                attendanceRecord?.status || '',
                 isEditMode
               );
 

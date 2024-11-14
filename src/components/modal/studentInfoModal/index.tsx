@@ -4,6 +4,7 @@ import Button from '@/components/button';
 import * as S from './StudentInfoModal.styles';
 import type { StudentInfoModalProps } from './StudentInfoModal.types';
 import GirlIcon from '@/assets/modal/girl.svg';
+import BoyIcon from '@/assets/modal/boy.svg';
 
 const StudentInfoModal = ({
   studentDetailData,
@@ -18,7 +19,10 @@ const StudentInfoModal = ({
         <S.Header>학생정보</S.Header>
         <S.Content>
           <S.ProfileImageWrapper>
-            <S.ProfileImage src={GirlIcon} alt='학생 이미지' />
+            <S.ProfileImage
+              src={studentDetailData.gender === 'FEMALE' ? GirlIcon : BoyIcon}
+              alt='학생 이미지'
+            />
           </S.ProfileImageWrapper>
           <S.InfoWrapper>
             <S.Info>
