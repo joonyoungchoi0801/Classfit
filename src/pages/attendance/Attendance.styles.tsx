@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const Container = styled.div`
   padding: 2.5rem;
   background-color: var(--color-white);
-  flex-grow: 1;
   width: 100%;
+  position: relative;
 `;
 
 export const AttendanceTitle = styled.h1`
@@ -21,6 +21,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.94rem;
+  z-index: 20;
 `;
 
 export const LeftButtons = styled.div`
@@ -156,4 +157,30 @@ export const EditButton = styled.div<{ $isEditMode: boolean }>`
   font-weight: 600;
   line-height: 1.792rem;
   cursor: pointer;
+`;
+
+export const DefaultImageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: var(--color-white);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const DefaultImage = styled.img`
+  width: 19.25rem;
+  height: 22.6551rem;
+`;
+
+export const DefaultText = styled.p`
+  color: #414141;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;
