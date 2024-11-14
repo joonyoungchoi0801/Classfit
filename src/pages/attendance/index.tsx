@@ -5,7 +5,8 @@ import ManageLayout from '@/components/layout/managelayout';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
-import { useNavigate } from 'react-router-dom';
+import defaultImg from '@/assets/attendanceTable/default.svg';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
 import { useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -22,6 +23,9 @@ interface Student {
 }
 
 function Attendance() {
+  const location = useLocation();
+  const url = location.pathname;
+
   const currentMonth = new Date().getMonth() + 1;
   const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(
     Math.max(0, currentMonth - 6)
@@ -31,6 +35,8 @@ function Attendance() {
   const [isEditMode, setIsEditMode] = useState(false);
   const { grade, class: classParam } = useParams();
   const isSmsButtonEnabled = !!classParam;
+
+  const isTableOpen = url === '/manage/attendance/all' || !!classParam;
 
   const navigate = useNavigate();
 
@@ -136,10 +142,21 @@ function Attendance() {
             </S.EditButton>
           </S.RightButtons>
         </S.ButtonGroup>
-        <AttendanceTable
-          selectedMonth={selectedMonth}
-          isEditMode={isEditMode}
-        />
+        {isTableOpen ? (
+          <AttendanceTable
+            selectedMonth={selectedMonth}
+            isEditMode={isEditMode}
+          />
+        ) : (
+          <>
+            <S.DefaultImageWrapper>
+              <S.DefaultImage src={defaultImg} />
+              <S.DefaultText>
+                클래스를 추가해 자유롭게 관리하세요 !
+              </S.DefaultText>
+            </S.DefaultImageWrapper>
+          </>
+        )}
       </S.Container>
     </ManageLayout>
   );
