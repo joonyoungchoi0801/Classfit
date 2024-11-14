@@ -5,6 +5,7 @@ import { API_STUDENT } from '@/constants/API';
 import type {
   GetStudentDetailResponse,
   GetStudentResponse,
+  GetStudentSearchResponse,
   PatchedStudentData,
   StudentData,
 } from '@/types/student.type';
@@ -54,7 +55,9 @@ export const patchStudentDetail = (
   });
 };
 
-export const getStudentSearch = (name: string) => {
+export const getStudentSearch = (
+  name: string
+): Promise<AxiosResponse<GetStudentSearchResponse>> => {
   return instance({
     url: API_STUDENT.STUDENTSEARCH,
     method: 'GET',

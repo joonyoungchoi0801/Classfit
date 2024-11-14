@@ -14,6 +14,14 @@ export interface GetStudentDetailResponse {
   message: string;
 }
 
+export interface GetStudentSearchResponse {
+  statusCode: number;
+  resultType: string;
+  data: StudentListData[];
+  error: { message: string };
+  message: string;
+}
+
 export interface StudentListData {
   studentId: number;
   name: string;

@@ -6,7 +6,7 @@ export const Table = styled.div`
   border-collapse: collapse;
   margin-top: 1rem;
   margin-bottom: 14rem;
-  background-color: white;
+  background-color: var(--color-white);
   box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
   border-radius: 0.4rem;
   height: calc(100vh - 20rem);
@@ -17,7 +17,9 @@ export const TableRow = styled.div<{
   $isSelected: boolean;
 }>`
   display: table-row;
-  background-color: ${(props) => (props.$isSelected ? '#e3f2fd' : 'white')};
+  width: 100%;
+  background-color: ${(props) =>
+    props.$isSelected ? '#E0EBFF' : 'var(--color-white)'};
   &:hover {
     background-color: #f5f5f5;
   }
@@ -42,10 +44,12 @@ export const nameWrapper = styled.div`
 
 export const TableHeader = styled.div`
   display: table-row;
+  width: 100%;
   font-weight: 500;
   background-color: #f9f9f9;
   color: #999999;
   font-size: 1.8rem;
+  height: 6rem;
 `;
 
 export const TableCell = styled.div<{

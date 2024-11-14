@@ -7,6 +7,7 @@ export const Container = styled.div`
   padding: 4rem;
   overflow: hidden;
   overflow-y: auto;
+  width: 100%;
 `;
 
 export const TitleWrapper = styled.div`

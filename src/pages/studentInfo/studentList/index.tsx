@@ -42,7 +42,16 @@ function StudentList() {
           <S.TableCell $isHeader={true}>
             <S.InputContainer>
               <S.BtnIcon src={SearchIcon} />
-              <S.Input placeholder='이름을 검색해보세요.' />
+              <S.Input
+                placeholder='이름을 검색해보세요.'
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    console.log('e', e);
+                    studentListHandler.handleOnSearch(e);
+                  }
+                }}
+                onChange={(e) => studentListHandler.handleOnSearchChange(e)}
+              />
             </S.InputContainer>
           </S.TableCell>
           <S.TableCell $isHeader={true}>상태</S.TableCell>
@@ -50,7 +59,7 @@ function StudentList() {
           <S.TableCell $isHeader={true}>관리</S.TableCell>
         </S.TableHeader>
 
-        {studentListHandler.studentListData.map((student) => (
+        {studentListHandler.studentVisibleData.map((student) => (
           <S.TableRow
             key={student.studentId}
             $isSelected={studentListHandler.studentIds.includes(

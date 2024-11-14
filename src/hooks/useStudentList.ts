@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import type { StudentData, StudentListData } from '@/types/student.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteStudent, getStudent, getStudentDetail } from '@/api/studentAPI';
+import {
+  deleteStudent,
+  getStudent,
+  getStudentDetail,
+  getStudentSearch,
+} from '@/api/studentAPI';
 
 function useStudentList() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -16,6 +21,10 @@ function useStudentList() {
     useState<boolean>(false);
 
   const [studentListData, setStudentListData] = useState<StudentListData[]>([]);
+  const [studentVisibleData, setStudentVisibleData] = useState<
+    StudentListData[]
+  >([]);
+
   const [studentIds, setStudentIds] = useState<number[]>([]);
   const [studentDetailData, setStudentDetailData] = useState<StudentData>();
 
@@ -35,6 +44,7 @@ function useStudentList() {
 
   useEffect(() => {
     if (tempStudentList) {
+      setStudentVisibleData(tempStudentList);
       setStudentListData(tempStudentList);
     }
   }, [tempStudentList]);
@@ -70,6 +80,22 @@ function useStudentList() {
     },
   });
 
+  const { mutateAsync: getStudentSearchData } = useMutation({
+    mutationFn: async (studentName: string) => {
+      return getStudentSearch(studentName);
+    },
+    onError: () => {
+      setModalMessage('학생 검색에 실패했습니다.');
+      setIsModalVisible(true);
+    },
+    onSuccess: (data) => {
+      console.log('data', data);
+      setStudentVisibleData(
+        Array.isArray(data.data.data) ? data.data.data : [data.data.data]
+      );
+    },
+  });
+
   const handleOnSelectDelete = (id: number) => {
     setStudentIds((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
@@ -101,6 +127,17 @@ function useStudentList() {
     await getStudentDetailData(studentId);
   };
 
+  const handleOnSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    await getStudentSearchData(e.currentTarget.value);
+  };
+
+  const handleOnSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    if (value === '') {
+      setStudentVisibleData(studentListData);
+    }
+  };
+
   const handleOnModalConfirm = () => {
     setIsQuestionModalVisible(false);
     _handleOnDelete();
@@ -115,6 +152,7 @@ function useStudentList() {
 
   return {
     studentListData,
+    studentVisibleData,
     studentDetailData,
     studentIds,
     modalMessage,
@@ -127,6 +165,8 @@ function useStudentList() {
     handleOnSideDelete,
     handleOnSelectDelete,
     handleOnName,
+    handleOnSearch,
+    handleOnSearchChange,
     handleOnModalConfirm,
     handleOnModalClose,
   };
