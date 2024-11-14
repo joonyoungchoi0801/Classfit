@@ -166,7 +166,7 @@ function Attendance() {
   return (
     <>
       <S.AttendanceWrapper>
-        <S.AttendanceBtn>전체학생</S.AttendanceBtn>
+        <S.AttendanceBtn onClick={() => navigate('/manage/attendance/all')}>전체학생</S.AttendanceBtn>
         {classData?.map((data, index) => (
           <S.ManageWrapper key={data.mainClassId}>
             <S.GradeWrapper

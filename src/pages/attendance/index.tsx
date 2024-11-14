@@ -5,9 +5,8 @@ import ManageLayout from '@/components/layout/managelayout';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
-import { useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
 
@@ -30,9 +29,10 @@ function Attendance() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
   const { grade, class: classParam } = useParams();
-  const isSmsButtonEnabled = !!classParam;
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSmsButtonEnabled = !!classParam || location.pathname === '/manage/attendance/all';
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

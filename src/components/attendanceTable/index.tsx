@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import * as S from './AttendanceTable.styles';
 import type { AttendanceTableProps } from './AttendanceTable.types';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
@@ -28,33 +29,34 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [weekOffset, setWeekOffset] = useState(0);
   const [page, setPage] = useState(0);
 
+  const location = useLocation();
+  const url = location.pathname;
+
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
-        const response: AxiosResponse<AttendanceResponse> = await getAllAttendance(weekOffset, page);
-        const attendanceData = response.data;
-
-        if (attendanceData.statusCode === 200) {
-          const formattedData = attendanceData.data.map(student => ({
-            ...student,
-            isChecked: false,
-            attendance: student.attendance.map(record => ({
-              ...record, status: record.status || '출석', // 출결 상태가 없을 때 '출석'으로 초기화 
-            })),
-          }));
-
-          setOriginalStudents(formattedData);
-          setStudents(formattedData);
-        } else {
-          console.error("Error:", attendanceData.error.message);
+        if (url === '/manage/attendance/all') {
+          const response: AxiosResponse<AttendanceResponse> = await getAllAttendance(weekOffset, page);
+          const attendanceData = response.data;
+          if (attendanceData.statusCode === 200) {
+            const formattedData = attendanceData.data.map(student => ({
+              ...student,
+              isChecked: false,
+              attendance: student.attendance.map(record => ({
+                ...record, status: record.status || '출석',
+              })),
+            }));
+            setOriginalStudents(formattedData);
+            setStudents(formattedData);
+          } else {
+            console.error("Error:", attendanceData.error.message);
+          }
         }
       } catch (error) {
         console.error("Error fetching attendance data:", error);
       }
-    };
-
-    fetchAttendanceData();
-  }, [weekOffset, page]);
+    }; fetchAttendanceData();
+  }, [weekOffset, page, url]);
 
   const getIconByStatus = (status: string, isEditMode: boolean) => {
     if (status === '출석') return isEditMode ? circle_Black : circle_Blue;
