@@ -3,14 +3,15 @@ import * as S from './StudentEdit.styles';
 import * as PS from '@/pages/studentInfo/StudentInfo.styles';
 import DropDown from '@/components/dropDown';
 import Button from '@/components/button';
-import useStudentRegister from '@/hooks/useStudentRegister';
+import useStudentRegister from '@/hooks/student/useStudentRegister';
 import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
+import useStudentEdit from '@/hooks/student/useStudentEdit';
 
 function StudentEdit({ studentId }: { studentId: string }) {
   const genderLst = ['남', '여'];
-  const studentRegisterHandler = useStudentRegister();
+  const studentRegisterHandler = useStudentEdit(studentId);
 
   return (
     <PS.Container>
@@ -86,7 +87,7 @@ function StudentEdit({ studentId }: { studentId: string }) {
                   studentRegisterHandler.studentData.grade
                 ]
               }
-              // value={studentRegisterHandler.studentData.subClassList}
+              value={studentRegisterHandler.studentData.subClassList}
               placeholder='클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeSubClassValue(

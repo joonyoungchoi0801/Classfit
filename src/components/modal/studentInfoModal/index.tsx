@@ -12,7 +12,6 @@ const StudentInfoModal = ({
   onClose,
 }: StudentInfoModalProps) => {
   if (!isOpen) return null;
-  console.log(studentDetailData);
 
   return ReactDOM.createPortal(
     <S.ModalWrapper>

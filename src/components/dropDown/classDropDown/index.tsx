@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ClassDropDownProps } from './ClassDropDown.types';
 import * as PS from '@/components/dropDown/DropDown.styles';
 import * as S from './ClassDropDown.styles';
@@ -6,6 +6,7 @@ import * as S from './ClassDropDown.styles';
 function ClassDropDown({
   options = [],
   placeholder = '선택',
+  value,
   onChange,
 }: ClassDropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,20 @@ function ClassDropDown({
     setIsOpen(false);
     if (onChange) onChange(option);
   };
+
+  useEffect(() => {
+    if (value && value.length > 0) {
+      const option = options.find((option) => option.subClassName === value[0]);
+      if (!option) return;
+      setSelectedOption([option.subClassId]);
+    }
+  }, [value]);
+
+  // useEffect(() => {
+  //   if (options.length === 0) {
+  //     setSelectedOption([]);
+  //   }
+  // }, [options]);
 
   return (
     <PS.SelectWrapper>

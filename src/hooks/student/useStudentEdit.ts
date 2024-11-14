@@ -1,13 +1,22 @@
 import { useEffect, useState } from 'react';
-import type { StudentData } from '@/types/student.type';
+import type {
+  PatchedStudentData,
+  StudentData,
+  StudentViewData,
+} from '@/types/student.type';
 import { STUDENT_FIELD, STUDENT_FIELD_LIST } from '@/constants/STUDENT';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { postStudent } from '@/api/studentAPI';
+import {
+  getStudentDetail,
+  patchStudentDetail,
+  postStudent,
+} from '@/api/studentAPI';
 import { getClassInfo } from '@/api/classAPI';
 import { ClassData } from '@/types/class.type';
+import { useNavigate } from 'react-router-dom';
 
-function useStudentRegister() {
-  const initialStudentData: StudentData = {
+function useStudentEdit(studentId: string) {
+  const initialStudentData: StudentViewData = {
     [STUDENT_FIELD.NAME]: '',
     [STUDENT_FIELD.GENDER]: '',
     [STUDENT_FIELD.BIRTH]: '',
@@ -26,7 +35,11 @@ function useStudentRegister() {
   >({});
 
   const [studentData, setStudentData] =
-    useState<StudentData>(initialStudentData);
+    useState<StudentViewData>(initialStudentData);
+  const [studentPatchedData, setStudentPatchedData] =
+    useState<PatchedStudentData>({});
+
+  const navigate = useNavigate();
 
   const {
     data: tempClassInfo,
@@ -55,24 +68,41 @@ function useStudentRegister() {
     },
   });
 
+  const {
+    data: tempStudentData,
+    error: getStudentDataError,
+    isFetching: isFetchingStudentData,
+  } = useQuery({
+    queryKey: ['studentViewData'],
+    queryFn: () => getStudentDetail(Number(studentId)),
+    staleTime: 0,
+    select: (data) => {
+      return data.data.data;
+    },
+  });
+
+  useEffect(() => {
+    if (tempStudentData) {
+      setStudentData(tempStudentData);
+    }
+  }, [tempStudentData]);
+
   useEffect(() => {
     if (tempClassInfo) {
       setClassInfo(tempClassInfo);
     }
   }, [tempClassInfo]);
 
-  const { mutateAsync: postStudentData } = useMutation({
-    mutationFn: async (data: StudentData) => {
-      console.log('data:', data);
-      return postStudent(data);
+  const { mutateAsync: patchStudentDetailData } = useMutation({
+    mutationFn: async (data: PatchedStudentData) => {
+      return patchStudentDetail(Number(studentId), data);
     },
     onError: () => {
-      setModalMessage('학생 등록에 실패했습니다.');
+      setModalMessage('학생 정보 수정에 실패했습니다.');
       setIsModalVisible(true);
     },
     onSuccess: () => {
-      setModalMessage('학생 등록이 완료되었습니다.');
-      setStudentData(initialStudentData);
+      setModalMessage('학생 정보 수정이 완료되었습니다.');
       setIsModalVisible(true);
     },
   });
@@ -82,23 +112,27 @@ function useStudentRegister() {
       ...prevData,
       [field]: value,
     }));
+    setStudentPatchedData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   const handleOnChangeSubClassValue = (field: string, value: number) => {
-    setStudentData((prevData) => ({
+    setStudentPatchedData((prevData) => ({
       ...prevData,
-      subClassList: [...prevData.subClassList, value],
+      [field]: [value],
     }));
   };
 
   const handleOnChangeGenderValue = (field: string, value: string) => {
     if (value === '남') {
-      setStudentData((prevData) => ({
+      setStudentPatchedData((prevData) => ({
         ...prevData,
         [field]: 'MALE',
       }));
     } else {
-      setStudentData((prevData) => ({
+      setStudentPatchedData((prevData) => ({
         ...prevData,
         [field]: 'FEMALE',
       }));
@@ -106,9 +140,9 @@ function useStudentRegister() {
   };
 
   const validateStudentData = (): boolean => {
-    for (const field of STUDENT_FIELD_LIST) {
+    for (const field of Object.keys(studentPatchedData)) {
       if (field === STUDENT_FIELD.SUB_CLASS_LIST) {
-        if (studentData[field].length === 0) {
+        if (studentPatchedData[field]!.length === 0) {
           return false;
         }
       } else if (
@@ -116,8 +150,13 @@ function useStudentRegister() {
         field === STUDENT_FIELD.COUNSELING_LOG
       ) {
         continue;
+      } else if (
+        field === STUDENT_FIELD.GRADE &&
+        !Object.keys(studentPatchedData).includes(STUDENT_FIELD.SUB_CLASS_LIST)
+      ) {
+        return false;
       } else {
-        if (studentData[field as keyof StudentData] === '') {
+        if (studentPatchedData[field as keyof StudentViewData] === '') {
           return false;
         }
       }
@@ -126,9 +165,13 @@ function useStudentRegister() {
   };
 
   const handleOnSave = async () => {
+    if (Object.keys(studentPatchedData).length === 0) {
+      setModalMessage('변경된 내용이 없습니다.');
+      setIsModalVisible(true);
+      return;
+    }
     if (validateStudentData()) {
-      //필드값 검증되었을 경우
-      await postStudentData(studentData);
+      await patchStudentDetailData(studentPatchedData);
       return;
     }
     //필드값 검증에 실패했을 경우
@@ -139,6 +182,7 @@ function useStudentRegister() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
+    navigate('/manage/studentinfo/list');
   };
 
   const handleOnCancel = () => {
@@ -161,4 +205,4 @@ function useStudentRegister() {
   };
 }
 
-export default useStudentRegister;
+export default useStudentEdit;

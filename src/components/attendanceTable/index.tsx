@@ -28,10 +28,12 @@ interface Student {
 
 function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
-  const [originalStudents, setOriginalStudents] = useState<Student[]>(mockData.map(student => ({
-    ...student,
-    isChecked: false,
-  })));
+  const [originalStudents, setOriginalStudents] = useState<Student[]>(
+    mockData.map((student) => ({
+      ...student,
+      isChecked: false,
+    }))
+  );
   const [students, setStudents] = useState<Student[]>(originalStudents);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -66,19 +68,23 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
 
   const handleAllCheck = () => {
     setIsAllChecked(!isAllChecked);
-    setStudents(students.map(student => ({
-      ...student,
-      isChecked: !isAllChecked,
-    })));
+    setStudents(
+      students.map((student) => ({
+        ...student,
+        isChecked: !isAllChecked,
+      }))
+    );
   };
 
   const handleStudentCheck = (name: string) => {
     setStudents((prevStudents) => {
       const updatedStudents = prevStudents.map((student) =>
-        student.name === name ? { ...student, isChecked: !student.isChecked } : student
+        student.name === name
+          ? { ...student, isChecked: !student.isChecked }
+          : student
       );
 
-      const allChecked = updatedStudents.every(student => student.isChecked);
+      const allChecked = updatedStudents.every((student) => student.isChecked);
       setIsAllChecked(allChecked);
 
       return updatedStudents;
@@ -140,21 +146,21 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
       prevStudents.map((student) =>
         student.name === studentName
           ? {
-            ...student,
-            attendance: student.attendance.map((attendanceRecord) =>
-              attendanceRecord.date === date
-                ? {
-                  ...attendanceRecord,
-                  status:
-                    attendanceRecord.status === '출석'
-                      ? '지각'
-                      : attendanceRecord.status === '지각'
-                        ? '결석'
-                        : '출석',
-                }
-                : attendanceRecord
-            ),
-          }
+              ...student,
+              attendance: student.attendance.map((attendanceRecord) =>
+                attendanceRecord.date === date
+                  ? {
+                      ...attendanceRecord,
+                      status:
+                        attendanceRecord.status === '출석'
+                          ? '지각'
+                          : attendanceRecord.status === '지각'
+                            ? '결석'
+                            : '출석',
+                    }
+                  : attendanceRecord
+              ),
+            }
           : student
       )
     );
@@ -165,9 +171,9 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
       <S.TableHeader>
         <S.SearchContainer>
           <S.CheckBox
-            as="img"
+            as='img'
             src={isAllChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
-            alt="Select All"
+            alt='Select All'
             onClick={handleAllCheck}
           />
           <S.SearchInput
@@ -181,7 +187,14 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
           onClick={handlePrevWeek}
         />
         {weekDates.map(({ date, isToday }, index) => (
-          <S.PaginationItem key={index} style={{ color: isToday ? 'var(--color-blue)' : 'var(--color-black)' }}>{date}</S.PaginationItem>
+          <S.PaginationItem
+            key={index}
+            style={{
+              color: isToday ? 'var(--color-blue)' : 'var(--color-black)',
+            }}
+          >
+            {date}
+          </S.PaginationItem>
         ))}
         <S.ArrowButton
           src={paginationRight}
@@ -192,18 +205,17 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
 
       <S.TableBody>
         {students.map((student, i) => (
-          <S.TableRow
-            key={student.name + i}
-            $isSelected={student.isChecked}
-          >
+          <S.TableRow key={student.name + i} $isSelected={student.isChecked}>
             <S.StudentName>
               <S.CheckBox
-                as="img"
+                as='img'
                 src={student.isChecked ? SelectedCheckBoxIcon : CheckBoxIcon}
-                alt="Check Student"
+                alt='Check Student'
                 onClick={() => handleStudentCheck(student.name)}
               />
-              <S.StudentNameText onClick={() => handleStudentNameClick(student.name)}>
+              <S.StudentNameText
+                onClick={() => handleStudentNameClick(student.name)}
+              >
                 {student.name}
               </S.StudentNameText>
             </S.StudentName>
@@ -212,14 +224,19 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
               const attendanceRecord = student.attendance.find(
                 (record) => record.date === date.date.slice(0, 5)
               );
-              const statusIcon = getIconByStatus(attendanceRecord?.status || '', isEditMode);
+              const statusIcon = getIconByStatus(
+                attendanceRecord?.status || '',
+                isEditMode
+              );
 
               return (
                 <S.PaginationItem key={date.date}>
                   <S.StatusIcon
                     src={statusIcon}
                     alt={attendanceRecord?.status}
-                    onClick={() => handleStatusClick(student.name, date.date.slice(0, 5))}
+                    onClick={() =>
+                      handleStatusClick(student.name, date.date.slice(0, 5))
+                    }
                   />
                 </S.PaginationItem>
               );
@@ -228,9 +245,9 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
           </S.TableRow>
         ))}
       </S.TableBody>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <StudentInfoModal name={selectedStudent} gender='여' grade={1} className='A' tags='수학반' studentPhone='010-0000-0000' parentPhone='010-0000-0000' address='서울시' detailInfo='서울고 재학' counseling='' isOpen={isModalOpen} onClose={handleCloseModal} />
-      )}
+      )} */}
     </S.Table>
   );
 }

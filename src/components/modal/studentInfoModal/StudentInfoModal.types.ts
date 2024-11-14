@@ -1,7 +1,7 @@
-import type { StudentData } from '@/types/student.type';
+import type { StudentViewData } from '@/types/student.type';
 
 export interface StudentInfoModalProps {
-  studentDetailData: StudentData;
+  studentDetailData: StudentViewData;
   isOpen: boolean;
   onClose: () => void;
 }

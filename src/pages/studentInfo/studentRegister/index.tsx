@@ -3,7 +3,7 @@ import * as S from './StudentRegister.styles';
 import * as PS from '@/pages/studentInfo/StudentInfo.styles';
 import DropDown from '@/components/dropDown';
 import Button from '@/components/button';
-import useStudentRegister from '@/hooks/useStudentRegister';
+import useStudentRegister from '@/hooks/student/useStudentRegister';
 import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
