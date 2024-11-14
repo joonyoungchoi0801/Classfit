@@ -1,8 +1,12 @@
+import { AxiosResponse } from 'axios';
 import instance from './instance';
-
 import { API_ATTENDANCE } from '@/constants/API';
+import { AttendanceResponse } from '@/types/attendance.type';
 
-export const getAllAttendance = (weekOffset: number, page: number) => {
+export const getAllAttendance = (
+  weekOffset: number,
+  page: number
+): Promise<AxiosResponse<AttendanceResponse>> => {
   return instance({
     url: API_ATTENDANCE.ATTENDANCE,
     method: 'GET',

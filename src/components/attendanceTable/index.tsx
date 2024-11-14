@@ -12,37 +12,55 @@ import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 
-import mockData from '@/constants/tabledata';
+import { AxiosResponse } from 'axios';
+import { getAllAttendance } from '@/api/attendanceAPI';
+import { AttendanceResponse, StudentData } from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
-
-interface AttendanceRecord {
-  date: string;
-  status: string;
-}
-
-interface Student {
-  name: string;
-  attendance: AttendanceRecord[];
-  isChecked: boolean;
-}
 
 function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
-  const [originalStudents, setOriginalStudents] = useState<Student[]>(mockData.map(student => ({
-    ...student,
-    isChecked: false,
-  })));
-  const [students, setStudents] = useState<Student[]>(originalStudents);
+  const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
+  const [students, setStudents] = useState<StudentData[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string>('');
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    const fetchAttendanceData = async () => {
+      try {
+        const response: AxiosResponse<AttendanceResponse> = await getAllAttendance(weekOffset, page);
+        const attendanceData = response.data;
+
+        if (attendanceData.statusCode === 200) {
+          const formattedData = attendanceData.data.map(student => ({
+            ...student,
+            isChecked: false,
+            attendance: student.attendance.map(record => ({
+              ...record, status: record.status || '출석', // 출결 상태가 없을 때 '출석'으로 초기화 
+            })),
+          }));
+
+          setOriginalStudents(formattedData);
+          setStudents(formattedData);
+        } else {
+          console.error("Error:", attendanceData.error.message);
+        }
+      } catch (error) {
+        console.error("Error fetching attendance data:", error);
+      }
+    };
+
+    fetchAttendanceData();
+  }, [weekOffset, page]);
 
   const getIconByStatus = (status: string, isEditMode: boolean) => {
     if (status === '출석') return isEditMode ? circle_Black : circle_Blue;
     if (status === '지각') return isEditMode ? triangle_Black : triangle_Blue;
     if (status === '결석') return isEditMode ? absent_Black : absent_Blue;
-    return undefined;
+    return circle_Blue;
   };
 
   useEffect(() => {
@@ -136,6 +154,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
 
   const handleStatusClick = (studentName: string, date: string) => {
     if (!isEditMode) return;
+
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
         student.name === studentName
@@ -212,7 +231,7 @@ function AttendanceTable({ selectedMonth, isEditMode }: AttendanceTableProps) {
               const attendanceRecord = student.attendance.find(
                 (record) => record.date === date.date.slice(0, 5)
               );
-              const statusIcon = getIconByStatus(attendanceRecord?.status || '', isEditMode);
+              const statusIcon = getIconByStatus(attendanceRecord?.status || '출석', isEditMode);
 
               return (
                 <S.PaginationItem key={date.date}>
