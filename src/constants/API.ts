@@ -16,7 +16,7 @@ export const API_MAINCLASS = Object.freeze({
 });
 
 export const API_STUDENT = Object.freeze({
-  STUDENT: '/v1/student',
+  STUDENT: '/v1/student/',
   STUDENTDETAIL: (studentId: number) => `/v1/student/${studentId}`,
   STUDENTSEARCH: '/v1/student/search',
 });
