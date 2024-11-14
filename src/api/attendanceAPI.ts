@@ -17,14 +17,18 @@ export const getAllAttendance = (
   });
 };
 
-export const getAllAttendanceDetail = () =>
-  // 매개변수 넣기
-  {
-    return instance({
-      url: API_ATTENDANCE.ATTENDANCEDETAIL(1, 1 /* */),
-      method: 'GET',
-      params: {
-        // 변수넣기
-      },
-    });
-  };
+export const getAllAttendanceDetail = (
+  weekOffset: number,
+  page: number,
+  mainClassId: number,
+  subClassId: number
+) => {
+  return instance({
+    url: API_ATTENDANCE.ATTENDANCEDETAIL(mainClassId, subClassId),
+    method: 'GET',
+    params: {
+      weekOffset,
+      page,
+    },
+  });
+};

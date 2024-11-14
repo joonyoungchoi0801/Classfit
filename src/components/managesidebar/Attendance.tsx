@@ -12,12 +12,15 @@ import { getClassList } from '@/api/classAPI';
 import { deleteSubClass, patchSubClass, postSubClass } from '@/api/subclassAPI';
 import { postMainClass } from '@/api/mainclassAPI';
 import axios from 'axios';
+import useClassStore from '@/store/classStore';
 
 function Attendance() {
   const { grade, class: className } = useParams<{
     grade?: string;
     class?: string;
   }>();
+  const { setMainClassId, setSubClassId } = useClassStore();
+
   const navigate = useNavigate();
   const [selectedGrade, setSelectedGrade] = useState<string>('');
   const [classData, setClassData] = useState<ClassDataForm[] | undefined>();
@@ -51,12 +54,19 @@ function Attendance() {
     setIsMainClassAdd(false);
   };
 
-  const handleClassClick = (grade: string, className: string) => {
+  const handleClassClick = (
+    grade: string,
+    className: string,
+    mainClassId: number,
+    subClassId: number
+  ) => {
     navigate(`/manage/attendance/${grade}/${className}`);
     setSelectedClass(className);
     setIsPopupOpen(false);
     setIsSubClassAdd(false);
     setIsMainClassAdd(false);
+    setSubClassId(subClassId);
+    setMainClassId(mainClassId);
   };
 
   const handleClassDelete = async (subClassId: number) => {
@@ -166,7 +176,9 @@ function Attendance() {
   return (
     <>
       <S.AttendanceWrapper>
-        <S.AttendanceBtn onClick={() => navigate('/manage/attendance/all')}>전체학생</S.AttendanceBtn>
+        <S.AttendanceBtn onClick={() => navigate('/manage/attendance/all')}>
+          전체학생
+        </S.AttendanceBtn>
         {classData?.map((data, index) => (
           <S.ManageWrapper key={data.mainClassId}>
             <S.GradeWrapper
@@ -192,7 +204,12 @@ function Attendance() {
                 <S.ClassContainer
                   key={classData.subClassId + classData.mainClassId}
                   onClick={() =>
-                    handleClassClick(data.mainClassName, classData.subClassName)
+                    handleClassClick(
+                      data.mainClassName,
+                      classData.subClassName,
+                      classData.mainClassId,
+                      classData.subClassId
+                    )
                   }
                 >
                   <S.Class
