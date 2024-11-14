@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const Container = styled.div`
   padding: 2.5rem;
   background-color: var(--color-white);
-  background-color: var(--color-white);
   flex-grow: 1;
   width: 100%;
 `;

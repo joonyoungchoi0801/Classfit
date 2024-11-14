@@ -132,20 +132,6 @@ export const StudentNameText = styled.span`
   }
 `;
 
-export const CheckBox = styled.input`
-  width: 2.2rem;
-  height: 2.2rem;
-`;
-
-export const StudentNameText = styled.span`
-  cursor: pointer;
-
-  &:hover {
-    color: var(--color-blue);
-    text-decoration: underline; 
-  }
-`;
-
 export const StatusIcon = styled.img`
   width: 2rem;
   height: 2rem;
