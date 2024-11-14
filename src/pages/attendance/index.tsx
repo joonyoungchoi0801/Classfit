@@ -7,6 +7,7 @@ import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
 import { useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
+import { useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
 
@@ -26,6 +27,8 @@ function Attendance() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
+  const { grade, class: classParam } = useParams();
+  const isSmsButtonEnabled = !!classParam;
 
   const navigate = useNavigate();
 
@@ -92,7 +95,7 @@ function Attendance() {
         <S.AttendanceTitle>학생출결관리</S.AttendanceTitle>
         <S.ButtonGroup>
           <S.LeftButtons>
-            <S.BlueButton onClick={() => navigate('./sms')}><img src={sms} alt='sms icon' />SMS보내기</S.BlueButton>
+            <S.BlueButton as="button" disabled={!isSmsButtonEnabled} onClick={() => navigate('./sms')}><img src={sms} alt='sms icon' />SMS보내기</S.BlueButton>
             <S.WhiteButton><img src={statistics} alt='statistics icon' />통계</S.WhiteButton>
           </S.LeftButtons>
           <S.RightButtons>
