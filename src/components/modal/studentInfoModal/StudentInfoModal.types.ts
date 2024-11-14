@@ -1,14 +1,7 @@
+import type { StudentData } from '@/types/student.type';
+
 export interface StudentInfoModalProps {
-  name: string;
-  gender: string;
-  grade: number;
-  className: string;
-  tags: string;
-  studentPhone: string;
-  parentPhone: string;
-  address: string;
-  detailInfo: string;
-  counseling: string;
+  studentDetailData: StudentData;
   isOpen: boolean;
   onClose: () => void;
 }
