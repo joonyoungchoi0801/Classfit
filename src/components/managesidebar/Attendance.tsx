@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './ManageSidebar.styles';
 import downArrow from '@/assets/managesidebar/downarrow.svg';
 import rightArrow from '@/assets/managesidebar/rightarrow.svg';
@@ -7,26 +7,28 @@ import bluePlusIcon from '@/assets/managesidebar/blueplus.svg';
 import kebabIcon from '@/assets/managesidebar/kebab.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import Popup from '@/components/popup';
+import { ClassData, ClassDataForm } from './Attendance.type';
+import { getClassList } from '@/api/classAPI';
 
-const gradeData = [
-  {
-    grade: 1,
-    class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
-  },
-  {
-    grade: 2,
-    class: [
-      { class: 'A반' },
-      { class: 'B반' },
-      { class: 'C반' },
-      { class: 'D반' },
-    ],
-  },
-  {
-    grade: 3,
-    class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
-  },
-];
+// const gradeData = [
+//   {
+//     grade: 1,
+//     class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
+//   },
+//   {
+//     grade: 2,
+//     class: [
+//       { class: 'A반' },
+//       { class: 'B반' },
+//       { class: 'C반' },
+//       { class: 'D반' },
+//     ],
+//   },
+//   {
+//     grade: 3,
+//     class: [{ class: 'A반' }, { class: 'B반' }, { class: 'C반' }],
+//   },
+// ];
 
 function Attendance() {
   const { grade, class: className } = useParams<{
@@ -37,11 +39,23 @@ function Attendance() {
   const [selectedGrade, setSelectedGrade] = useState<number>(
     Number(grade?.replace(/[^0-9]/g, ''))
   );
-  const [classData, setClassData] = useState(gradeData);
+  const [classData, setClassData] = useState<ClassData>();
   const [selectedClass, setSelectedClass] = useState<string>(className || '');
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [tempClassName, setTempClassName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchClassList = async () => {
+      try {
+        const res = getClassList();
+        setClassData(res.data);
+      } catch (error) {
+        alert('반 정보를 불러오는데 실패했습니다.');
+      }
+    };
+    fetchClassList();
+  }, []);
 
   const handleGradeClick = (grade: number) => {
     navigate(`/manage/attendance/${grade}학년`);
@@ -57,11 +71,11 @@ function Attendance() {
   };
 
   const handleClassDelete = () => {
-    setClassData((prev) =>
-      prev.map((data) => ({
+    setClassData((prev: ClassData) =>
+      prev?.map((data: ClassDataForm) => ({
         ...data,
-        class: data.class.filter(
-          (classData) => classData.class !== selectedClass
+        subClasses: data.subClasses.filter(
+          (classData) => classData.subClassName !== selectedClass
         ),
       }))
     );
@@ -99,8 +113,8 @@ function Attendance() {
                 {data.grade}학년
               </S.Grade>
               <S.PlusIcon
-                src={plusIcon}
-                alt='plus icon'
+                src={kebabIcon}
+                alt='kebabicon'
                 $isSelected={selectedGrade === data.grade}
               />
             </S.GradeWrapper>
