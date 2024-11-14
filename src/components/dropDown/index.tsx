@@ -9,7 +9,7 @@ function DropDown({
   onChange,
 }: DropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>(value);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -20,6 +20,14 @@ function DropDown({
   useEffect(() => {
     if (value == '') {
       setSelectedOption('');
+    } else {
+      if (value == 'FEMALE') {
+        setSelectedOption('여');
+      } else if (value == 'MALE') {
+        setSelectedOption('남');
+      } else {
+        setSelectedOption(value);
+      }
     }
   }, [value]);
 

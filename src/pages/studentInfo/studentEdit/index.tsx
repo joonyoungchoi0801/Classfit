@@ -1,5 +1,5 @@
 import Path from '@/components/path';
-import * as S from './StudentRegister.styles';
+import * as S from './StudentEdit.styles';
 import * as PS from '@/pages/studentInfo/StudentInfo.styles';
 import DropDown from '@/components/dropDown';
 import Button from '@/components/button';
@@ -7,16 +7,17 @@ import useStudentRegister from '@/hooks/student/useStudentRegister';
 import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
+import useStudentEdit from '@/hooks/student/useStudentEdit';
 
-function StudentRegister() {
+function StudentEdit({ studentId }: { studentId: string }) {
   const genderLst = ['남', '여'];
-  const studentRegisterHandler = useStudentRegister();
+  const studentRegisterHandler = useStudentEdit(studentId);
 
   return (
     <PS.Container>
       <Path />
       <PS.TitleWrapper>
-        <PS.Title>학생등록</PS.Title>
+        <PS.Title>학생수정</PS.Title>
       </PS.TitleWrapper>
       <S.FormWrapper>
         <S.Row>
@@ -86,7 +87,7 @@ function StudentRegister() {
                   studentRegisterHandler.studentData.grade
                 ]
               }
-              // value={studentRegisterHandler.studentData.subClassList}
+              value={studentRegisterHandler.studentData.subClassList}
               placeholder='클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeSubClassValue(
@@ -193,4 +194,4 @@ function StudentRegister() {
   );
 }
 
-export default StudentRegister;
+export default StudentEdit;

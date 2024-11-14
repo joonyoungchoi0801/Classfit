@@ -5,7 +5,7 @@ import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import SearchIcon from '@/assets/info/search.svg';
 import Path from '@/components/path';
-import useStudentList from '@/hooks/useStudentList';
+import useStudentList from '@/hooks/student/useStudentList';
 import QuestionModal from '@/components/modal/questionModal';
 import Modal from '@/components/modal';
 import StudentInfoModal from '@/components/modal/studentInfoModal';
@@ -46,7 +46,6 @@ function StudentList() {
                 placeholder='이름을 검색해보세요.'
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    console.log('e', e);
                     studentListHandler.handleOnSearch(e);
                   }
                 }}
@@ -94,7 +93,14 @@ function StudentList() {
             <S.TableCell>{student.studentNumber}</S.TableCell>
             <S.TableCell>
               <S.EditWrapper>
-                <S.EditButton $color='#7d7d7d'>수정</S.EditButton>
+                <S.EditButton
+                  onClick={() => {
+                    studentListHandler.handleOnEdit(student.studentId);
+                  }}
+                  $color='#7d7d7d'
+                >
+                  수정
+                </S.EditButton>
                 <S.EditDivider>|</S.EditDivider>
                 <S.EditButton
                   onClick={() => {

@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { StudentData, StudentListData } from '@/types/student.type';
+import type {
+  StudentData,
+  StudentListData,
+  StudentViewData,
+} from '@/types/student.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   deleteStudent,
@@ -7,6 +11,7 @@ import {
   getStudentDetail,
   getStudentSearch,
 } from '@/api/studentAPI';
+import { useNavigate } from 'react-router-dom';
 
 function useStudentList() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -26,7 +31,9 @@ function useStudentList() {
   >([]);
 
   const [studentIds, setStudentIds] = useState<number[]>([]);
-  const [studentDetailData, setStudentDetailData] = useState<StudentData>();
+  const [studentDetailData, setStudentDetailData] = useState<StudentViewData>();
+
+  const navigate = useNavigate();
 
   const {
     data: tempStudentList,
@@ -51,7 +58,6 @@ function useStudentList() {
 
   const { mutateAsync: deleteStudentData } = useMutation({
     mutationFn: async (studentIds: number[]) => {
-      console.log('studentIds', studentIds);
       return deleteStudent(studentIds);
     },
     onError: () => {
@@ -89,7 +95,6 @@ function useStudentList() {
       setIsModalVisible(true);
     },
     onSuccess: (data) => {
-      console.log('data', data);
       setStudentVisibleData(
         Array.isArray(data.data.data) ? data.data.data : [data.data.data]
       );
@@ -116,6 +121,10 @@ function useStudentList() {
     setQuestionModalTitle('선택항목을 삭제하시겠습니까?');
     setQuestionModalMessage(`1명의 학생이 삭제됩니다.`);
     setIsQuestionModalVisible(true);
+  };
+
+  const handleOnEdit = (studentId: number) => {
+    navigate(`/manage/studentinfo/edit?studentId=${studentId}`);
   };
 
   const _handleOnDelete = async () => {
@@ -163,6 +172,7 @@ function useStudentList() {
     questionModalMessage,
     handleOnDelete,
     handleOnSideDelete,
+    handleOnEdit,
     handleOnSelectDelete,
     handleOnName,
     handleOnSearch,

@@ -12,3 +12,9 @@ export const STUDENT_FIELD = Object.freeze({
 });
 
 export const STUDENT_FIELD_LIST = Object.freeze(Object.values(STUDENT_FIELD));
+
+export const STUDENT_INFO_PATH = Object.freeze({
+  LIST: 'list',
+  REGISTER: 'register',
+  EDIT: 'edit',
+});
