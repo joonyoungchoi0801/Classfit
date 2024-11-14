@@ -6,7 +6,6 @@ import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
 import defaultImg from '@/assets/attendanceTable/default.svg';
-import { useLocation, useNavigate } from 'react-router-dom';
 import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -23,9 +22,6 @@ interface Student {
 }
 
 function Attendance() {
-  const location = useLocation();
-  const url = location.pathname;
-
   const currentMonth = new Date().getMonth() + 1;
   const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(
     Math.max(0, currentMonth - 6)
@@ -34,12 +30,11 @@ function Attendance() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
   const { grade, class: classParam } = useParams();
-  const isSmsButtonEnabled = !!classParam;
-
-  const isTableOpen = url === '/manage/attendance/all' || !!classParam;
 
   const navigate = useNavigate();
   const location = useLocation();
+  const url = location.pathname;
+  const isTableOpen = url === '/manage/attendance/all' || !!classParam;
   const isSmsButtonEnabled = !!classParam || location.pathname === '/manage/attendance/all';
 
   const toggleDropdown = () => {
