@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import GlobalStyles from './styles/GlobalStyles';
-import StudentInfo from './pages/studentInfo';
 import Home from './pages/home';
 import StudentInfo from './pages/studentInfo';
 import Sms from './pages/sms';

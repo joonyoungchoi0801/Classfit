@@ -28,7 +28,7 @@ export const LeftButtons = styled.div`
   gap: 1.25rem;
 `;
 
-export const BlueButton = styled.div`
+export const BlueButton = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 15rem;
   justify-content: center;
@@ -38,7 +38,7 @@ export const BlueButton = styled.div`
   border-radius: 1rem;
   border: 1px solid var(--color-blue);
   background-color: var(--color-blue);
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   color: var(--color-white);
   font-size: 2rem;
   font-style: normal;
