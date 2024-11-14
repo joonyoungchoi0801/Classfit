@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './DropDown.styles';
 import type { DropDownProps } from './DropDown.types';
 
 function DropDown({
   options = [],
+  value = '',
   placeholder = '선택',
   onChange,
 }: DropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string>();
+  const [selectedOption, setSelectedOption] = useState<string>('');
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -16,10 +17,19 @@ function DropDown({
     if (onChange) onChange(option);
   };
 
+  useEffect(() => {
+    if (value == '') {
+      setSelectedOption('');
+    }
+  }, [value]);
+
   return (
     <S.SelectWrapper>
-      <S.SelectButton onClick={() => setIsOpen((prev) => !prev)}>
-        {selectedOption || placeholder}
+      <S.SelectButton
+        onClick={() => setIsOpen((prev) => !prev)}
+        $selectedOption={selectedOption}
+      >
+        {selectedOption.length > 0 ? selectedOption : placeholder}
       </S.SelectButton>
       {isOpen && (
         <S.OptionsList>

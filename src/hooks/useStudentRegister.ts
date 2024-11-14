@@ -21,7 +21,9 @@ function useStudentRegister() {
   };
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
-  const [classInfo, setClassInfo] = useState<Record<string, string[]>>({});
+  const [classInfo, setClassInfo] = useState<
+    Record<string, { subClassId: number; subClassName: string }[]>
+  >({});
 
   const [studentData, setStudentData] =
     useState<StudentData>(initialStudentData);
@@ -36,9 +38,15 @@ function useStudentRegister() {
     staleTime: 0,
     select: (data) => {
       return data.data.data.reduce(
-        (acc: Record<string, string[]>, classItem: ClassData) => {
+        (
+          acc: Record<string, { subClassId: number; subClassName: string }[]>,
+          classItem: ClassData
+        ) => {
           acc[classItem.mainClassName] = classItem.subClasses.map(
-            (subClass) => subClass.subClassName
+            (subClass) => ({
+              subClassId: subClass.subClassId,
+              subClassName: subClass.subClassName,
+            })
           );
           return acc;
         },
@@ -55,6 +63,7 @@ function useStudentRegister() {
 
   const { mutateAsync: postStudentData } = useMutation({
     mutationFn: async (data: StudentData) => {
+      console.log('data:', data);
       return postStudent(data);
     },
     onError: () => {
@@ -63,39 +72,37 @@ function useStudentRegister() {
     },
     onSuccess: () => {
       setModalMessage('학생 등록이 완료되었습니다.');
+      setStudentData(initialStudentData);
       setIsModalVisible(true);
     },
   });
 
   const handleOnChangeValue = (field: string, value: string) => {
-    if (
-      field === STUDENT_FIELD.SUB_CLASS_LIST &&
-      Array.isArray(studentData.subClassList)
-    ) {
-      setStudentData((prevData) => ({
-        ...prevData,
-        subClassList: [...prevData.subClassList, value],
-      }));
-      return;
-    } else if (field === STUDENT_FIELD.GENDER) {
-      if (value === '남자') {
-        setStudentData((prevData) => ({
-          ...prevData,
-          [field]: 'MALE',
-        }));
-      } else {
-        setStudentData((prevData) => ({
-          ...prevData,
-          [field]: 'FEMALE',
-        }));
-      }
-      return;
-    }
-
     setStudentData((prevData) => ({
       ...prevData,
       [field]: value,
     }));
+  };
+
+  const handleOnChangeSubClassValue = (field: string, value: number) => {
+    setStudentData((prevData) => ({
+      ...prevData,
+      subClassList: [...prevData.subClassList, value],
+    }));
+  };
+
+  const handleOnChangeGenderValue = (field: string, value: string) => {
+    if (value === '남자') {
+      setStudentData((prevData) => ({
+        ...prevData,
+        [field]: 'MALE',
+      }));
+    } else {
+      setStudentData((prevData) => ({
+        ...prevData,
+        [field]: 'FEMALE',
+      }));
+    }
   };
 
   const validateStudentData = (): boolean => {
@@ -146,6 +153,8 @@ function useStudentRegister() {
     studentData,
     classInfo,
     handleOnChangeValue,
+    handleOnChangeSubClassValue,
+    handleOnChangeGenderValue,
     handleOnSave,
     handleOnModalClose,
     handleOnCancel,

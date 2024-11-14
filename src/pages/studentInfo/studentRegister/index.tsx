@@ -6,6 +6,7 @@ import Button from '@/components/button';
 import useStudentRegister from '@/hooks/useStudentRegister';
 import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
+import ClassDropDown from '@/components/dropDown/classDropDown';
 
 function StudentRegister() {
   const genderLst = ['남', '여'];
@@ -36,9 +37,10 @@ function StudentRegister() {
             <S.Label>성별</S.Label>
             <DropDown
               options={genderLst}
+              value={studentRegisterHandler.studentData.gender}
               placeholder='성별 선택'
               onChange={(value) =>
-                studentRegisterHandler.handleOnChangeValue(
+                studentRegisterHandler.handleOnChangeGenderValue(
                   STUDENT_FIELD.GENDER,
                   value
                 )
@@ -66,6 +68,7 @@ function StudentRegister() {
             <S.Label>학년</S.Label>
             <DropDown
               options={Object.keys(studentRegisterHandler.classInfo)}
+              value={studentRegisterHandler.studentData.grade}
               placeholder='학년 선택'
               onChange={(
                 value //1학년
@@ -79,15 +82,16 @@ function StudentRegister() {
           </S.FormGroup>
           <S.FormGroup>
             <S.Label>클래스</S.Label>
-            <DropDown
+            <ClassDropDown
               options={
                 studentRegisterHandler.classInfo[
                   studentRegisterHandler.studentData.grade
                 ]
               }
+              value={studentRegisterHandler.studentData.subClassList}
               placeholder='클래스 선택'
               onChange={(value) =>
-                studentRegisterHandler.handleOnChangeValue(
+                studentRegisterHandler.handleOnChangeSubClassValue(
                   STUDENT_FIELD.SUB_CLASS_LIST,
                   value
                 )

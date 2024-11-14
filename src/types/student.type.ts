@@ -5,7 +5,7 @@ export interface StudentData {
   studentNumber: string;
   parentNumber: string;
   grade: string;
-  subClassList: string[];
+  subClassList: number[];
   address: string;
   remark?: string;
   counselingLog?: string;
@@ -18,7 +18,7 @@ export interface PatchedStudentData {
   studentNumber?: string;
   parentNumber?: string;
   grade?: string;
-  subClassList?: string[];
+  subClassList?: number[];
   address?: string;
   remark?: string;
   counselingLog?: string;
