@@ -6,7 +6,7 @@ export const SelectWrapper = styled.div`
   width: 100%;
 `;
 
-export const SelectButton = styled.button`
+export const SelectButton = styled.button<{ $selectedOption?: string }>`
   width: 100%;
   padding: 1rem;
   background-color: var(--color-white);
@@ -17,7 +17,10 @@ export const SelectButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #8a91a1;
+  color: ${(props) =>
+    props.$selectedOption && props.$selectedOption.length > 0
+      ? 'var(--color-black)'
+      : '#8a91a1'};
 
   &:after {
     content: url(${ArrowBottomIcon});
