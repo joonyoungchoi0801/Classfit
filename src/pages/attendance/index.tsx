@@ -99,6 +99,15 @@ function Attendance() {
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
   };
+  console.log('selectedStudent', selectedStudent);
+
+  const handleSmsButtonClick = () => {
+    if (selectedStudent.length === 0) {
+      alert('학생을 선택해주세요.');
+      return;
+    }
+    navigate(`./sms?studentId=${smsQuery}`);
+  };
 
   return (
     <ManageLayout>
@@ -110,7 +119,7 @@ function Attendance() {
             <S.BlueButton
               as='button'
               disabled={!isSmsButtonEnabled}
-              onClick={() => navigate(`./sms?studentId=${smsQuery}`)}
+              onClick={() => handleSmsButtonClick()}
             >
               <img src={sms} alt='sms icon' />
               SMS보내기

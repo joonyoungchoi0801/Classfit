@@ -128,7 +128,7 @@ function StudentList() {
         onCancel={studentListHandler.handleOnModalClose}
       />
       <StudentInfoModal
-        studentDetailData={studentListHandler.studentDetailData!}
+        studentId={Number(studentListHandler.studentDetailData?.studentNumber)}
         isOpen={studentListHandler.isStudentModalVisible}
         onClose={studentListHandler.handleOnModalClose}
       />

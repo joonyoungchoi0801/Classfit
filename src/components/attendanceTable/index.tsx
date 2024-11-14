@@ -30,7 +30,7 @@ function AttendanceTable({
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<string>('');
+  const [selectedStudentId, setSelectedStudentId] = useState<number>();
   const [weekOffset, setWeekOffset] = useState(0);
   const [page, setPage] = useState(0);
   const { grade, class: className } = useParams<{
@@ -193,8 +193,8 @@ function AttendanceTable({
     setWeekOffset(weekOffset + 1);
   };
 
-  const handleStudentNameClick = (name: string) => {
-    setSelectedStudent(name);
+  const handleStudentNameClick = (id: number) => {
+    setSelectedStudentId(id);
     setIsModalOpen(true);
   };
 
@@ -275,7 +275,7 @@ function AttendanceTable({
                 onClick={() => handleStudentCheck(student.name)}
               />
               <S.StudentNameText
-                onClick={() => handleStudentNameClick(student.name)}
+                onClick={() => handleStudentNameClick(student.id)}
               >
                 {student.name}
               </S.StudentNameText>
@@ -308,16 +308,7 @@ function AttendanceTable({
       </S.TableBody>
       {isModalOpen && (
         <StudentInfoModal
-          name={selectedStudent}
-          gender='여'
-          grade={1}
-          className='A'
-          tags='수학반'
-          studentPhone='010-0000-0000'
-          parentPhone='010-0000-0000'
-          address='서울시'
-          detailInfo='서울고 재학'
-          counseling=''
+          studentId={selectedStudentId || 0}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         />
