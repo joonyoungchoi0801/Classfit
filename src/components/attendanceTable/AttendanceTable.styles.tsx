@@ -38,6 +38,7 @@ export const SearchInput = styled.input`
   border: transparent;
   background-color: var(--color-gray);
   outline: none;
+  font-size: 2rem;
   &::placeholder {
     color: #999;
     font-size: 1.7rem;

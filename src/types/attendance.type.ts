@@ -21,3 +21,13 @@ export interface AttendanceResponse {
   error: { message: string };
   message: string;
 }
+
+export interface AttendanceStatusRequest {
+  attendanceId: number;
+  status: string;
+}
+
+export interface UpdateAttendanceRequest {
+  studentId: number;
+  attendance: AttendanceStatusRequest[];
+}

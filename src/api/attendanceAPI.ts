@@ -32,3 +32,20 @@ export const getAllAttendanceDetail = (
     },
   });
 };
+
+export const AttendanceEdit = async (
+  updatedStudents: any
+): Promise<AxiosResponse> => {
+  try {
+    const response = await instance({
+      url: API_ATTENDANCE.ATTENDANCE,
+      method: 'PATCH',
+      data: updatedStudents,
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Error updating attendance:', error);
+    throw error;
+  }
+};

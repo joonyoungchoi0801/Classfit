@@ -11,6 +11,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
 import { StudentData } from '@/types/attendance.type';
+import { AttendanceEdit } from '@/api/attendanceAPI';
 
 interface AttendanceRecord {
   date: string;
@@ -96,8 +97,22 @@ function Attendance() {
     const query = selectedStudent.map((student) => student.id).join(',');
     setSmsQuery(query);
   }, [selectedStudent]);
+
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
+    if (isEditMode) {
+      handleSaveAttendance();
+    }
+  };
+
+  const handleSaveAttendance = async () => {
+    try {
+      console.log("Request Body:", selectedStudent);
+      const response = await AttendanceEdit(selectedStudent);
+      console.log('Attendance updated successfully', response);
+    } catch (error) {
+      console.error('Error updating attendance', error);
+    }
   };
 
   const handleSmsButtonClick = () => {
@@ -158,7 +173,9 @@ function Attendance() {
           <AttendanceTable
             selectedMonth={selectedMonth}
             isEditMode={isEditMode}
-            setStudentData={setSelectedStudent}
+            setStudentData={(data) => {
+              setSelectedStudent(data);
+            }}
           />
         ) : (
           <>
