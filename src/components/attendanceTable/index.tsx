@@ -14,20 +14,30 @@ import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 
 import { AxiosResponse } from 'axios';
-import { getAllAttendance, getAllAttendanceDetail } from '@/api/attendanceAPI';
-import { AttendanceResponse, StudentData } from '@/types/attendance.type';
+import {
+  getAllAttendance,
+  getAllAttendanceDetail,
+  AttendanceEdit,
+} from '@/api/attendanceAPI';
+import {
+  AttendanceResponse,
+  StudentData,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
+import formatDateToISO from '@/utils/formatDate';
 
 function AttendanceTable({
   selectedMonth,
   isEditMode,
   setStudentData,
+  setUpdatedStudents,
 }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
   const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [students, setStudents] = useState<StudentData[]>([]);
-  const [updatedStudents, setUpdatedStudents] = useState<StudentData[]>([]);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,7 +110,7 @@ function AttendanceTable({
     if (status === 'PRESENT') return isEditMode ? circle_Black : circle_Blue;
     if (status === 'LATE') return isEditMode ? triangle_Black : triangle_Blue;
     if (status === 'ABSENT') return isEditMode ? absent_Black : absent_Blue;
-    return isEditMode ? circle_Black : circle_Blue;
+    // return isEditMode ? circle_Black : circle_Blue;
   };
 
   useEffect(() => {
@@ -209,18 +219,20 @@ function AttendanceTable({
     setStudents((prevStudents) => {
       const updatedStudents = prevStudents.map((student) => {
         if (student.name === studentName) {
-
-          const attendanceExists = student.attendance.some(
-            (attendanceRecord) => attendanceRecord.date === date
+          const updatedAttendance = student.attendance.map(
+            (attendanceRecord) =>
+              attendanceRecord.date === formatDateToISO(date)
+                ? {
+                  ...attendanceRecord,
+                  status:
+                    attendanceRecord.status === 'PRESENT'
+                      ? 'LATE'
+                      : attendanceRecord.status === 'LATE'
+                        ? 'ABSENT'
+                        : 'PRESENT',
+                }
+                : attendanceRecord
           );
-
-          if (!attendanceExists) {
-            student.attendance.push({
-              id: student.id,
-              date: date,
-              status: 'PRESENT',
-            });
-          }
 
           return {
             ...student,
@@ -241,9 +253,17 @@ function AttendanceTable({
         }
         return student;
       });
-      console.log("Updated Student Data:", updatedStudents);
-      setUpdatedStudents(updatedStudents);
 
+      setUpdatedStudents(
+        updatedStudents.map((student) => ({
+          studentId: student.id,
+          attendance: student.attendance.map((record) => ({
+            attendanceId: record.id,
+            status: record.status,
+          })),
+        }))
+      );
+      console.log(updatedStudents);
       return updatedStudents;
     });
 
@@ -305,7 +325,8 @@ function AttendanceTable({
             <S.Blank />
             {weekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
-                (record) => record.date === date.date.slice(0, 5)
+                (record) =>
+                  record.date === formatDateToISO(date.date.slice(0, 5))
               );
               const statusIcon = getIconByStatus(
                 attendanceRecord?.status || 'PRESENT',
