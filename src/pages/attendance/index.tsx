@@ -10,8 +10,9 @@ import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import mockData from '@/constants/tabledata';
-import { StudentData } from '@/types/attendance.type';
+import { StudentData, UpdateAttendanceRequest } from '@/types/attendance.type';
 import { AttendanceEdit } from '@/api/attendanceAPI';
+import useClassStore from '@/store/classStore';
 
 interface AttendanceRecord {
   date: string;
@@ -32,7 +33,12 @@ function Attendance() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentData[]>([]);
+  const [updatedStudents, setUpdatedStudents] = useState<
+    UpdateAttendanceRequest[]
+  >([]);
   const [smsQuery, setSmsQuery] = useState('');
+  const { subClassId } = useClassStore();
+
   const { grade, class: classParam } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +46,10 @@ function Attendance() {
   const isTableOpen = url === '/manage/attendance/all' || !!classParam;
   const isSmsButtonEnabled =
     !!classParam || location.pathname === '/manage/attendance/all';
+
+  useEffect(() => {
+    setIsEditMode(false);
+  }, [grade, subClassId, classParam]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -49,7 +59,6 @@ function Attendance() {
     setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
-
   const downloadExcel = (data: Student[]) => {
     const dates = Array.from(
       new Set(
@@ -107,11 +116,9 @@ function Attendance() {
 
   const handleSaveAttendance = async () => {
     try {
-      console.log("Request Body:", selectedStudent);
-      const response = await AttendanceEdit(selectedStudent);
-      console.log('Attendance updated successfully', response);
+      await AttendanceEdit(updatedStudents);
     } catch (error) {
-      console.error('Error updating attendance', error);
+      alert('출결저장에 실패했습니다');
     }
   };
 
@@ -175,6 +182,9 @@ function Attendance() {
             isEditMode={isEditMode}
             setStudentData={(data) => {
               setSelectedStudent(data);
+            }}
+            setUpdatedStudents={(data) => {
+              setUpdatedStudents(data);
             }}
           />
         ) : (

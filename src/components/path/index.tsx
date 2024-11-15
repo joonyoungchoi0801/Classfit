@@ -4,7 +4,7 @@ import * as S from './Path.styles';
 
 const pathMappings: Record<string, string> = {
   manage: '학생관리',
-  attendance: '출석',
+  attendance: '출결관리',
   sms: 'SMS',
   studentinfo: '학생정보',
   list: '학생목록',

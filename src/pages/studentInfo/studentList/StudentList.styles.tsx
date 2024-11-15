@@ -9,7 +9,7 @@ export const Table = styled.div`
   background-color: var(--color-white);
   box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
   border-radius: 0.4rem;
-  height: calc(100vh - 20rem);
+  /* height: calc(100vh - 20rem); */
   overflow-y: auto;
 `;
 
@@ -18,6 +18,8 @@ export const TableRow = styled.div<{
 }>`
   display: table-row;
   width: 100%;
+  max-height: 6rem;
+  height: 6rem;
   background-color: ${(props) =>
     props.$isSelected ? '#E0EBFF' : 'var(--color-white)'};
   &:hover {
