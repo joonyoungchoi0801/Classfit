@@ -9,18 +9,17 @@ import defaultImg from '@/assets/attendanceTable/default.svg';
 import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import mockData from '@/constants/tabledata';
-import { StudentData } from '@/types/attendance.type';
-
-interface AttendanceRecord {
-  date: string;
-  status: string;
-}
-
-interface Student {
-  name: string;
-  attendance: AttendanceRecord[];
-}
+import {
+  Student,
+  StudentData,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
+import { Student as ExcelStudentData } from '@/pages/attendance/Attendance.type';
+import { AttendanceEdit } from '@/api/attendanceAPI';
+import useClassStore from '@/store/classStore';
+import { ExcelData } from '@/types/excel.type';
+import { excelDownload } from '@/api/excelAPI';
+import { formatDate, formatStatus } from '@/utils/formatExcelData';
 
 function Attendance() {
   const currentMonth = new Date().getMonth() + 1;
@@ -31,7 +30,13 @@ function Attendance() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentData[]>([]);
+  const [updatedStudents, setUpdatedStudents] = useState<
+    UpdateAttendanceRequest[]
+  >([]);
+  const [excelData, setExcelData] = useState<ExcelStudentData[]>();
   const [smsQuery, setSmsQuery] = useState('');
+  const { subClassId } = useClassStore();
+
   const { grade, class: classParam } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,6 +44,10 @@ function Attendance() {
   const isTableOpen = url === '/manage/attendance/all' || !!classParam;
   const isSmsButtonEnabled =
     !!classParam || location.pathname === '/manage/attendance/all';
+
+  useEffect(() => {
+    setIsEditMode(false);
+  }, [grade, subClassId, classParam]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -48,8 +57,43 @@ function Attendance() {
     setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
+  useEffect(() => {
+    fetchExcelData(selectedMonth);
+  }, [selectedMonth, subClassId]);
 
-  const downloadExcel = (data: Student[]) => {
+  const fetchExcelData = async (month: number) => {
+    try {
+      if (subClassId == 0) {
+        const response = await excelDownload(month);
+        const data: ExcelData[] = response.data.data;
+        setExcelData(
+          data.map((item) => ({
+            name: item.name,
+            attendance: item.attendance.map((record) => ({
+              date: formatDate(record.date),
+              status: formatStatus(record.status),
+            })),
+          }))
+        );
+      } else {
+        const response = await excelDownload(month, subClassId);
+        const data: ExcelData[] = response.data.data;
+        setExcelData(
+          data.map((item) => ({
+            name: item.name,
+            attendance: item.attendance.map((record) => ({
+              date: formatDate(record.date),
+              status: formatStatus(record.status),
+            })),
+          }))
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching Excel data', error);
+    }
+  };
+
+  const downloadExcel = (data: ExcelStudentData[]) => {
     const dates = Array.from(
       new Set(
         data.flatMap((student) =>
@@ -92,12 +136,30 @@ function Attendance() {
     URL.revokeObjectURL(url);
   };
 
+  const ExcelButton = () => {
+    if (excelData) {
+      downloadExcel(excelData);
+    }
+  };
+
   useEffect(() => {
     const query = selectedStudent.map((student) => student.id).join(',');
     setSmsQuery(query);
   }, [selectedStudent]);
+
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
+    if (isEditMode) {
+      handleSaveAttendance();
+    }
+  };
+
+  const handleSaveAttendance = async () => {
+    try {
+      await AttendanceEdit(updatedStudents);
+    } catch (error) {
+      alert('출결저장에 실패했습니다');
+    }
   };
 
   const handleSmsButtonClick = () => {
@@ -145,7 +207,7 @@ function Attendance() {
                   ))}
                 </S.DropdownList>
               )}
-              <S.FileDownloadButton onClick={() => downloadExcel(mockData)}>
+              <S.FileDownloadButton onClick={() => ExcelButton()}>
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
@@ -158,7 +220,12 @@ function Attendance() {
           <AttendanceTable
             selectedMonth={selectedMonth}
             isEditMode={isEditMode}
-            setStudentData={setSelectedStudent}
+            setStudentData={(data) => {
+              setSelectedStudent(data);
+            }}
+            setUpdatedStudents={(data) => {
+              setUpdatedStudents(data);
+            }}
           />
         ) : (
           <>

@@ -1,4 +1,4 @@
-import { StudentData } from '@/types/attendance.type';
+import { StudentData, UpdateAttendanceRequest } from '@/types/attendance.type';
 
 export interface Student {
   id: number;
@@ -10,4 +10,5 @@ export interface AttendanceTableProps {
   selectedMonth: number;
   isEditMode: boolean;
   setStudentData: (studentData: StudentData[]) => void;
+  setUpdatedStudents: (updatedStudents: UpdateAttendanceRequest[]) => void;
 }

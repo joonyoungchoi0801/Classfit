@@ -14,19 +14,30 @@ import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 
 import { AxiosResponse } from 'axios';
-import { getAllAttendance, getAllAttendanceDetail } from '@/api/attendanceAPI';
-import { AttendanceResponse, StudentData } from '@/types/attendance.type';
+import {
+  getAllAttendance,
+  getAllAttendanceDetail,
+  AttendanceEdit,
+} from '@/api/attendanceAPI';
+import {
+  AttendanceResponse,
+  StudentData,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
+import formatDateToISO from '@/utils/formatDate';
 
 function AttendanceTable({
   selectedMonth,
   isEditMode,
   setStudentData,
+  setUpdatedStudents,
 }: AttendanceTableProps) {
   const [keyword, setKeyword] = useState('');
   const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [students, setStudents] = useState<StudentData[]>([]);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +67,7 @@ function AttendanceTable({
               isChecked: false,
               attendance: student.attendance.map((record) => ({
                 ...record,
-                status: record.status || '출석',
+                status: record.status || 'PRESENT',
               })),
             }));
             setOriginalStudents(formattedData);
@@ -79,7 +90,7 @@ function AttendanceTable({
               isChecked: false,
               attendance: student.attendance.map((record) => ({
                 ...record,
-                status: record.status || '출석',
+                status: record.status || 'PRESENT',
               })),
             }));
             setOriginalStudents(formattedData);
@@ -96,10 +107,10 @@ function AttendanceTable({
   }, [weekOffset, page, url]);
 
   const getIconByStatus = (status: string, isEditMode: boolean) => {
-    if (status === '출석') return isEditMode ? circle_Black : circle_Blue;
-    if (status === '지각') return isEditMode ? triangle_Black : triangle_Blue;
-    if (status === '결석') return isEditMode ? absent_Black : absent_Blue;
-    return circle_Blue;
+    if (status === 'PRESENT') return isEditMode ? circle_Black : circle_Blue;
+    if (status === 'LATE') return isEditMode ? triangle_Black : triangle_Blue;
+    if (status === 'ABSENT') return isEditMode ? absent_Black : absent_Blue;
+    // return isEditMode ? circle_Black : circle_Blue;
   };
 
   useEffect(() => {
@@ -203,28 +214,46 @@ function AttendanceTable({
   };
 
   const handleStatusClick = (studentName: string, date: string) => {
-    setStudents((prevStudents) =>
-      prevStudents.map((student) =>
-        student.name === studentName
-          ? {
-              ...student,
-              attendance: student.attendance.map((attendanceRecord) =>
-                attendanceRecord.date === date
-                  ? {
-                      ...attendanceRecord,
-                      status:
-                        attendanceRecord.status === '출석'
-                          ? '지각'
-                          : attendanceRecord.status === '지각'
-                            ? '결석'
-                            : '출석',
-                    }
-                  : attendanceRecord
-              ),
-            }
-          : student
-      )
-    );
+    if (!isEditMode) return;
+
+    setStudents((prevStudents) => {
+      const updatedStudents = prevStudents.map((student) => {
+        if (student.name === studentName) {
+          const updatedAttendance = student.attendance.map(
+            (attendanceRecord) =>
+              attendanceRecord.date === formatDateToISO(date)
+                ? {
+                  ...attendanceRecord,
+                  status:
+                    attendanceRecord.status === 'PRESENT'
+                      ? 'LATE'
+                      : attendanceRecord.status === 'LATE'
+                        ? 'ABSENT'
+                        : 'PRESENT',
+                }
+                : attendanceRecord
+          );
+
+          return {
+            ...student,
+            attendance: updatedAttendance,
+          };
+        }
+        return student;
+      });
+
+      setUpdatedStudents(
+        updatedStudents.map((student) => ({
+          studentId: student.id,
+          attendance: student.attendance.map((record) => ({
+            attendanceId: record.id,
+            status: record.status,
+          })),
+        }))
+      );
+      console.log(updatedStudents);
+      return updatedStudents;
+    });
   };
 
   return (
@@ -283,10 +312,11 @@ function AttendanceTable({
             <S.Blank />
             {weekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
-                (record) => record.date === date.date.slice(0, 5)
+                (record) =>
+                  record.date === formatDateToISO(date.date.slice(0, 5))
               );
               const statusIcon = getIconByStatus(
-                attendanceRecord?.status || '',
+                attendanceRecord?.status || 'PRESENT',
                 isEditMode
               );
 

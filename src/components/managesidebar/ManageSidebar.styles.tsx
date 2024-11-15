@@ -10,7 +10,6 @@ export const ManageSidebarWrapper = styled.div`
   background: var(--color-white);
   padding: 3.5rem 0rem;
   background: #f2f5fc;
-  overflow-y: auto;
   overflow: visible;
   &::-webkit-scrollbar {
     width: 0.8rem;

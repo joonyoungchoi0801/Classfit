@@ -1,7 +1,10 @@
 import { AxiosResponse } from 'axios';
 import instance from './instance';
 import { API_ATTENDANCE } from '@/constants/API';
-import { AttendanceResponse } from '@/types/attendance.type';
+import {
+  AttendanceResponse,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
 
 export const getAllAttendance = (
   weekOffset: number,
@@ -31,4 +34,21 @@ export const getAllAttendanceDetail = (
       page,
     },
   });
+};
+
+export const AttendanceEdit = async (
+  updatedStudents: UpdateAttendanceRequest[]
+): Promise<AxiosResponse> => {
+  try {
+    const response = await instance({
+      url: API_ATTENDANCE.ATTENDANCE,
+      method: 'PATCH',
+      data: updatedStudents,
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Error updating attendance:', error);
+    throw error;
+  }
 };
