@@ -133,3 +133,21 @@ export const Input = styled.input`
     outline: none;
   }
 `;
+
+export const EmptyWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; // 테이블이 있는 컨테이너의 높이에 맞추기 위해 설정
+  padding: 2rem; // 여백 추가
+  background-color: #f9f9f9;
+  border-radius: 0.4rem;
+  margin: 5rem 0;
+`;
+
+export const EmptyMessage = styled.div`
+  font-size: 1.8rem;
+  color: #999999;
+  text-align: center;
+  font-weight: 500;
+`;
