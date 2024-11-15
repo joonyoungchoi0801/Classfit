@@ -9,7 +9,11 @@ import defaultImg from '@/assets/attendanceTable/default.svg';
 import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import { Student, StudentData, UpdateAttendanceRequest } from '@/types/attendance.type';
+import {
+  Student,
+  StudentData,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
 import { Student as ExcelStudentData } from '@/pages/attendance/Attendance.type';
 import { AttendanceEdit } from '@/api/attendanceAPI';
 import useClassStore from '@/store/classStore';
@@ -53,6 +57,9 @@ function Attendance() {
     setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
+  useEffect(() => {
+    fetchExcelData(selectedMonth);
+  }, [selectedMonth, subClassId]);
 
   const fetchExcelData = async (month: number) => {
     try {
@@ -129,12 +136,11 @@ function Attendance() {
     URL.revokeObjectURL(url);
   };
 
-  const ExcelButton = async (month: number) => {
-    await fetchExcelData(month);
+  const ExcelButton = () => {
     if (excelData) {
       downloadExcel(excelData);
     }
-  }
+  };
 
   useEffect(() => {
     const query = selectedStudent.map((student) => student.id).join(',');
@@ -201,7 +207,7 @@ function Attendance() {
                   ))}
                 </S.DropdownList>
               )}
-              <S.FileDownloadButton onClick={() => ExcelButton(selectedMonth)}>
+              <S.FileDownloadButton onClick={() => ExcelButton()}>
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>
