@@ -11,7 +11,7 @@ export const ManageSidebarWrapper = styled.div`
   padding: 3.5rem 0rem;
   background: #f2f5fc;
   overflow-y: auto;
-  overflow: visible;
+  overflow-x: visible;
   &::-webkit-scrollbar {
     width: 0.8rem;
     height: 0.8rem;
@@ -145,7 +145,7 @@ export const Class = styled.div<{ $isSelected?: boolean }>`
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;
@@ -194,7 +194,7 @@ export const Info = styled.div<{ $isSelected?: boolean }>`
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;

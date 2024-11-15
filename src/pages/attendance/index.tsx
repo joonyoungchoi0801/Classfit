@@ -9,20 +9,13 @@ import defaultImg from '@/assets/attendanceTable/default.svg';
 import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import mockData from '@/constants/tabledata';
-import { StudentData, UpdateAttendanceRequest } from '@/types/attendance.type';
+import { Student, StudentData, UpdateAttendanceRequest } from '@/types/attendance.type';
+import { Student as ExcelStudentData } from '@/pages/attendance/Attendance.type';
 import { AttendanceEdit } from '@/api/attendanceAPI';
 import useClassStore from '@/store/classStore';
-
-interface AttendanceRecord {
-  date: string;
-  status: string;
-}
-
-interface Student {
-  name: string;
-  attendance: AttendanceRecord[];
-}
+import { ExcelData } from '@/types/excel.type';
+import { excelDownload } from '@/api/excelAPI';
+import { formatDate, formatStatus } from '@/utils/formatExcelData';
 
 function Attendance() {
   const currentMonth = new Date().getMonth() + 1;
@@ -36,6 +29,7 @@ function Attendance() {
   const [updatedStudents, setUpdatedStudents] = useState<
     UpdateAttendanceRequest[]
   >([]);
+  const [excelData, setExcelData] = useState<ExcelStudentData[]>();
   const [smsQuery, setSmsQuery] = useState('');
   const { subClassId } = useClassStore();
 
@@ -59,7 +53,40 @@ function Attendance() {
     setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
-  const downloadExcel = (data: Student[]) => {
+
+  const fetchExcelData = async (month: number) => {
+    try {
+      if (subClassId == 0) {
+        const response = await excelDownload(month);
+        const data: ExcelData[] = response.data.data;
+        setExcelData(
+          data.map((item) => ({
+            name: item.name,
+            attendance: item.attendance.map((record) => ({
+              date: formatDate(record.date),
+              status: formatStatus(record.status),
+            })),
+          }))
+        );
+      } else {
+        const response = await excelDownload(month, subClassId);
+        const data: ExcelData[] = response.data.data;
+        setExcelData(
+          data.map((item) => ({
+            name: item.name,
+            attendance: item.attendance.map((record) => ({
+              date: formatDate(record.date),
+              status: formatStatus(record.status),
+            })),
+          }))
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching Excel data', error);
+    }
+  };
+
+  const downloadExcel = (data: ExcelStudentData[]) => {
     const dates = Array.from(
       new Set(
         data.flatMap((student) =>
@@ -101,6 +128,13 @@ function Attendance() {
 
     URL.revokeObjectURL(url);
   };
+
+  const ExcelButton = async (month: number) => {
+    await fetchExcelData(month);
+    if (excelData) {
+      downloadExcel(excelData);
+    }
+  }
 
   useEffect(() => {
     const query = selectedStudent.map((student) => student.id).join(',');
@@ -167,7 +201,7 @@ function Attendance() {
                   ))}
                 </S.DropdownList>
               )}
-              <S.FileDownloadButton onClick={() => downloadExcel(mockData)}>
+              <S.FileDownloadButton onClick={() => ExcelButton(selectedMonth)}>
                 출결 문서 다운
               </S.FileDownloadButton>
             </S.DownloadContainer>

@@ -30,11 +30,5 @@ export const API_SMS = Object.freeze({
 });
 
 export const API_EXCEL = Object.freeze({
-  EXCEL: (month: number, subClassId?: number) => {
-    let url = `/v1/home/excel/download?month=${month}`;
-    if (subClassId) {
-      url += `&subClassId=${subClassId}`;
-    }
-    return url;
-  },
+  EXCEL: '/v1/home/excel/download',
 });

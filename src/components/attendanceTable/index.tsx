@@ -236,19 +236,7 @@ function AttendanceTable({
 
           return {
             ...student,
-            attendance: student.attendance.map((attendanceRecord) =>
-              attendanceRecord.date === date
-                ? {
-                  ...attendanceRecord,
-                  status:
-                    attendanceRecord.status === 'PRESENT'
-                      ? 'LATE'
-                      : attendanceRecord.status === 'LATE'
-                        ? 'ABSENT'
-                        : 'PRESENT',
-                }
-                : attendanceRecord
-            ),
+            attendance: updatedAttendance,
           };
         }
         return student;
@@ -266,7 +254,6 @@ function AttendanceTable({
       console.log(updatedStudents);
       return updatedStudents;
     });
-
   };
 
   return (
