@@ -14,8 +14,8 @@ import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 
 import { AxiosResponse } from 'axios';
-import { getAllAttendance, getAllAttendanceDetail, AttendanceEdit } from '@/api/attendanceAPI';
-import { AttendanceResponse, StudentData, AttendanceStatusRequest, UpdateAttendanceRequest } from '@/types/attendance.type';
+import { getAllAttendance, getAllAttendanceDetail } from '@/api/attendanceAPI';
+import { AttendanceResponse, StudentData } from '@/types/attendance.type';
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
 
@@ -209,53 +209,44 @@ function AttendanceTable({
     setStudents((prevStudents) => {
       const updatedStudents = prevStudents.map((student) => {
         if (student.name === studentName) {
-          const updatedAttendance = student.attendance.map((attendanceRecord) => {
-            if (attendanceRecord.date === date) {
-              return {
-                attendanceId: attendanceRecord.id,
-                status:
-                  attendanceRecord.status === 'PRESENT'
-                    ? 'LATE'
-                    : attendanceRecord.status === 'LATE'
-                      ? 'ABSENT'
-                      : 'PRESENT',
-              };
-            }
-            return {
-              attendanceId: attendanceRecord.id,
-              status: attendanceRecord.status,
-            };
-          });
 
           const attendanceExists = student.attendance.some(
             (attendanceRecord) => attendanceRecord.date === date
           );
 
           if (!attendanceExists) {
-            updatedAttendance.push({
-              attendanceId: 0,
+            student.attendance.push({
+              id: student.id,
+              date: date,
               status: 'PRESENT',
             });
           }
-          const updateAttendanceRequest: UpdateAttendanceRequest = {
-            studentId: student.id,
-            attendance: updatedAttendance,
-          };
-
-          AttendanceEdit(updateAttendanceRequest);
 
           return {
             ...student,
-            attendance: updatedAttendance,
+            attendance: student.attendance.map((attendanceRecord) =>
+              attendanceRecord.date === date
+                ? {
+                  ...attendanceRecord,
+                  status:
+                    attendanceRecord.status === 'PRESENT'
+                      ? 'LATE'
+                      : attendanceRecord.status === 'LATE'
+                        ? 'ABSENT'
+                        : 'PRESENT',
+                }
+                : attendanceRecord
+            ),
           };
         }
         return student;
       });
-
+      console.log("Updated Student Data:", updatedStudents);
       setUpdatedStudents(updatedStudents);
 
       return updatedStudents;
     });
+
   };
 
   return (

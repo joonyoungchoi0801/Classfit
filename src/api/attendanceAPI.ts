@@ -1,7 +1,10 @@
 import { AxiosResponse } from 'axios';
 import instance from './instance';
 import { API_ATTENDANCE } from '@/constants/API';
-import { AttendanceResponse } from '@/types/attendance.type';
+import {
+  AttendanceResponse,
+  UpdateAttendanceRequest,
+} from '@/types/attendance.type';
 
 export const getAllAttendance = (
   weekOffset: number,
@@ -34,7 +37,7 @@ export const getAllAttendanceDetail = (
 };
 
 export const AttendanceEdit = async (
-  updatedStudents: any
+  updatedStudents: UpdateAttendanceRequest[]
 ): Promise<AxiosResponse> => {
   try {
     const response = await instance({
