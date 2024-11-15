@@ -15,6 +15,7 @@ const StudentInfoModal = ({
 }: StudentInfoModalProps) => {
   const [studentDetailData, setStudentDetialData] =
     useState<Omit<StudentViewData, 'birth'>>();
+  console.log('studentId:', studentId);
 
   useEffect(() => {
     const getStudentDetail = async () => {
@@ -46,7 +47,9 @@ const StudentInfoModal = ({
         alert('학생 정보를 불러오는데 실패했습니다.');
       }
     };
-    getStudentDetail();
+    if (studentId) {
+      getStudentDetail();
+    }
   }, [studentId]);
 
   if (!isOpen) return null;

@@ -31,7 +31,8 @@ function useStudentList() {
   >([]);
 
   const [studentIds, setStudentIds] = useState<number[]>([]);
-  const [studentDetailData, setStudentDetailData] = useState<StudentViewData>();
+  const [studentId, setStudentId] = useState<number>();
+  // const [studentDetailData, setStudentDetailData] = useState<StudentViewData>();
 
   const navigate = useNavigate();
 
@@ -72,19 +73,19 @@ function useStudentList() {
     },
   });
 
-  const { mutateAsync: getStudentDetailData } = useMutation({
-    mutationFn: async (studentId: number) => {
-      return getStudentDetail(studentId);
-    },
-    onError: () => {
-      setModalMessage('학생 정보 조회에 실패했습니다.');
-      setIsModalVisible(true);
-    },
-    onSuccess: (data) => {
-      setStudentDetailData(data.data.data);
-      setIsStudentModalVisible(true);
-    },
-  });
+  // const { mutateAsync: getStudentDetailData } = useMutation({
+  //   mutationFn: async (studentId: number) => {
+  //     return getStudentDetail(studentId);
+  //   },
+  //   onError: () => {
+  //     setModalMessage('학생 정보 조회에 실패했습니다.');
+  //     setIsModalVisible(true);
+  //   },
+  //   onSuccess: (data) => {
+  //     setStudentDetailData(data.data.data);
+  //     setIsStudentModalVisible(true);
+  //   },
+  // });
 
   const { mutateAsync: getStudentSearchData } = useMutation({
     mutationFn: async (studentName: string) => {
@@ -133,7 +134,9 @@ function useStudentList() {
   };
 
   const handleOnName = async (studentId: number) => {
-    await getStudentDetailData(studentId);
+    setStudentId(studentId);
+    setIsStudentModalVisible(true);
+    // await getStudentDetailData(studentId);
   };
 
   const handleOnSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -162,8 +165,9 @@ function useStudentList() {
   return {
     studentListData,
     studentVisibleData,
-    studentDetailData,
+    // studentDetailData,
     studentIds,
+    studentId,
     modalMessage,
     isModalVisible,
     isStudentModalVisible,
