@@ -99,7 +99,6 @@ function Attendance() {
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
   };
-  console.log('selectedStudent', selectedStudent);
 
   const handleSmsButtonClick = () => {
     if (selectedStudent.length === 0) {

@@ -6,7 +6,7 @@ import ManageLayout from '@/components/layout/managelayout';
 import Label from '@/components/label';
 import QuestionModal from '@/components/modal/questionModal';
 import Modal from '@/components/modal';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SmsData } from '@/types/sms.type';
 import { getStudentDetail, getStudentDetailById } from '@/api/studentAPI';
 import { postSms } from '@/api/smsAPI';
@@ -17,7 +17,7 @@ function Sms() {
   const query = new URLSearchParams(location.search);
 
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [studentData, setStudentData] = useState<SmsData[] | []>([]);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -39,7 +39,7 @@ function Sms() {
   };
 
   const handleSendSms = async () => {
-    const res = await postSms(studentData, 1);
+    const res = await postSms(studentData, 2);
     if (res.status === 200) {
       setIsSendModalOpen(false);
       setIsConfirmModalOpen(true);
@@ -60,6 +60,12 @@ function Sms() {
       }
       return [...prev, { studentId, studentName, messageText }];
     });
+  };
+
+  const handleConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    const newPath = location.pathname.replace('/sms', '');
+    navigate(newPath);
   };
 
   useEffect(() => {
@@ -83,8 +89,6 @@ function Sms() {
     });
   }, [message]);
 
-  console.log(studentData.length);
-  console.log(studentData);
   return (
     <>
       <ManageLayout>
@@ -137,7 +141,7 @@ function Sms() {
       <Modal
         message='전송이 완료되었습니다.'
         isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
+        onClose={() => handleConfirmModal()}
       />
     </>
   );

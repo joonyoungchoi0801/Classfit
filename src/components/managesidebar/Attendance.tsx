@@ -147,7 +147,11 @@ function Attendance() {
       await postSubClass(reqData, 1);
       fetchClassList();
     } catch (e) {
-      alert('반 정보를 추가하는데 실패했습니다.');
+      if (axios.isAxiosError(e) && e.response?.status === 409) {
+        alert('이미 존재하는 서브 클래스입니다.');
+      } else {
+        alert('서브 클래스를 추가하는데 실패했습니다.');
+      }
     }
   };
 
@@ -159,7 +163,6 @@ function Attendance() {
       await postMainClass(1, reqData);
       fetchClassList();
     } catch (e) {
-      console.log(e);
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         alert('이미 존재하는 메인 클래스입니다.');
       } else {
