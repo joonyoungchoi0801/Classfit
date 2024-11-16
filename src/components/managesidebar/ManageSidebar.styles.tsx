@@ -125,6 +125,7 @@ export const ClassContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  position: relative;
 `;
 
 export const Class = styled.div<{ $isSelected?: boolean }>`

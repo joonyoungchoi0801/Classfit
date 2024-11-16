@@ -13,6 +13,7 @@ import { deleteSubClass, patchSubClass, postSubClass } from '@/api/subclassAPI';
 import { postMainClass } from '@/api/mainclassAPI';
 import axios from 'axios';
 import useClassStore from '@/store/classStore';
+import useSubClassShowStore from '@/store/subClassShowStore';
 
 function Attendance() {
   const { grade, class: className } = useParams<{
@@ -32,6 +33,8 @@ function Attendance() {
   const [tempMainClassName, setTempMainClassName] = useState<string>('');
   const [isMainClassAdd, setIsMainClassAdd] = useState<boolean>(false);
   const [isSubClassAdd, setIsSubClassAdd] = useState<boolean>(false);
+  // const [isSubClassShow, setIsSubClassShow] = useState<boolean>(false);
+  const { isSubClassShow, setIsSubClassShow } = useSubClassShowStore();
   const fetchClassList = async () => {
     try {
       const res = await getClassList();
@@ -46,12 +49,17 @@ function Attendance() {
   }, []);
 
   const handleGradeClick = (grade: string) => {
-    navigate(`/manage/attendance/${grade}`);
     setSelectedGrade(grade);
     setSelectedClass('');
     setIsPopupOpen(false);
     setIsSubClassAdd(false);
     setIsMainClassAdd(false);
+    if (grade !== selectedGrade) {
+      navigate(`/manage/attendance/${grade}`);
+      setIsSubClassShow(true);
+    } else {
+      setIsSubClassShow(!isSubClassShow);
+    }
   };
 
   const handleClassClick = (
@@ -78,11 +86,11 @@ function Attendance() {
         return prev.map((data) => ({
           ...data,
           subClasses: data.subClasses.filter(
-            (classData) => classData.subClassName !== selectedClass
+            (classData) => classData.subClassName !== className
           ),
         }));
       });
-      navigate(`/manage/attendance`);
+      navigate(`/manage/attendance/${grade}`);
       fetchClassList();
     } catch (error) {
       alert('반 정보를 삭제하는데 실패했습니다.');
@@ -108,12 +116,13 @@ function Attendance() {
         return prev.map((data) => ({
           ...data,
           subClasses: data.subClasses.filter(
-            (classData) => classData.subClassName !== selectedClass
+            (classData) => classData.subClassName !== className
           ),
         }));
       });
-      navigate(`/manage/attendance`);
+
       fetchClassList();
+      navigate(`/manage/attendance/${grade}/${name}`);
     } catch (error) {
       alert('반 정보를 수정하는데 실패했습니다.');
     } finally {
@@ -133,6 +142,7 @@ function Attendance() {
     setIsSubClassAdd(!isSubClassAdd);
     setIsPopupOpen(false);
     setIsMainClassAdd(false);
+    setIsSubClassShow(true);
   };
 
   const handleSubClassAdd = async (
@@ -146,6 +156,7 @@ function Attendance() {
       };
       await postSubClass(reqData, 1);
       fetchClassList();
+      navigate(`/manage/attendance/${grade}/${subClassName}`);
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         alert('이미 존재하는 서브 클래스입니다.');
@@ -162,6 +173,8 @@ function Attendance() {
       };
       await postMainClass(1, reqData);
       fetchClassList();
+      navigate(`/manage/attendance/${mainClassName}`);
+      setSelectedGrade(mainClassName);
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         alert('이미 존재하는 메인 클래스입니다.');
@@ -189,7 +202,11 @@ function Attendance() {
             >
               <S.Grade>
                 <S.Icon
-                  src={grade === data.mainClassName ? downArrow : rightArrow}
+                  src={
+                    grade === data.mainClassName && isSubClassShow
+                      ? downArrow
+                      : rightArrow
+                  }
                   alt='down arrow'
                 />
                 {data.mainClassName}
@@ -202,7 +219,9 @@ function Attendance() {
               />
             </S.GradeWrapper>
 
-            <S.ClassWrapper $isSelected={data.mainClassName === grade}>
+            <S.ClassWrapper
+              $isSelected={data.mainClassName === grade && isSubClassShow}
+            >
               {data.subClasses.map((classData) => (
                 <S.ClassContainer
                   key={classData.subClassId + classData.mainClassId}
@@ -215,10 +234,8 @@ function Attendance() {
                     )
                   }
                 >
-                  <S.Class
-                    $isSelected={classData.subClassName === selectedClass}
-                  >
-                    {isEditMode && classData.subClassName === selectedClass ? (
+                  <S.Class $isSelected={classData.subClassName === className}>
+                    {isEditMode && classData.subClassName === className ? (
                       <S.ClassInput
                         type='text'
                         onChange={(e) => setTempClassName(e.target.value)}
@@ -240,13 +257,13 @@ function Attendance() {
                   <S.KebabIcon
                     src={kebabIcon}
                     alt='kebab icon'
-                    $isSelected={classData.subClassName === selectedClass}
+                    $isSelected={classData.subClassName === className}
                     onClick={(e) => handleClickSubPopUp(e)}
                   />
                   {isPopupOpen && (
                     <Popup
                       isOpen={
-                        isPopupOpen && classData.subClassName === selectedClass
+                        isPopupOpen && classData.subClassName === className
                       }
                       onDelete={() => handleClassDelete(classData.subClassId)}
                       onEdit={() => setIsEditMode(true)}
