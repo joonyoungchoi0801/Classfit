@@ -144,9 +144,18 @@ function useStudentList() {
   };
 
   const handleOnSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    if (value === '') {
+    const value = e.currentTarget.value.toLowerCase();
+    if (!value) {
       setStudentVisibleData(studentListData);
+    } else {
+      const filteredData = studentListData.filter((student) =>
+        student.name.toLowerCase().includes(value)
+      );
+      if (filteredData.length > 0) {
+        setStudentVisibleData(filteredData);
+      } else {
+        setStudentVisibleData(studentListData);
+      }
     }
   };
 
