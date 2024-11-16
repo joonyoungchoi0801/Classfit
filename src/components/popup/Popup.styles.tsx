@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const PopupContainer = styled.div`
   position: absolute;
-  top: 5rem;
+  top: 3rem;
   right: 3rem;
   z-index: 1000;
   overflow: visible;
