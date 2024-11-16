@@ -13,6 +13,7 @@ import { deleteSubClass, patchSubClass, postSubClass } from '@/api/subclassAPI';
 import { postMainClass } from '@/api/mainclassAPI';
 import axios from 'axios';
 import useClassStore from '@/store/classStore';
+import useSubClassShowStore from '@/store/subClassShowStore';
 
 function Attendance() {
   const { grade, class: className } = useParams<{
@@ -32,7 +33,8 @@ function Attendance() {
   const [tempMainClassName, setTempMainClassName] = useState<string>('');
   const [isMainClassAdd, setIsMainClassAdd] = useState<boolean>(false);
   const [isSubClassAdd, setIsSubClassAdd] = useState<boolean>(false);
-  const [isSubClassShow, setIsSubClassShow] = useState<boolean>(false);
+  // const [isSubClassShow, setIsSubClassShow] = useState<boolean>(false);
+  const { isSubClassShow, setIsSubClassShow } = useSubClassShowStore();
   const fetchClassList = async () => {
     try {
       const res = await getClassList();
