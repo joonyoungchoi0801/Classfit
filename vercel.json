@@ -4,7 +4,7 @@
     {
       "source": "http://classfits.vercel.app/(.*)",
       "destination": "https://classfits.vercel.app/$1",
-      "permanent": true
+      "permanent": false
     }
   ]
 }
