@@ -21,11 +21,29 @@ import { ExcelData } from '@/types/excel.type';
 import { excelDownload } from '@/api/excelAPI';
 import { formatDate, formatStatus } from '@/utils/formatExcelData';
 
-function Attendance() {
+// 드롭다운 최근 6개월 
+const getLastSixMonths = () => {
   const currentMonth = new Date().getMonth() + 1;
-  const months = Array.from({ length: currentMonth }, (_, i) => i + 1).slice(
-    Math.max(0, currentMonth - 6)
-  );
+  const currentYear = new Date().getFullYear();
+
+  const months = [];
+  for (let i = 0; i < 6; i++) {
+    const month = currentMonth - i;
+    if (month > 0) {
+      months.push({ year: currentYear, month });
+    } else {
+      months.push({ year: currentYear - 1, month: month + 12 });
+    }
+  }
+
+  return { months: months.reverse(), currentMonth };
+};
+
+console.log(getLastSixMonths());
+
+function Attendance() {
+  const { months, currentMonth } = getLastSixMonths();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -197,7 +215,7 @@ function Attendance() {
               </S.DropdownButton>
               {isDropdownOpen && (
                 <S.DropdownList>
-                  {months?.map((month) => (
+                  {months?.map(({ month }) => (
                     <S.DropdownItem
                       key={month}
                       onClick={() => handleMonthSelect(month)}
