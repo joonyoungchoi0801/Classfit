@@ -9,10 +9,14 @@ export default defineConfig({
   },
   base: '/',
   server: {
-    https: {
-      key: fs.readFileSync('./localhost-key.pem'),
-      cert: fs.readFileSync('./localhost.pem'),
-    },
+    https:
+      process.env.VITE_DEVELOPMENT === 'true'
+        ? {
+            // 개발 환경에서만 https 적용
+            key: fs.readFileSync('./localhost-key.pem'),
+            cert: fs.readFileSync('./localhost.pem'),
+          }
+        : undefined,
   },
   resolve: {
     alias: [
