@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-
+import fs from 'fs';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -8,6 +8,12 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000, // build 오류 방지
   },
   base: '/',
+  server: {
+    https: {
+      key: fs.readFileSync('./localhost-key.pem'),
+      cert: fs.readFileSync('./localhost.pem'),
+    },
+  },
   resolve: {
     alias: [
       { find: '@', replacement: '/src' },
