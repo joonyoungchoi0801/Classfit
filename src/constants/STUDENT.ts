@@ -18,3 +18,8 @@ export const STUDENT_INFO_PATH = Object.freeze({
   REGISTER: 'register',
   EDIT: 'edit',
 });
+
+export const STUDENT_ACHIEVEMENT_PATH = Object.freeze({
+  MANAGEMENT: 'management',
+  REPORT: 'report',
+});

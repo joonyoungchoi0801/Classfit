@@ -4,6 +4,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import Home from './pages/home';
 import Sms from './pages/sms';
 import Attendance from './pages/attendance';
+import Achievement from './pages/achievement';
 
 export default function Router() {
   return (
@@ -21,7 +22,7 @@ export default function Router() {
           element={<Attendance />}
         />
         <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
-        <Route path='/manage/achievement' element={<Home />} />
+        <Route path='/manage/achievement/:type/*' element={<Achievement />} />
         <Route path='/manage/studentinfo/:type' element={<StudentInfo />} />
         <Route path='/calendar' element={<Home />} />
         <Route path='/board' element={<Home />} />
