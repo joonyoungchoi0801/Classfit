@@ -1,51 +1,96 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
 `;
 
 export const Header = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   margin-bottom: 20px;
+  gap: 1rem;
+`;
+
+export const FilterWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+`;
+
+export const RegisterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+`;
+
+export const SearchWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
 `;
 
 export const SelectBox = styled.div`
+  flex: 1;
+  width: 100%;
   select {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 1.6rem;
   }
 `;
 
 export const SearchBox = styled.div`
   display: flex;
-  input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-  }
-  button {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 0 4px 4px 0;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
+  flex: 1;
+`;
+
+export const Input = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 1rem 0 0 1rem;
+  outline: none;
+  font-size: 1.6rem;
+`;
+
+export const Button = styled.button`
+  padding: 1rem 1rem;
+  border-radius: 0 1rem 1rem 0;
+  background-color: var(--color-blue);
+  color: white;
+  cursor: pointer;
+  font-size: 1.6rem;
+  &:hover {
+    background-color: #0056b3;
   }
 `;
 
 export const RegisterButton = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  padding: 0.6rem 1.4rem;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
+  border-radius: 0.5rem;
 `;
 
 export const FilterTabs = styled.div`
@@ -55,15 +100,26 @@ export const FilterTabs = styled.div`
 `;
 
 export const FilterButton = styled.button<{ isActive: boolean }>`
-  padding: 10px 20px;
-  border: 1px solid ${({ isActive }) => (isActive ? '#007bff' : '#ddd')};
-  background-color: ${({ isActive }) => (isActive ? '#007bff' : 'white')};
+  display: flex;
+  padding: 1rem 2rem;
+  gap: 0.5rem;
+  border: 1px solid
+    ${({ isActive }) => (isActive ? 'var(--color-blue)' : '#ddd')};
+  background-color: ${({ isActive }) =>
+    isActive ? 'var(--color-blue)' : 'white'};
   color: ${({ isActive }) => (isActive ? 'white' : '#000')};
-  border-radius: 4px;
+  border-radius: 5rem;
   cursor: pointer;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const List = styled.div`
+  flex: 1;
   border: 1px solid #ddd;
   border-radius: 4px;
 `;
@@ -71,23 +127,47 @@ export const List = styled.div`
 export const ListItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 2rem 3rem;
+  border-bottom: 0.1rem solid #ededed;
+  justify-content: space-between;
   &:last-child {
     border-bottom: none;
   }
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  cursor: pointer;
 `;
 
 export const Tag = styled.div<{ isMonthly: boolean }>`
-  padding: 5px 10px;
-  background-color: ${({ isMonthly }) => (isMonthly ? '#28a745' : '#dc3545')};
+  padding: 5px 1.2rem;
+  background-color: ${({ isMonthly }) => (isMonthly ? '#5DD2A9' : '#FF7173')};
   color: white;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 0.5rem;
+  font-size: 1.4rem;
   margin-right: 10px;
+  font-weight: 600;
+  line-height: normal;
 `;
 
 export const Text = styled.div`
-  flex: 1;
   text-align: left;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const TeacherWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+`;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8rem;
+  justify-content: center;
+  align-items: center;
 `;
