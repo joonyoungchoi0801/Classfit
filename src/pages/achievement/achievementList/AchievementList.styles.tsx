@@ -23,13 +23,6 @@ export const FilterWrapper = styled.div`
   width: 100%;
 `;
 
-export const RegisterWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-`;
-
 export const SearchWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -74,23 +67,6 @@ export const Button = styled.button`
   &:hover {
     background-color: #0056b3;
   }
-`;
-
-export const RegisterButton = styled.button`
-  padding: 0.6rem 1.4rem;
-  background-color: var(--color-blue);
-  color: var(--color-white);
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 1.792rem;
-  border-radius: 0.5rem;
 `;
 
 export const FilterTabs = styled.div`

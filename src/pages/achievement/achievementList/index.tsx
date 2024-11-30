@@ -1,6 +1,8 @@
 import { AchievementData } from '@/types/achievement.type';
 import * as S from './AchievementList.styles';
+import * as PS from '@/pages/achievement/Achievement.styles';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AchievementList() {
   const [filter, setFilter] = useState('전체'); // 타입 필터
@@ -10,6 +12,7 @@ function AchievementList() {
   const [previousFilteredData, setPreviousFilteredData] = useState<
     AchievementData[]
   >([]); // 이전 필터링된 데이터 저장
+  const navigate = useNavigate();
 
   const data = [
     {
@@ -70,9 +73,9 @@ function AchievementList() {
   return (
     <S.Container>
       <S.Header>
-        <S.RegisterWrapper>
-          <S.RegisterButton>성적등록</S.RegisterButton>
-        </S.RegisterWrapper>
+        <PS.RegisterWrapper>
+          <PS.RegisterButton>성적등록</PS.RegisterButton>
+        </PS.RegisterWrapper>
 
         <S.FilterWrapper>
           <S.SelectBox>
@@ -127,7 +130,12 @@ function AchievementList() {
 
       <S.List>
         {displayData.map((item, index) => (
-          <S.ListItem key={index}>
+          <S.ListItem
+            key={index}
+            onClick={() =>
+              navigate(`/manage/achievement/management/detail/${index}`)
+            }
+          >
             <S.TitleWrapper>
               <S.Tag isMonthly={item.type === '월간'}>{item.type}</S.Tag>
               <S.Text>{item.class}</S.Text>

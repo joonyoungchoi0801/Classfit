@@ -1,11 +1,23 @@
 import ManageLayout from '@/components/layout/managelayout';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import AchievementList from './achievementList';
 import * as S from './Achievement.styles';
+import AchievementDetail from './achievementDetail';
 
 function Achievement() {
   const navigate = useNavigate();
-  const { type } = useParams();
+  const location = useLocation(); // 현재 URL 경로 가져오기
+
+  // URL 경로에 따라 type 동적으로 설정
+  const type = location.pathname.includes('/management')
+    ? 'management'
+    : 'report';
 
   return (
     <ManageLayout>
@@ -26,11 +38,15 @@ function Achievement() {
         </S.Header>
         <S.Content>
           <Routes>
-            <Route path='/' element={<AchievementList />} />
-            <Route path='/management' element={<AchievementList />} />
-            <Route path='management/:id' element={<AchievementList />} />
+            <Route path='management' element={<AchievementList />} />
+            <Route
+              path='management/detail/:id'
+              element={<AchievementDetail />}
+            />
             <Route path='management/:id/edit' element={<AchievementList />} />
-            <Route path='report' element={<AchievementList />} />
+            <Route path='management/register' element={<AchievementList />} />
+            <Route path='report' element={<AchievementDetail />} />
+            <Route index element={<AchievementList />} />
           </Routes>
         </S.Content>
       </S.Container>
