@@ -130,7 +130,11 @@ function AchievementList() {
     <S.Container>
       <S.Header>
         <PS.RegisterWrapper>
-          <PS.RegisterButton>성적등록</PS.RegisterButton>
+          <PS.RegisterButton
+            onClick={() => navigate(`/manage/achievement/management/register`)}
+          >
+            성적등록
+          </PS.RegisterButton>
         </PS.RegisterWrapper>
 
         <S.FilterWrapper>
