@@ -1,8 +1,15 @@
+import { AchievementData } from '@/types/achievement.type';
 import * as S from './AchievementList.styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function AchievementList() {
-  const [filter, setFilter] = useState('전체');
+  const [filter, setFilter] = useState('전체'); // 타입 필터
+  const [classFilter, setClassFilter] = useState('전체 클래스'); // 클래스 필터
+  const [teacherFilter, setTeacherFilter] = useState('전체 강사'); // 강사 필터
+  const [searchText, setSearchText] = useState(''); // 검색어 상태 추가
+  const [previousFilteredData, setPreviousFilteredData] = useState<
+    AchievementData[]
+  >([]); // 이전 필터링된 데이터 저장
 
   const data = [
     {
@@ -23,75 +30,42 @@ function AchievementList() {
       type: '월간',
       class: '중3-A',
       test: '월말테스트',
-      teacher: '김나나',
+      teacher: '박선호',
       date: '24.11.15',
     },
     {
       type: '주간',
       class: '중1-C',
       test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
+      teacher: '박선호',
       date: '24.11.15',
     },
   ];
 
-  const filterData = ['전체', '월별', '주간', '데일리', '기타'];
+  // 필터 데이터
+  const filterData = ['전체', '월간', '주간', '데일리', '기타'];
+  const classOptions = ['전체 클래스', '중3-A', '중1-C'];
+  const teacherOptions = ['전체 강사', '김나나', '박선호'];
+
+  const filteredData = data.filter((item) => {
+    const matchesType = filter === '전체' || item.type === filter;
+    const matchesClass =
+      classFilter === '전체 클래스' || item.class === classFilter;
+    const matchesTeacher =
+      teacherFilter === '전체 강사' || item.teacher === teacherFilter;
+    const matchesSearch = searchText === '' || item.test.includes(searchText); // 검색 조건 추가
+    return matchesType && matchesClass && matchesTeacher && matchesSearch;
+  });
+
+  // `filteredData`가 비었을 때 이전 데이터를 유지
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      setPreviousFilteredData(filteredData); // 이전 필터링된 데이터 업데이트
+    }
+  }, [filteredData]);
+
+  const displayData =
+    filteredData.length > 0 ? filteredData : previousFilteredData;
 
   return (
     <S.Container>
@@ -102,22 +76,37 @@ function AchievementList() {
 
         <S.FilterWrapper>
           <S.SelectBox>
-            <select>
-              <option value='전체 클래스'>전체 클래스</option>
-              <option value='중3-A'>중3-A</option>
-              <option value='중1-C'>중1-C</option>
+            <select
+              value={classFilter}
+              onChange={(e) => setClassFilter(e.target.value)}
+            >
+              {classOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
           </S.SelectBox>
           <S.SearchWrapper>
             <S.SelectBox>
-              <select>
-                <option value='강사명'>강사명</option>
-                <option value='김나나'>김나나</option>
-                <option value='박선호'>박선호</option>
+              <select
+                value={teacherFilter}
+                onChange={(e) => setTeacherFilter(e.target.value)}
+              >
+                {teacherOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
               </select>
             </S.SelectBox>
             <S.SearchBox>
-              <S.Input type='text' placeholder='검색어 입력' />
+              <S.Input
+                type='text'
+                placeholder='테스트명 검색'
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)} // 검색어 상태 업데이트
+              />
               <S.Button>검색</S.Button>
             </S.SearchBox>
           </S.SearchWrapper>
@@ -137,7 +126,7 @@ function AchievementList() {
       </S.FilterTabs>
 
       <S.List>
-        {data.map((item, index) => (
+        {displayData.map((item, index) => (
           <S.ListItem key={index}>
             <S.TitleWrapper>
               <S.Tag isMonthly={item.type === '월간'}>{item.type}</S.Tag>
