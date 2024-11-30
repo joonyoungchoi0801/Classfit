@@ -262,9 +262,9 @@ function AttendanceTable({
   const handleFilterClick = () => { setIsDropdownOpen(!isDropdownOpen); };
 
   const handleCheckboxClick = (index: number) => {
-    const newCheckedDays = [...checkedDays];
-    newCheckedDays[index] = !newCheckedDays[index];
-    setCheckedDays(newCheckedDays);
+    const updatedCheckedDays = [...checkedDays];
+    updatedCheckedDays[index] = !updatedCheckedDays[index];
+    setCheckedDays(updatedCheckedDays);
   };
 
   return (
@@ -311,8 +311,15 @@ function AttendanceTable({
           <S.PaginationItem
             key={index}
             style={{
-              color: isToday ? 'var(--color-blue)' : 'var(--color-black)',
+              color: checkedDays.includes(true) // 요일 필터링이 활성화된 경우
+                ? checkedDays[index]
+                  ? "var(--color-black)" // 필터링된 요일은 검은색
+                  : "var(--color-gray)" // 선택되지 않은 요일은 회색
+                : isToday
+                  ? "var(--color-blue)" // 오늘 날짜는 파란색
+                  : "var(--color-black)", // 나머지 날짜는 검은색
             }}
+            onClick={() => handleCheckboxClick(index)}
           >
             {date}
           </S.PaginationItem>
