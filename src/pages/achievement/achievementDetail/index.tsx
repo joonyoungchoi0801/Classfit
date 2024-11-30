@@ -59,7 +59,12 @@ function AchievementDetail() {
       <S.ScoreListSection>
         <S.ScoreListHeader>
           <S.ScoreTitle>성적</S.ScoreTitle>
-          <PS.RegisterButton $color='var(--color-black)'>
+          <PS.RegisterButton
+            $color='var(--color-black)'
+            onClick={() =>
+              navigate(`/manage/achievement/management/detail/${id}/editscore`)
+            }
+          >
             수정
           </PS.RegisterButton>
         </S.ScoreListHeader>
