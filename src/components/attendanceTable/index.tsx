@@ -12,6 +12,7 @@ import absent_Black from '@/assets/attendanceTable/absent_Black.svg';
 import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
+import filter from '@/assets/attendanceTable/filter.svg';
 
 import { AxiosResponse } from 'axios';
 import {
@@ -37,7 +38,8 @@ function AttendanceTable({
   const [keyword, setKeyword] = useState('');
   const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [students, setStudents] = useState<StudentData[]>([]);
-
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [checkedDays, setCheckedDays] = useState(new Array(7).fill(false));
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -256,9 +258,38 @@ function AttendanceTable({
     });
   };
 
+  //요일 필터링
+  const handleFilterClick = () => { setIsDropdownOpen(!isDropdownOpen); };
+
+  const handleCheckboxClick = (index: number) => {
+    const newCheckedDays = [...checkedDays];
+    newCheckedDays[index] = !newCheckedDays[index];
+    setCheckedDays(newCheckedDays);
+  };
+
   return (
     <S.Table>
       <S.TableHeader>
+        <S.FilterButton
+          src={filter}
+          alt='filter button'
+          onClick={handleFilterClick}
+        />
+        {isDropdownOpen && (
+          <S.DropdownContainer>
+            {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => (
+              <S.DropdownItem key={index}>
+                <S.CheckBox
+                  as="img"
+                  src={checkedDays[index] ? SelectedCheckBoxIcon : CheckBoxIcon}
+                  alt={`${day} checkbox`}
+                  onClick={() => handleCheckboxClick(index)}
+                />
+                <S.DropdownText>{day}</S.DropdownText>
+              </S.DropdownItem>
+            ))}
+          </S.DropdownContainer>
+        )}
         <S.SearchContainer>
           <S.CheckBox
             as='img'

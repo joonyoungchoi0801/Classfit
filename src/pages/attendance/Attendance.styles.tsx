@@ -49,6 +49,7 @@ export const ButtonGroup = styled.div`
   justify-content: space-between;
   margin-bottom: 0.94rem;
   z-index: 20;
+  padding: 2rem 2.5rem;
 `;
 
 export const LeftButtons = styled.div`
@@ -58,17 +59,17 @@ export const LeftButtons = styled.div`
 
 export const BlueButton = styled.div<{ disabled?: boolean }>`
   display: flex;
-  width: 15rem;
+  width: 13rem;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-shrink: 0;
   border-radius: 1rem;
   border: 1px solid var(--color-blue);
   background-color: var(--color-blue);
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   color: var(--color-white);
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
@@ -84,7 +85,7 @@ export const WhiteButton = styled.div`
   border-radius: 1rem;
   border: 1px solid var(--color-blue);
   color: var(--color-blue);
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
@@ -113,7 +114,7 @@ export const DropdownButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
@@ -158,7 +159,7 @@ export const FileDownloadButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.12rem;
@@ -179,7 +180,7 @@ export const EditButton = styled.div<{ $isEditMode: boolean }>`
     props.$isEditMode ? 'var(--color-white)' : 'var(--color-blue)'};
   background-color: ${(props) =>
     props.$isEditMode ? 'var(--color-blue)' : 'var(--color-white)'};
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
