@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import * as S from './style/signup.styles';
@@ -7,8 +8,10 @@ import email from '@/assets/auth/signup/email.svg';
 import passwordIcon from '@/assets/auth/signup/password.svg';
 import check from '@/assets/auth/signup/check.svg';
 import Error from '@/assets/auth/signup/error.svg';
+import eyeon from '@/assets/auth/signup/eyeon.svg';
+import eyeoff from '@/assets/auth/signup/eyeoff.svg';
 import type { SignupType, ErrorProps } from './type/signup.type';
-import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ErrorComponent = ({ message }: ErrorProps) => (
   <S.Error>
@@ -18,6 +21,7 @@ const ErrorComponent = ({ message }: ErrorProps) => (
 );
 
 function Signup() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -25,6 +29,7 @@ function Signup() {
     formState: { errors },
   } = useForm<SignupType>();
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const password = watch('password');
   const passwordConfirm = watch('passwordConfirm');
 
@@ -49,6 +54,8 @@ function Signup() {
   const onSubmit = (data: SignupType) => {
     console.log(errors);
     console.log(data);
+    sessionStorage.setItem('email', data.email);
+    navigate('/email');
   };
 
   return (
@@ -111,7 +118,7 @@ function Signup() {
             <S.InputLabel>비밀번호</S.InputLabel>
           </S.LabelWrapper>
           <S.Input
-            type='password'
+            type={isPasswordVisible ? 'text' : 'password'}
             placeholder='비밀번호를 입력해주세요 (8-20자, 영문 숫자 혼합)'
             {...register('password', {
               required: '비밀번호를 입력해주세요',
@@ -121,6 +128,11 @@ function Signup() {
                   '비밀번호를 8-20자 사이로 지정해주세요.(영문 숫자 혼합)',
               },
             })}
+          />
+          <S.InputImg
+            src={isPasswordVisible ? eyeon : eyeoff}
+            alt='eye'
+            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
           />
           {errors.password && (
             <ErrorComponent message={errors?.password.message} />

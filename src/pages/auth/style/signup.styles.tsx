@@ -73,6 +73,7 @@ export const Input = styled.input`
   border: 1px solid #dedede;
   background: var(--color-white);
   outline: none;
+  font-size: 1.6rem;
   &::placeholder {
     color: #cacaca;
     font-family: Pretendard;
@@ -89,7 +90,7 @@ export const InputImg = styled.img`
   height: 2.4rem;
   right: 1rem;
   top: 50%;
-  transform: translateY(13%);
+  transform: translateY(19%);
 `;
 
 export const SubmitButton = styled.button<{

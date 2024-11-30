@@ -65,6 +65,7 @@ export const Input = styled.input`
   border-radius: 1rem;
   border: 1px solid #dedede;
   background: var(--color-white);
+  font-size: 1.6rem;
   &::placeholder {
     color: #cacaca;
     font-family: Pretendard;
