@@ -19,7 +19,7 @@ function ManageSidebar() {
       </S.SidebarItem>
       {url.startsWith('/manage/attendance') && <Attendance />}
       <S.SidebarItem
-        onClick={() => navigate('/manage/achievement')}
+        onClick={() => navigate('/manage/achievement/management')}
         $isSelected={url.startsWith('/manage/achievement')}
       >
         학생성적관리
