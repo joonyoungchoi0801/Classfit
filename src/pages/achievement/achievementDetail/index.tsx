@@ -1,8 +1,11 @@
 import * as S from './AchievementDetail.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function AchievementDetail() {
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [data] = useState([
     { id: 1, name: '손화영', score: '86', checked: true },
     { id: 2, name: '김나나', score: '86', checked: false },
@@ -12,10 +15,15 @@ function AchievementDetail() {
 
   return (
     <S.Container>
-      {/* Header Section */}
       <S.HeaderSection>
         <PS.RegisterWrapper>
-          <PS.RegisterButton>수정</PS.RegisterButton>
+          <PS.RegisterButton
+            onClick={() =>
+              navigate(`/manage/achievement/management/detail/${id}/edit`)
+            }
+          >
+            수정
+          </PS.RegisterButton>
         </PS.RegisterWrapper>
         <S.TestInfo>
           <S.ClassWrapper>
@@ -33,8 +41,6 @@ function AchievementDetail() {
           </S.TagWrapper>
         </S.TestInfo>
       </S.HeaderSection>
-
-      {/* Statistics Section */}
       <S.StatisticsSection>
         <S.StatisticBox>
           <S.StatisticLabel>최고점수</S.StatisticLabel>
@@ -50,7 +56,6 @@ function AchievementDetail() {
         </S.StatisticBox>
       </S.StatisticsSection>
 
-      {/* Score List Section */}
       <S.ScoreListSection>
         <S.ScoreListHeader>
           <S.ScoreTitle>성적</S.ScoreTitle>
@@ -61,9 +66,6 @@ function AchievementDetail() {
         <S.ScoreList>
           {data.map((item) => (
             <S.ScoreItem key={item.id}>
-              {/* <S.CheckboxWrapper>
-                <input type='checkbox' checked={item.checked} readOnly />
-              </S.CheckboxWrapper> */}
               <S.Name>{item.name}</S.Name>
               <S.ScoreWrapper>
                 <S.Score>{item.score}</S.Score>

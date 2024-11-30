@@ -43,6 +43,62 @@ function AchievementList() {
       teacher: '박선호',
       date: '24.11.15',
     },
+    {
+      type: '월간',
+      class: '중3-A',
+      test: '월말테스트',
+      teacher: '김나나',
+      date: '24.11.15',
+    },
+    {
+      type: '주간',
+      class: '중1-C',
+      test: '영어퀴즈테스트',
+      teacher: '김나나',
+      date: '24.11.15',
+    },
+    {
+      type: '월간',
+      class: '중3-A',
+      test: '월말테스트',
+      teacher: '박선호',
+      date: '24.11.15',
+    },
+    {
+      type: '주간',
+      class: '중1-C',
+      test: '영어퀴즈테스트',
+      teacher: '박선호',
+      date: '24.11.15',
+    },
+    {
+      type: '월간',
+      class: '중3-A',
+      test: '월말테스트',
+      teacher: '김나나',
+      date: '24.11.15',
+    },
+    {
+      type: '주간',
+      class: '중1-C',
+      test: '영어퀴즈테스트',
+      teacher: '김나나',
+      date: '24.11.15',
+    },
+    {
+      type: '월간',
+      class: '중3-A',
+      test: '월말테스트',
+      teacher: '박선호',
+      date: '24.11.15',
+    },
+    {
+      type: '주간',
+      class: '중1-C',
+      test: '영어퀴즈테스트',
+      teacher: '박선호',
+      date: '24.11.15',
+    },
   ];
 
   // 필터 데이터

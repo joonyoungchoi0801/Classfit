@@ -8,16 +8,6 @@ export const Container = styled.div`
   overflow: hidden;
 `;
 
-// import styled from 'styled-components';
-
-// // Container
-// export const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   padding: 2rem;
-//   gap: 2rem;
-// `;
-
 export const ClassWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -111,7 +101,6 @@ export const EditButton = styled.button`
   }
 `;
 
-// Statistics Section
 export const StatisticsSection = styled.div`
   display: flex;
   gap: 2rem;
@@ -143,7 +132,6 @@ export const StatisticValue = styled.h2`
   margin: 0;
 `;
 
-// Score List Section
 export const ScoreListSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -166,8 +154,6 @@ export const ScoreTitle = styled.h3`
 export const ScoreList = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap: 1rem; */
-  /* border-top: 1px solid #ddd; */
   padding: 1rem 0;
 `;
 
@@ -177,7 +163,6 @@ export const ScoreItem = styled.div`
   justify-content: space-between;
   padding: 1.5rem 0;
   border-bottom: 0.1rem solid var(--color-gray);
-  /* background-color: #000; */
   &:last-child {
     border-bottom: none;
   }
@@ -188,7 +173,6 @@ export const CheckboxWrapper = styled.div`
 `;
 
 export const Name = styled.div`
-  /* flex: 0 0 60%; */
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
@@ -196,7 +180,6 @@ export const Name = styled.div`
 `;
 
 export const Score = styled.div`
-  /* flex: 0 0 37%; */
   font-size: 1.6rem;
   text-align: right;
   font-weight: 500;

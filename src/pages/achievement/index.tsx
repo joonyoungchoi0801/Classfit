@@ -9,6 +9,7 @@ import {
 import AchievementList from './achievementList';
 import * as S from './Achievement.styles';
 import AchievementDetail from './achievementDetail';
+import AchievementInfoEdit from './achievementInfoEdit';
 
 function Achievement() {
   const navigate = useNavigate();
@@ -43,7 +44,10 @@ function Achievement() {
               path='management/detail/:id'
               element={<AchievementDetail />}
             />
-            <Route path='management/:id/edit' element={<AchievementList />} />
+            <Route
+              path='management/detail/:id/edit'
+              element={<AchievementInfoEdit />}
+            />
             <Route path='management/register' element={<AchievementList />} />
             <Route path='report' element={<AchievementDetail />} />
             <Route index element={<AchievementList />} />
