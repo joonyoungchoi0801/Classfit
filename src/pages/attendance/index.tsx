@@ -6,7 +6,6 @@ import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import sms from '@/assets/buttonIcon/sms.svg';
 import statistics from '@/assets/buttonIcon/statistics.svg';
 import defaultImg from '@/assets/attendanceTable/default.svg';
-import Path from '@/components/path';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import {
@@ -39,11 +38,8 @@ const getLastSixMonths = () => {
   return { months: months.reverse(), currentMonth };
 };
 
-console.log(getLastSixMonths());
-
 function Attendance() {
   const { months, currentMonth } = getLastSixMonths();
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -54,14 +50,15 @@ function Attendance() {
   const [excelData, setExcelData] = useState<ExcelStudentData[]>();
   const [smsQuery, setSmsQuery] = useState('');
   const { subClassId } = useClassStore();
-
   const { grade, class: classParam } = useParams();
+  const { type } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const url = location.pathname;
   const isTableOpen = url === '/manage/attendance/all' || !!classParam;
   const isSmsButtonEnabled =
     !!classParam || location.pathname === '/manage/attendance/all';
+  const isButtonGroupEnabled = url === '/manage/attendance'
 
   useEffect(() => {
     setIsEditMode(false);
@@ -75,6 +72,7 @@ function Attendance() {
     setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
+
   useEffect(() => {
     fetchExcelData(selectedMonth);
   }, [selectedMonth, subClassId]);
@@ -134,7 +132,7 @@ function Attendance() {
       worksheetData.push(row);
     });
 
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData); //2D 배열을 엑셀 시트 형식으로 변환
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, '출석기록');
@@ -143,6 +141,7 @@ function Attendance() {
       bookType: 'xlsx',
       type: 'array',
     });
+
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
 
     const url = URL.createObjectURL(blob);
@@ -191,49 +190,63 @@ function Attendance() {
   return (
     <ManageLayout>
       <S.Container>
-        <Path />
-        <S.AttendanceTitle>학생출결관리</S.AttendanceTitle>
-        <S.ButtonGroup>
-          <S.LeftButtons>
-            <S.BlueButton
-              as='button'
-              disabled={!isSmsButtonEnabled}
-              onClick={() => handleSmsButtonClick()}
-            >
-              <img src={sms} alt='sms icon' />
-              SMS보내기
-            </S.BlueButton>
-            <S.WhiteButton>
-              <img src={statistics} alt='statistics icon' />
-              통계
-            </S.WhiteButton>
-          </S.LeftButtons>
-          <S.RightButtons>
-            <S.DownloadContainer>
-              <S.DropdownButton onClick={toggleDropdown}>
-                {selectedMonth}월 <img src={dropdwon} alt='dropdown icon' />
-              </S.DropdownButton>
-              {isDropdownOpen && (
-                <S.DropdownList>
-                  {months?.map(({ month }) => (
-                    <S.DropdownItem
-                      key={month}
-                      onClick={() => handleMonthSelect(month)}
-                    >
-                      {month}월
-                    </S.DropdownItem>
-                  ))}
-                </S.DropdownList>
-              )}
-              <S.FileDownloadButton onClick={() => ExcelButton()}>
-                출결 문서 다운
-              </S.FileDownloadButton>
-            </S.DownloadContainer>
-            <S.EditButton onClick={toggleEditMode} $isEditMode={isEditMode}>
-              {isEditMode ? '저장' : '편집'}
-            </S.EditButton>
-          </S.RightButtons>
-        </S.ButtonGroup>
+        <S.Header>
+          <S.TabButton
+            isActive={type === 'attendance'}>
+            출결
+          </S.TabButton>
+          <S.TabButton
+            isActive={type === 'statistics'}>
+            통계
+          </S.TabButton>
+          <S.TabButton
+            isActive={type === 'message'}>
+            메세지함
+          </S.TabButton>
+        </S.Header>
+        {!isButtonGroupEnabled && (
+          <S.ButtonGroup>
+            <S.LeftButtons>
+              <S.BlueButton
+                as='button'
+                disabled={!isSmsButtonEnabled}
+                onClick={() => handleSmsButtonClick()}
+              >
+                <img src={sms} alt='sms icon' />
+                SMS보내기
+              </S.BlueButton>
+              <S.WhiteButton>
+                <img src={statistics} alt='statistics icon' />
+                통계
+              </S.WhiteButton>
+            </S.LeftButtons>
+            <S.RightButtons>
+              <S.DownloadContainer>
+                <S.DropdownButton onClick={toggleDropdown}>
+                  {selectedMonth}월 <img src={dropdwon} alt='dropdown icon' />
+                </S.DropdownButton>
+                {isDropdownOpen && (
+                  <S.DropdownList>
+                    {months?.map(({ month }) => (
+                      <S.DropdownItem
+                        key={month}
+                        onClick={() => handleMonthSelect(month)}
+                      >
+                        {month}월
+                      </S.DropdownItem>
+                    ))}
+                  </S.DropdownList>
+                )}
+                <S.FileDownloadButton onClick={() => ExcelButton()}>
+                  출결 문서 다운
+                </S.FileDownloadButton>
+              </S.DownloadContainer>
+              <S.EditButton onClick={toggleEditMode} $isEditMode={isEditMode}>
+                {isEditMode ? '저장' : '편집'}
+              </S.EditButton>
+            </S.RightButtons>
+          </S.ButtonGroup>
+        )}
         {isTableOpen ? (
           <AttendanceTable
             selectedMonth={selectedMonth}
