@@ -3,4 +3,5 @@ export interface DropDownProps {
   value?: string;
   placeholder?: string;
   onChange: (option: string) => void;
+  style?: React.CSSProperties;
 }

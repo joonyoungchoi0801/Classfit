@@ -11,6 +11,8 @@ import * as S from './Achievement.styles';
 import AchievementDetail from './achievementDetail';
 import AchievementInfoEdit from './achievementInfoEdit';
 import AchievementScoreEdit from './achievementScoreEdit';
+import AchievementRegister from './achievementRegister';
+import AchievementRegisterStudent from './achievementRegisterStudent';
 
 function Achievement() {
   const navigate = useNavigate();
@@ -53,7 +55,14 @@ function Achievement() {
               path='management/detail/:id/editscore'
               element={<AchievementScoreEdit />}
             />
-            <Route path='management/register' element={<AchievementList />} />
+            <Route
+              path='management/register'
+              element={<AchievementRegister />}
+            />
+            <Route
+              path='management/register/student'
+              element={<AchievementRegisterStudent />}
+            />
             <Route path='report' element={<AchievementDetail />} />
             <Route index element={<AchievementList />} />
           </Routes>
