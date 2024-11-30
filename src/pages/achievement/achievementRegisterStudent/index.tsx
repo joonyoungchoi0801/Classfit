@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
+import SelectedToggleIcon from '@/assets/buttonIcon/toggleFilled.svg';
+import ToggleIcon from '@/assets/buttonIcon/toggle.svg';
 import Button from '@/components/button';
 
 function AchievementRegisterStudent() {
@@ -66,6 +68,20 @@ function AchievementRegisterStudent() {
                 <S.Score>{item.score}</S.Score>
                 <S.TotalScore>{totalScore}</S.TotalScore>
               </S.ScoreWrapper>
+              {/* <S.ToggleWrapper>
+                <S.Toggle>
+                  <S.IconWrapper $alignLeft={true} onClick={() => {}}>
+                    <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                  </S.IconWrapper>
+                  <S.Label>T</S.Label>
+                </S.Toggle>
+                <S.Toggle>
+                  <S.IconWrapper $alignLeft={true} onClick={() => {}}>
+                    <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                  </S.IconWrapper>
+                  <S.Label>F</S.Label>
+                </S.Toggle>
+              </S.ToggleWrapper> */}
             </S.ScoreItem>
           ))}
         </S.ScoreList>

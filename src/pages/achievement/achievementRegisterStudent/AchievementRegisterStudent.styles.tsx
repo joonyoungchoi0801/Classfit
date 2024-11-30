@@ -117,7 +117,20 @@ export const IconWrapper = styled.div<{
   cursor: pointer;
 `;
 
-export const BtnIcon = styled.img`
-  width: 2.2rem;
-  height: 2.2rem;
+export const BtnIcon = styled.img<{ $size?: string }>`
+  width: ${({ $size }) => $size || '2.2rem'};
+  height: ${({ $size }) => $size || '2.2rem'};
+`;
+
+export const ToggleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+`;
+
+export const Toggle = styled.div`
+  display: flex;
+  flex-direction: row;
+  /* gap: 0.5rem; */
+  align-items: center;
 `;

@@ -15,7 +15,7 @@ export const FormWrapper = styled.div`
 
 export const Row = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   flex-direction: row;
   padding-bottom: 1rem;
   @media (max-width: 76.8rem) {
@@ -77,7 +77,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  padding: 2rem;
+  padding: 2rem 0;
 `;
 
 export const TagItem = styled.span`

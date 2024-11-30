@@ -3,6 +3,7 @@ import * as S from './DropDown.styles';
 import type { DropDownProps } from './DropDown.types';
 
 function DropDown({
+  style,
   options = [],
   value = '',
   placeholder = '선택',
@@ -32,7 +33,7 @@ function DropDown({
   }, [value]);
 
   return (
-    <S.SelectWrapper>
+    <S.SelectWrapper style={style}>
       <S.SelectButton
         onClick={() => setIsOpen((prev) => !prev)}
         $selectedOption={selectedOption}

@@ -11,7 +11,8 @@ import CloseIcon from '@/assets/label/close.svg';
 import { useNavigate } from 'react-router-dom';
 
 function AchievementRegister() {
-  const genderLst = ['남', '여'];
+  const genderLst = ['점수', '개수', 'P/F', '정성평가'];
+  const examLst = ['주간', '월간', '데일리', '기타'];
   const studentRegisterHandler = useStudentRegister();
   const navigate = useNavigate();
 
@@ -65,7 +66,7 @@ function AchievementRegister() {
           </S.FormGroup>
         </S.Row>
         <S.Row>
-          <S.FormGroup>
+          <S.FormGroup style={{ flex: 1 }}>
             <S.LabelWrapper>
               <S.Label>시험 날짜</S.Label>
               <S.Label $color='var(--color-blue)'>(필수)</S.Label>
@@ -82,16 +83,17 @@ function AchievementRegister() {
               type='date'
             />
           </S.FormGroup>
-          <S.FormGroup>
+          <S.FormGroup style={{ flex: 2 }}>
             <S.LabelWrapper>
               <S.Label>채점 기준</S.Label>
               <S.Label $color='var(--color-blue)'>(필수)</S.Label>
             </S.LabelWrapper>
             <S.Row>
               <DropDown
+                style={{ flex: 1 }}
                 options={genderLst}
                 value={studentRegisterHandler.studentData.gender}
-                placeholder='성별 선택'
+                placeholder='기준 선택'
                 onChange={(value) =>
                   studentRegisterHandler.handleOnChangeGenderValue(
                     STUDENT_FIELD.GENDER,
@@ -100,6 +102,7 @@ function AchievementRegister() {
                 }
               />
               <S.Input
+                style={{ flex: 1 }}
                 placeholder='점수'
                 value={studentRegisterHandler.studentData.name}
                 onChange={(e) =>
@@ -120,7 +123,7 @@ function AchievementRegister() {
           <S.Row>
             <S.FormGroup style={{ flex: 1 }}>
               <DropDown
-                options={genderLst}
+                options={examLst}
                 value={studentRegisterHandler.studentData.gender}
                 placeholder='분류 선택'
                 onChange={(value) =>
