@@ -6,6 +6,7 @@ import Sms from './pages/sms';
 import Attendance from './pages/attendance';
 import Achievement from './pages/achievement';
 import Signin from './pages/auth/signin';
+import Signup from './pages/auth/signup';
 
 export default function Router() {
   return (
@@ -14,6 +15,7 @@ export default function Router() {
       <Routes>
         <Route path='/' element={<Attendance />} />
         <Route path='/signin' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
         <Route path='/manage' element={<Attendance />} />
         <Route path='/manage/attendance' element={<Attendance />} />
         <Route path='/manage/attendance/all' element={<Attendance />} />

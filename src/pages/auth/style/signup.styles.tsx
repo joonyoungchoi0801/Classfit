@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FieldError } from 'react-hook-form';
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -10,7 +11,7 @@ export const PageWrapper = styled.div`
   background: var(--color-lightblue);
 `;
 
-export const SignupWrapper = styled.div`
+export const Signupform = styled.form`
   display: flex;
   width: 48rem;
   padding: 3rem 3rem 4rem 3rem;
@@ -19,6 +20,9 @@ export const SignupWrapper = styled.div`
   align-items: flex-start;
   gap: 3rem;
   flex-shrink: 0;
+  border-radius: 2rem;
+  background: var(--color-white);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
 `;
 
 export const Label = styled.label`
@@ -34,12 +38,18 @@ export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
+  width: 100%;
 `;
 
 export const LabelWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
   align-items: center;
+`;
+export const LabelImg = styled.img`
+  width: 2.4rem;
+  height: 2.4rem;
 `;
 
 export const InputLabel = styled.label`
@@ -62,6 +72,7 @@ export const Input = styled.input`
   border-radius: 1rem;
   border: 1px solid #dedede;
   background: var(--color-white);
+  outline: none;
   &::placeholder {
     color: #cacaca;
     font-family: Pretendard;
@@ -70,4 +81,51 @@ export const Input = styled.input`
     font-weight: 600;
     line-height: normal;
   }
+`;
+
+export const InputImg = styled.img`
+  position: absolute;
+  width: 2.4rem;
+  height: 2.4rem;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(13%);
+`;
+
+export const SubmitButton = styled.button<{
+  $isDisabled?: FieldError | boolean;
+}>`
+  display: flex;
+  width: 42rem;
+  padding: 1.5rem 2rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 5rem;
+  color: var(--color-white);
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  background: ${(props) =>
+    props.$isDisabled ? '#dedede' : 'var(--color-blue)'};
+`;
+
+export const Error = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+`;
+export const ErrorImg = styled.img`
+  width: 2.4rem;
+  height: 2.4rem;
+`;
+export const ErrorMsg = styled.span`
+  color: #ff5858;
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;

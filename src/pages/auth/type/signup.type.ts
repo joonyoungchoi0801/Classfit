@@ -5,3 +5,7 @@ export interface SignupType {
   password: string;
   passwordConfirm: string;
 }
+
+export interface ErrorProps {
+  message?: string;
+}
