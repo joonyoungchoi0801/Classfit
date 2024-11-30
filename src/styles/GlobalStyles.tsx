@@ -27,7 +27,7 @@ html{
 }
 
 body {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard';
   cursor: default;
   overflow-x: auto;
   overflow-y: hidden;

@@ -5,6 +5,7 @@ import Home from './pages/home';
 import Sms from './pages/sms';
 import Attendance from './pages/attendance';
 import Achievement from './pages/achievement';
+import Signin from './pages/auth/signin';
 
 export default function Router() {
   return (
@@ -12,6 +13,7 @@ export default function Router() {
       <GlobalStyles />
       <Routes>
         <Route path='/' element={<Attendance />} />
+        <Route path='/signin' element={<Signin />} />
         <Route path='/manage' element={<Attendance />} />
         <Route path='/manage/attendance' element={<Attendance />} />
         <Route path='/manage/attendance/all' element={<Attendance />} />
