@@ -10,9 +10,11 @@ import Password from '@/assets/auth/signin/password.svg';
 import type { SigninType } from './type/signin.type';
 
 function Signin() {
+  const [emailValue, setEmailValue] = useState<string>(
+    localStorage.getItem('savedEmail') || ''
+  );
   const [isMemoryChecked, setIsMemoryChecked] = useState(false);
   const { register, handleSubmit, watch } = useForm<SigninType>();
-  const savedEmail = localStorage.getItem('savedEmail');
 
   const onSubmit = (data: SigninType) => {
     if (isMemoryChecked) {
@@ -33,14 +35,15 @@ function Signin() {
                 {...register('email')}
                 type='email'
                 id='email'
-                value={savedEmail ?? ''}
+                value={emailValue}
                 placeholder='이메일을 입력해주세요'
+                onChange={(e) => setEmailValue(e.target.value)}
               />
               <S.InputImg
                 src={Id}
                 alt='id'
                 style={{
-                  display: watch('email') || savedEmail ? 'none' : 'block',
+                  display: watch('email') || emailValue ? 'none' : 'block',
                 }}
               />
             </S.InputWrapper>
