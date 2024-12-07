@@ -1,6 +1,7 @@
 export interface AttendanceStatus {
   id: number;
   date: string;
+  week: number; // 요일 데이터 0:월요일...6:일요일
   status: string;
 }
 

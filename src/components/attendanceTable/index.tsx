@@ -2,18 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import * as S from './AttendanceTable.styles';
 import type { AttendanceTableProps } from './AttendanceTable.types';
-import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
-import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
-import circle_Black from '@/assets/attendanceTable/circle_Black.svg';
-import circle_Blue from '@/assets/attendanceTable/circle_Blue.svg';
-import triangle_Black from '@/assets/attendanceTable/triangle_Black.svg';
-import triangle_Blue from '@/assets/attendanceTable/triangle_Blue.svg';
-import absent_Black from '@/assets/attendanceTable/absent_Black.svg';
-import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
-import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
-import CheckBoxIcon from '@/assets/info/checkBox.svg';
-import filter from '@/assets/attendanceTable/filter.svg';
-
 import { AxiosResponse } from 'axios';
 import {
   getAllAttendance,
@@ -25,6 +13,20 @@ import {
   StudentData,
   UpdateAttendanceRequest,
 } from '@/types/attendance.type';
+
+import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
+import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
+import circle_Black from '@/assets/attendanceTable/circle_Black.svg';
+import circle_Blue from '@/assets/attendanceTable/circle_Blue.svg';
+import triangle_Black from '@/assets/attendanceTable/triangle_Black.svg';
+import triangle_Blue from '@/assets/attendanceTable/triangle_Blue.svg';
+import absent_Black from '@/assets/attendanceTable/absent_Black.svg';
+import absent_Blue from '@/assets/attendanceTable/absent_Blue.svg';
+import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
+import CheckBoxIcon from '@/assets/info/checkBox.svg';
+import filter from '@/assets/attendanceTable/filter.svg';
+import white_status from '@/assets/attendanceTable/white_status.svg';
+
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
 import formatDateToISO from '@/utils/formatDate';
@@ -63,6 +65,7 @@ function AttendanceTable({
           const response: AxiosResponse<AttendanceResponse> =
             await getAllAttendance(weekOffset, page);
           const attendanceData = response.data;
+
           if (attendanceData.statusCode === 200) {
             const formattedData = attendanceData.data.map((student) => ({
               ...student,
@@ -105,14 +108,15 @@ function AttendanceTable({
         console.error('Error fetching attendance data:', error);
       }
     };
+
     fetchAttendanceData();
   }, [weekOffset, page, url]);
 
-  const getIconByStatus = (status: string, isEditMode: boolean) => {
+  const getIconByStatus = (status: string | undefined, isEditMode: boolean) => {
     if (status === 'PRESENT') return isEditMode ? circle_Black : circle_Blue;
-    if (status === 'LATE') return isEditMode ? triangle_Black : triangle_Blue;
-    if (status === 'ABSENT') return isEditMode ? absent_Black : absent_Blue;
-    // return isEditMode ? circle_Black : circle_Blue;
+    else if (status === 'LATE') return isEditMode ? triangle_Black : triangle_Blue;
+    else if (status === 'ABSENT') return isEditMode ? absent_Black : absent_Blue;
+    else return white_status;
   };
 
   useEffect(() => {
@@ -166,9 +170,9 @@ function AttendanceTable({
 
   const calculateWeekDates = (currentDate: Date) => {
     const weekDates = [];
-    const dayOfWeek = currentDate.getDay() === 0 ? 7 : currentDate.getDay();
+    const dayOfWeek = currentDate.getDay() === 0 ? 7 : currentDate.getDay(); // Sunday(0)을 7로 처리
     const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - dayOfWeek + 1);
+    startOfWeek.setDate(currentDate.getDate() - dayOfWeek + 1); // 월요일로 시작하도록 설정
 
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
@@ -178,19 +182,19 @@ function AttendanceTable({
       const day = date.getDate();
 
       const formattedDay = day < 10 ? `0${day}` : `${day}`;
-      const dayLabel = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'][
-        date.getDay()
-      ];
+      // 월요일(0)을 시작으로, 요일을 0 (월)부터 6 (일)로 설정
+      const dayLabel = ['(월)', '(화)', '(수)', '(목)', '(금)', '(토)', '(일)'][(date.getDay() + 6) % 7];
 
       const isToday = date.toDateString() === new Date().toDateString();
 
-      weekDates.push({ date: `${month}/${formattedDay}${dayLabel}`, isToday });
+      weekDates.push({ date: `${month}/${formattedDay}${dayLabel}`, isToday, week: (date.getDay() + 6) % 7 });
     }
 
-    return weekDates;
+    return weekDates.sort((a, b) => a.week - b.week);
   };
 
   const weekDates = calculateWeekDates(currentDate);
+
 
   const handlePrevWeek = () => {
     const newDate = new Date(currentDate);
@@ -267,6 +271,8 @@ function AttendanceTable({
     setCheckedDays(updatedCheckedDays);
   };
 
+  const filteredWeekDates = weekDates.filter((_, index) => checkedDays[index]);
+
   return (
     <S.Table>
       <S.TableHeader>
@@ -307,23 +313,24 @@ function AttendanceTable({
           alt='Previous Week'
           onClick={handlePrevWeek}
         />
-        {weekDates.map(({ date, isToday }, index) => (
-          <S.PaginationItem
-            key={index}
-            style={{
-              color: checkedDays.includes(true) // 요일 필터링이 활성화된 경우
-                ? checkedDays[index]
-                  ? "var(--color-black)" // 필터링된 요일은 검은색
-                  : "var(--color-gray)" // 선택되지 않은 요일은 회색
-                : isToday
-                  ? "var(--color-blue)" // 오늘 날짜는 파란색
-                  : "var(--color-black)", // 나머지 날짜는 검은색
-            }}
-            onClick={() => handleCheckboxClick(index)}
-          >
-            {date}
-          </S.PaginationItem>
-        ))}
+        {weekDates.sort((a, b) => a.week - b.week) // 월요일부터 일요일까지 순서대로 정렬
+          .map(({ date, isToday, week }, index) => (
+            <S.PaginationItem
+              key={index}
+              style={{
+                color: checkedDays.includes(true) // 요일 필터링이 활성화된 경우
+                  ? checkedDays[week]
+                    ? "var(--color-black)" // 필터링된 요일은 검은색
+                    : "var(--color-gray)" // 선택되지 않은 요일은 회색
+                  : isToday
+                    ? "var(--color-blue)" // 오늘 날짜는 파란색
+                    : "var(--color-black)", // 나머지 날짜는 검은색
+              }}
+              onClick={() => handleCheckboxClick(week)}
+            >
+              {date}
+            </S.PaginationItem>
+          ))}
         <S.ArrowButton
           src={paginationRight}
           alt='Next Week'
@@ -348,10 +355,9 @@ function AttendanceTable({
               </S.StudentNameText>
             </S.StudentName>
             <S.Blank />
-            {weekDates.map((date) => {
+            {filteredWeekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
-                (record) =>
-                  record.date === formatDateToISO(date.date.slice(0, 5))
+                (record) => record.week === date.week
               );
               const statusIcon = getIconByStatus(
                 attendanceRecord?.status || 'PRESENT',
@@ -370,6 +376,7 @@ function AttendanceTable({
                 </S.PaginationItem>
               );
             })}
+
             <S.Blank />
           </S.TableRow>
         ))}
