@@ -69,27 +69,10 @@ export const BlueButton = styled.div<{ disabled?: boolean }>`
   background-color: var(--color-blue);
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   color: var(--color-white);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
-`;
-
-export const WhiteButton = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1rem;
-  border: 1px solid var(--color-blue);
-  color: var(--color-blue);
-  font-size: 1.5rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 1.792rem;
-  cursor: pointer;
 `;
 
 export const RightButtons = styled.div`
@@ -114,7 +97,7 @@ export const DropdownButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
@@ -159,7 +142,7 @@ export const FileDownloadButton = styled.button`
   border: none;
   color: var(--color-blue);
   background-color: transparent;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.12rem;
@@ -171,7 +154,7 @@ export const EditButton = styled.div<{ $isEditMode: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  padding: 1.5rem 2rem;
+  padding: 1rem 2rem;
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
@@ -180,7 +163,7 @@ export const EditButton = styled.div<{ $isEditMode: boolean }>`
     props.$isEditMode ? 'var(--color-white)' : 'var(--color-blue)'};
   background-color: ${(props) =>
     props.$isEditMode ? 'var(--color-blue)' : 'var(--color-white)'};
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;

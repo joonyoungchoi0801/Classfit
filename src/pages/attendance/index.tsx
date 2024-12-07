@@ -192,7 +192,7 @@ function Attendance() {
       <S.Container>
         <S.Header>
           <S.TabButton
-            isActive={type === 'attendance'}>
+            isActive={location.pathname.includes('/manage/attendance')}>
             출결
           </S.TabButton>
           <S.TabButton
@@ -215,10 +215,6 @@ function Attendance() {
                 <img src={sms} alt='sms icon' />
                 SMS보내기
               </S.BlueButton>
-              <S.WhiteButton>
-                <img src={statistics} alt='statistics icon' />
-                통계
-              </S.WhiteButton>
             </S.LeftButtons>
             <S.RightButtons>
               <S.DownloadContainer>
