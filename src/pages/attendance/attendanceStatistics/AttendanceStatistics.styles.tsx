@@ -11,7 +11,7 @@ export const Header = styled.div`
   justify-content: left;
   align-items: center;
   padding: 2rem 8rem 0rem;
-  gap: 2rem;
+  gap: 1rem;
 `
 
 export const TabButton = styled.button<{ isActive: boolean }>`
