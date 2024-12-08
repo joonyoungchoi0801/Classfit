@@ -237,12 +237,12 @@ function AttendanceDashboard() {
           setStudentData={setSelectedStudent}
           setUpdatedStudents={setUpdatedStudents}
         />
-      ) : (
+      ) : location.pathname === '/manage/attendance' ? (
         <S.DefaultImageWrapper>
           <S.DefaultImage src={defaultImg} />
           <S.DefaultText>클래스를 추가해 자유롭게 관리하세요 !</S.DefaultText>
         </S.DefaultImageWrapper>
-      )}
+      ) : null} {/* Default image only for /manage/attendance */}
     </S.Container>
   );
 }

@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import * as S from './AttendanceStatistics.styles';
 import DateStatistics from './DateStatistics';
+import MemberStatistics from './MemberStatistics';
 
 function AttendanceStatistics() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ function AttendanceStatistics() {
       </S.Header>
 
       <S.Content>
-        <DateStatistics />
+        {type === 'date' ? <DateStatistics /> : <MemberStatistics />}
       </S.Content>
     </S.Container>
   );
