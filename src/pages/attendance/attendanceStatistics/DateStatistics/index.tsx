@@ -153,16 +153,52 @@ function DateStatistics() {
         </S.TableHeader>
 
         <S.StatisticsContainer>
-
+          <S.RowTitle>출석</S.RowTitle>
+          <S.ValueContainer>
+            <S.Value>27</S.Value>
+            <S.Value>30</S.Value>
+            <S.Value>30</S.Value>
+            <S.Value>28</S.Value>
+            <S.Value>25</S.Value>
+            <S.Value>30</S.Value>
+            <S.Value>30</S.Value>
+          </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
-
+          <S.RowTitle>결석</S.RowTitle>
+          <S.ValueContainer>
+            <S.Value>3</S.Value>
+            <S.Value>0</S.Value>
+            <S.Value>0</S.Value>
+            <S.Value>2</S.Value>
+            <S.Value>5</S.Value>
+            <S.Value>0</S.Value>
+            <S.Value>0</S.Value>
+          </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
-
+          <S.RowTitle>보강</S.RowTitle>
+          <S.ValueContainer>
+            <S.Value>1</S.Value>
+            <S.Value>2</S.Value>
+            <S.Value>2</S.Value>
+            <S.Value>5</S.Value>
+            <S.Value>0</S.Value>
+            <S.Value>0</S.Value>
+            <S.Value>0</S.Value>
+          </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
-
+          <S.RowTitle>기타</S.RowTitle>
+          <S.ValueContainer>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+            <S.Value>-</S.Value>
+          </S.ValueContainer>
         </S.StatisticsContainer>
       </S.Table>
     </S.Container>

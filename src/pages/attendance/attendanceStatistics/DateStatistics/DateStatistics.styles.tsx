@@ -126,5 +126,35 @@ export const DatePaginationItem = styled.div`
 `;
 
 export const StatisticsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  height: 8rem;
+  border-bottom: 0.15rem solid #CACACA;
+  align-items: center ;
+  justify-content: space-between;
+  gap: 5rem;
+`;
 
+export const RowTitle = styled.div`
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  width: 22rem;
+`;
+
+export const ValueContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8rem;
+`;
+
+export const Value = styled.div`
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 500;
+  width: 7rem;
+  text-align: center;
+  cursor: pointer;
 `;
