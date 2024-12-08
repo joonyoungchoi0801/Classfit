@@ -147,14 +147,14 @@ export const ValueContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 8rem;
+  padding: 0 5rem;
 `;
 
 export const Value = styled.div`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 500;
-  width: 7rem;
+  width: 8rem;
   text-align: center;
   cursor: pointer;
 `;
