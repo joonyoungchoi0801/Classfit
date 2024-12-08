@@ -32,7 +32,7 @@ function Attendance() {
             출결
           </S.TabButton>
           <S.TabButton
-            onClick={() => navigate('/manage/attendance/statistics')}
+            onClick={() => navigate('/manage/attendance/statistics/date')}
             isActive={type === 'statistics'}
           >
             통계
@@ -47,7 +47,7 @@ function Attendance() {
         <S.Content>
           <Routes>
             <Route path='/' element={<AttendanceDashboard />} />
-            <Route path='statistics' element={<AttendanceStatistics />} />
+            <Route path='statistics/*' element={<AttendanceStatistics />} />
             {/* <Route path='message' element={<AttendanceMessage />} /> */}
           </Routes>
         </S.Content>

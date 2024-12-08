@@ -58,7 +58,7 @@ function AttendanceDashboard() {
   const isSmsButtonEnabled =
     !!classParam || location.pathname === '/manage/attendance/all';
   const isButtonGroupEnabled = url === '/manage/attendance/all' || !!classParam;
-  const isStatisticsPage = location.pathname === '/manage/attendance/statistics';
+  const isStatisticsPage = location.pathname.startsWith('/manage/attendance/statistics');
 
   useEffect(() => {
     setIsEditMode(false);
@@ -189,7 +189,7 @@ function AttendanceDashboard() {
 
   return (
     <S.Container>
-      {isButtonGroupEnabled && (
+      {!isStatisticsPage && isButtonGroupEnabled && (
         <S.ButtonGroup>
           <S.LeftButtons>
             <S.BlueButton
