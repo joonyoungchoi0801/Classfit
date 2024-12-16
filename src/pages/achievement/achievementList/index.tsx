@@ -198,12 +198,12 @@ function AchievementList() {
           >
             <S.TitleWrapper>
               <S.Tag isMonthly={item.type === '월간'}>{item.type}</S.Tag>
-              <S.Text>{item.class}</S.Text>
-              <S.Text>{item.test}</S.Text>
+              <PS.Text>{item.class}</PS.Text>
+              <PS.Text>{item.test}</PS.Text>
             </S.TitleWrapper>
             <S.TeacherWrapper>
-              <S.Text>{item.teacher}</S.Text>
-              <S.Text>{item.date}</S.Text>
+              <PS.Text>{item.teacher}</PS.Text>
+              <PS.Text>{item.date}</PS.Text>
             </S.TeacherWrapper>
           </S.ListItem>
         ))}

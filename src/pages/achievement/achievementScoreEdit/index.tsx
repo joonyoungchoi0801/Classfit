@@ -31,9 +31,9 @@ function AchievementScoreEdit() {
 
       <S.ScoreListSection>
         <S.TotalChooseWrapper>
-          <S.RowWrapper>
-            <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-              <S.BtnIcon src={SelectedCheckBoxIcon} />
+          <PS.RowWrapper>
+            <PS.IconWrapper $alignLeft={true} onClick={() => {}}>
+              <PS.BtnIcon src={SelectedCheckBoxIcon} />
               {/* {studentListHandler.studentIds.includes(
                       student.studentId
                     ) ? (
@@ -41,16 +41,16 @@ function AchievementScoreEdit() {
                     ) : (
                       <S.BtnIcon src={CheckBoxIcon} />
                     )} */}
-            </S.IconWrapper>
+            </PS.IconWrapper>
             <S.Label>전체선택</S.Label>
-          </S.RowWrapper>
+          </PS.RowWrapper>
         </S.TotalChooseWrapper>
         <S.ScoreList>
           {data.map((item) => (
             <S.ScoreItem key={item.id}>
-              <S.RowWrapper>
-                <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                  <S.BtnIcon src={SelectedCheckBoxIcon} />
+              <PS.RowWrapper>
+                <PS.IconWrapper $alignLeft={true} onClick={() => {}}>
+                  <PS.BtnIcon src={SelectedCheckBoxIcon} />
                   {/* {studentListHandler.studentIds.includes(
                       student.studentId
                     ) ? (
@@ -58,9 +58,9 @@ function AchievementScoreEdit() {
                     ) : (
                       <S.BtnIcon src={CheckBoxIcon} />
                     )} */}
-                </S.IconWrapper>
-                <S.Name>{item.name}</S.Name>
-              </S.RowWrapper>
+                </PS.IconWrapper>
+                <PS.Name>{item.name}</PS.Name>
+              </PS.RowWrapper>
 
               <S.ScoreWrapper>
                 <S.Score>{item.score}</S.Score>

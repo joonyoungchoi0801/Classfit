@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   padding-bottom: 10rem;
 `;
 
@@ -12,7 +13,7 @@ export const Header = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
   gap: 1rem;
 `;
 
@@ -30,18 +31,6 @@ export const SearchWrapper = styled.div`
   justify-content: center;
   width: 100%;
   gap: 1rem;
-`;
-
-export const SelectBox = styled.div`
-  flex: 1;
-  width: 100%;
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1.6rem;
-  }
 `;
 
 export const SearchBox = styled.div`
@@ -70,73 +59,75 @@ export const Button = styled.button`
   }
 `;
 
-export const FilterTabs = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-`;
-
-export const FilterButton = styled.button<{ isActive: boolean }>`
-  display: flex;
-  padding: 1rem 2rem;
-  gap: 0.5rem;
-  border: 1px solid
-    ${({ isActive }) => (isActive ? 'var(--color-blue)' : '#ddd')};
-  background-color: ${({ isActive }) =>
-    isActive ? 'var(--color-blue)' : 'white'};
-  color: ${({ isActive }) => (isActive ? 'white' : '#000')};
-  border-radius: 5rem;
-  cursor: pointer;
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const List = styled.div`
+export const ReportListSection = styled.div`
   flex: 1;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem 0rem;
+  background-color: #fafafa;
+  border-radius: 2rem;
 `;
 
-export const ListItem = styled.div`
+export const ReportListHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 3rem;
+`;
+
+export const ReportList = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+`;
+
+export const ReportItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 2rem 3rem;
-  border-bottom: 0.1rem solid #ededed;
   justify-content: space-between;
+  padding: 1.5rem 3rem;
+  border-bottom: 0.1rem solid var(--color-gray);
   &:last-child {
     border-bottom: none;
   }
   &:hover {
-    background-color: #f5f5f5;
+    background-color: #dfebff;
   }
   cursor: pointer;
 `;
 
-export const Tag = styled.div<{ isMonthly: boolean }>`
-  padding: 5px 1.2rem;
-  background-color: ${({ isMonthly }) => (isMonthly ? '#5DD2A9' : '#FF7173')};
-  color: white;
-  border-radius: 0.5rem;
-  font-size: 1.4rem;
-  margin-right: 10px;
-  font-weight: 600;
-  line-height: normal;
-`;
-
-export const TeacherWrapper = styled.div`
+export const MoreInfoWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1.5rem;
 `;
 
-export const TitleWrapper = styled.div`
+export const ReportName = styled.div`
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  padding: 0 5rem;
+`;
+
+export const ReportIcon = styled.img`
+  width: 15rem;
+  height: 13.7864rem;
+`;
+
+export const EmptyListSection = styled.div`
+  flex: 1;
   display: flex;
-  flex-direction: row;
-  gap: 8rem;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+`;
+
+export const ReportInfoText = styled.div`
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  padding-top: 5.314rem;
 `;
