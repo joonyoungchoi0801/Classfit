@@ -3,11 +3,14 @@ import ArrowBottomIcon from '@/assets/info/arrowBottom.svg';
 
 export const SelectButton = styled.button<{ $isPlaceholder: boolean }>`
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 2rem;
   background-color: var(--color-white);
   border: 0.1rem solid #d5d7dd;
-  border-radius: 0.4rem;
+  border-radius: 1rem;
   font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
   cursor: pointer;
   display: flex;
   align-items: center;

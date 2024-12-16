@@ -42,7 +42,7 @@ export const SearchBox = styled.div`
 `;
 
 export const Button = styled.button`
-  padding: 1rem 1rem;
+  padding: 1rem 2rem;
   border-radius: 0 1rem 1rem 0;
   background-color: var(--color-blue);
   color: white;
@@ -78,7 +78,7 @@ export const RegisterWrapper = styled.div`
 `;
 
 export const RegisterButton = styled.button<{ $color?: string }>`
-  padding: 0.6rem 1.4rem;
+  padding: 1rem 2rem;
   background-color: var(--color-blue);
   background-color: ${({ $color }) => $color || 'var(--color-blue)'};
   color: var(--color-white);
@@ -86,7 +86,7 @@ export const RegisterButton = styled.button<{ $color?: string }>`
   gap: 1rem;
   align-items: center;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
   font-size: 1.6rem;
   font-style: normal;
@@ -99,4 +99,40 @@ export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+`;
+
+export const RowWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const IconWrapper = styled.div<{
+  $alignLeft?: boolean;
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: ${(props) => (props.$alignLeft ? 'flex-start' : 'center')};
+  margin-right: 1rem;
+  cursor: pointer;
+`;
+
+export const BtnIcon = styled.img`
+  width: 2.2rem;
+  height: 2.2rem;
+`;
+
+export const Name = styled.div`
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const Text = styled.div`
+  text-align: left;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;

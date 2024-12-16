@@ -64,13 +64,6 @@ export const CheckboxWrapper = styled.div`
   flex: 0 0 3%;
 `;
 
-export const Name = styled.div`
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-`;
-
 export const Score = styled.div`
   font-size: 1.6rem;
   text-align: right;
@@ -93,25 +86,4 @@ export const ScoreWrapper = styled.div`
 export const Label = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
-`;
-
-export const RowWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const IconWrapper = styled.div<{
-  $alignLeft?: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: ${(props) => (props.$alignLeft ? 'flex-start' : 'center')};
-  margin-right: 1rem;
-  cursor: pointer;
-`;
-
-export const BtnIcon = styled.img`
-  width: 2.2rem;
-  height: 2.2rem;
 `;
