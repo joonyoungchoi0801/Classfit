@@ -197,7 +197,7 @@ function AchievementList() {
             }
           >
             <S.TitleWrapper>
-              <S.Tag isMonthly={item.type === '월간'}>{item.type}</S.Tag>
+              <PS.Tag $type={item.type}>{item.type}</PS.Tag>
               <PS.Text>{item.class}</PS.Text>
               <PS.Text>{item.test}</PS.Text>
             </S.TitleWrapper>
