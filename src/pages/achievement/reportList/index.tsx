@@ -59,7 +59,7 @@ function ReportList() {
       <S.Header>
         <PS.RegisterWrapper>
           <PS.RegisterButton
-            onClick={() => navigate(`/manage/achievement/management/register`)}
+            onClick={() => navigate(`/manage/achievement/report/register`)}
           >
             생성
           </PS.RegisterButton>
