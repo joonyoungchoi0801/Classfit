@@ -29,9 +29,9 @@ export const FormGroup = styled.div`
   flex: 1;
 `;
 
-export const Label = styled.label<{ $color?: string }>`
+export const Label = styled.label<{ $color?: string; $size?: string }>`
   color: ${({ $color }) => $color || 'var(--color-black)'};
-  font-size: 1.8rem;
+  font-size: ${({ $size }) => $size || '1.8rem'};
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -67,6 +67,33 @@ export const Input = styled.input`
     color: #8a91a1;
     opacity: 1;
   }
+`;
+export const TextWithIcon = styled.div<{ $isSelected: boolean }>`
+  width: 100%;
+  padding-right: 4rem;
+  padding: 1rem;
+  border: 0.1rem solid #d5d7dd;
+  border-radius: 1rem;
+  height: 4rem;
+  font-size: 1.6rem;
+  color: ${({ $isSelected }) =>
+    $isSelected ? 'var(--color-black)' : '#8a91a1'};
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+export const IconWrapper = styled.div`
+  position: absolute;
+  right: 1rem; /* Input 오른쪽 끝에서 간격 */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* 클릭 방지 */
+  color: var(--color-blue); /* 아이콘 색상 */
+  cursor: pointer;
 `;
 
 export const ButtonWrapper = styled.div`
@@ -156,4 +183,37 @@ export const OpItem = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem 2rem;
+`;
+
+export const CalendarWrapper = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  background-color: var(--color-white);
+  border: 0.1rem solid var(--color-gray);
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+`;
+
+export const CalendarInfoWrapper = styled.div`
+  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-size: 1.5129rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: 0.0204rem;
+  padding: 1rem 3rem;
+  padding-top: 0;
+`;
+
+export const CalendarButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem 3rem;
 `;
