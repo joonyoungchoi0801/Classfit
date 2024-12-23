@@ -24,7 +24,7 @@ export default function Router() {
         <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
         <Route path='/manage/achievement/*' element={<Achievement />} />
         <Route path='/manage/studentinfo/:type' element={<StudentInfo />} />
-        <Route path='/calendar' element={<Home />} />
+        <Route path='/schedule' element={<Home />} />
         <Route path='/board' element={<Home />} />
         <Route path='/drive' element={<Home />} />
       </Routes>
