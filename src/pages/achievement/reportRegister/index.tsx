@@ -234,6 +234,7 @@ function ReportRegister() {
           <S.Label>리포트 구성</S.Label>
           <S.Label $color='var(--color-blue)'>(필수)</S.Label>
         </S.LabelWrapper>
+        <S.Sublabel>기간 내 생성된 성적이 제공됩니다.</S.Sublabel>
 
         <S._Container>
           <S.Header>
