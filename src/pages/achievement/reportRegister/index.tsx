@@ -1,4 +1,3 @@
-import Path from '@/components/path';
 import * as S from './ReportRegister.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import DropDown from '@/components/dropDown';
@@ -7,7 +6,6 @@ import useStudentRegister from '@/hooks/student/useStudentRegister';
 import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
-import CloseIcon from '@/assets/label/close.svg';
 import CalendarIcon from '@/assets/achievement/calendar.svg';
 import CalendarFilledIcon from '@/assets/achievement/calendarFilled.svg';
 import { useNavigate } from 'react-router-dom';
@@ -77,6 +75,12 @@ function ReportRegister() {
     },
   ]);
 
+  const [isOn, setisOn] = useState<boolean>(false);
+
+  const toggleHandler = () => {
+    setisOn((prev) => !prev);
+  };
+
   const handleChange = (ranges: RangeKeyDict) => {
     const selectionRange = ranges.selection;
     const safeSelection = {
@@ -90,7 +94,7 @@ function ReportRegister() {
 
   const toggleCalendar = () => {
     setIsCalendarInitialized(true);
-    setShowCalendar((prev) => !prev); // 캘린더 토글
+    setShowCalendar((prev) => !prev);
   };
 
   useEffect(() => {
@@ -99,7 +103,7 @@ function ReportRegister() {
         calendarRef.current &&
         !calendarRef.current.contains(event.target as Node)
       ) {
-        setShowCalendar(false); // 캘린더 닫기
+        setShowCalendar(false);
       }
     };
 
@@ -253,10 +257,20 @@ function ReportRegister() {
                 전체선택
               </S.ListText>
             </PS.RowWrapper>
-            <S.ListText $padding='0'>
-              평균 포함
-              {/* <input type='checkbox' /> */}
-            </S.ListText>
+
+            <PS.RowWrapper>
+              <S.ListText $padding='0'>평균 포함</S.ListText>
+              <S.ToggleWrapper>
+                <S.ToggleContainer onClick={toggleHandler}>
+                  <div
+                    className={`toggle-container ${isOn ? 'toggle--checked' : null}`}
+                  />
+                  <div
+                    className={`toggle-circle ${isOn ? 'toggle--checked' : null}`}
+                  />
+                </S.ToggleContainer>
+              </S.ToggleWrapper>
+            </PS.RowWrapper>
           </S.Header>
           <S.List>
             {items.map((item) => (
