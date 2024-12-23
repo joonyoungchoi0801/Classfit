@@ -217,3 +217,38 @@ export const CalendarButtonWrapper = styled.div`
   gap: 1rem;
   padding: 2rem 3rem;
 `;
+
+export const ToggleContainer = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  > .toggle-container {
+    width: 5rem;
+    height: 2.4rem;
+    border-radius: 3rem;
+    background-color: rgb(233, 233, 234);
+  }
+  > .toggle--checked {
+    background-color: var(--color-blue);
+    transition: 0.5s;
+  }
+
+  > .toggle-circle {
+    position: absolute;
+    top: 0.1rem;
+    left: 0.1rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background-color: rgb(255, 254, 255);
+    transition: 0.5s;
+  }
+  > .toggle--checked {
+    left: 2.7rem;
+    transition: 0.5s;
+  }
+`;
+
+export const ToggleWrapper = styled.div`
+  margin: 0 1rem;
+`;
