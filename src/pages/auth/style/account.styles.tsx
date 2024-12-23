@@ -90,11 +90,10 @@ export const AccountOptionImg = styled.img`
 
 export const NextButton = styled.button`
   display: flex;
-  width: 42rem;
+  width: 100%;
   padding: 1.5rem 2rem;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
   border-radius: 5rem;
   background: var(--color-blue);
   color: var(--color-white);
