@@ -8,7 +8,7 @@ import Achievement from './pages/achievement';
 import Signin from './pages/auth/signin';
 import Signup from './pages/auth/signup';
 import Email from './pages/auth/email';
-
+import Account from './pages/auth/account';
 export default function Router() {
   return (
     <BrowserRouter>
@@ -18,6 +18,7 @@ export default function Router() {
         <Route path='/signin' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/email' element={<Email />} />
+        <Route path='/account' element={<Account />} />
         <Route path='/manage' element={<Attendance />} />
         <Route path='/manage/attendance' element={<Attendance />} />
         <Route path='/manage/attendance/all' element={<Attendance />} />

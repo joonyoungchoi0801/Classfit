@@ -8,6 +8,7 @@ import Id from '@/assets/auth/signin/id.svg';
 import Password from '@/assets/auth/signin/password.svg';
 
 import type { SigninType } from './type/signin.type';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Signin() {
   const [emailValue, setEmailValue] = useState<string>(
@@ -16,9 +17,13 @@ function Signin() {
   const [isMemoryChecked, setIsMemoryChecked] = useState(false);
   const { register, handleSubmit, watch } = useForm<SigninType>();
 
+  const navigate = useNavigate();
+
   const onSubmit = (data: SigninType) => {
     if (isMemoryChecked) {
       localStorage.setItem('savedEmail', data.email);
+      sessionStorage.setItem('email', data.email);
+      navigate('/email');
     } else {
       localStorage.removeItem('savedEmail');
     }

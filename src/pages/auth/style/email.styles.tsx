@@ -98,7 +98,7 @@ export const SendButton = styled.button<{ $disabled?: boolean }>`
   background: ${(props) => (props.$disabled ? '#E5E5E5' : 'var(--color-blue)')};
   position: absolute;
   top: 50%;
-  transform: translateY(15%);
+  transform: translateY(25%);
   right: 1rem;
 `;
 export const PersonalContainer = styled.div`

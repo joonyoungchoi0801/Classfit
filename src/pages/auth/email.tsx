@@ -6,6 +6,7 @@ import bluecheckboxIcon from '@/assets/auth/email/bluecheckbox.svg';
 import type { EmailType } from './type/email.type';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Email() {
   const { register, handleSubmit, watch } = useForm<EmailType>();
@@ -16,6 +17,8 @@ function Email() {
   const [serviceInfo, setServiceInfo] = useState<boolean>(false);
   const [locationInfo, setLocationInfo] = useState<boolean>(false);
   const [marketingInfo, setMarketingInfo] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -41,6 +44,7 @@ function Email() {
   };
   const onSubmit = (data: EmailType) => {
     console.log(data);
+    navigate('/account');
   };
   return (
     <S.PageWrapper>
