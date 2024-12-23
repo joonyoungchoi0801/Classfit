@@ -40,3 +40,48 @@ export const ScheduleAddBtn = styled.button`
   background: var(--color-white);
   border-radius: 1rem;
 `;
+
+export const CalendarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.8rem;
+`;
+
+export const CalendarItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.8rem;
+  &:not(:last-child) {
+    border-bottom: 0.1rem solid #DEDEDE;
+  }
+  height: 5rem;
+`;
+
+export const CalendarItemIcon = styled.img`
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+`;
+
+export const CalendarItemText = styled.span`
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
+
+export const CalendarAddBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  color: #5F6368;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+`;
+
+export const CalendarAddIcon = styled.img`
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+`;
