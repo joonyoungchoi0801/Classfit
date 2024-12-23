@@ -116,17 +116,6 @@ export const ListItem = styled.div`
   cursor: pointer;
 `;
 
-export const Tag = styled.div<{ isMonthly: boolean }>`
-  padding: 5px 1.2rem;
-  background-color: ${({ isMonthly }) => (isMonthly ? '#5DD2A9' : '#FF7173')};
-  color: white;
-  border-radius: 0.5rem;
-  font-size: 1.4rem;
-  margin-right: 10px;
-  font-weight: 600;
-  line-height: normal;
-`;
-
 export const TeacherWrapper = styled.div`
   display: flex;
   flex-direction: row;

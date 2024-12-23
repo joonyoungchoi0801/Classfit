@@ -136,3 +136,19 @@ export const Text = styled.div`
   font-weight: 500;
   line-height: normal;
 `;
+
+export const Tag = styled.div<{ $type: string }>`
+  padding: 0.5rem 1.2rem;
+  background-color: ${(props) => {
+    if (props.$type === '월간') return '#5DD2A9';
+    if (props.$type === '주간') return '#FF7173';
+    if (props.$type === '데일리') return 'var(--color-blue)';
+    return 'var(--color-gray)';
+  }};
+  color: var(--color-white);
+  border-radius: 0.5rem;
+  font-size: 1.4rem;
+  margin-right: 1rem;
+  font-weight: 600;
+  line-height: normal;
+`;
