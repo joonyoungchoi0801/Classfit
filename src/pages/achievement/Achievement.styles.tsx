@@ -122,8 +122,8 @@ export const BtnIcon = styled.img`
   height: 2.2rem;
 `;
 
-export const Name = styled.div`
-  font-size: 1.6rem;
+export const Name = styled.div<{ $size?: string }>`
+  font-size: ${({ $size }) => ($size ? $size : '1.6rem')};
   font-style: normal;
   font-weight: 500;
   line-height: normal;
