@@ -147,7 +147,12 @@ function ReportList() {
         </S.ReportListHeader>
         <S.ReportList>
           {data.map((item) => (
-            <S.ReportItem key={item.id}>
+            <S.ReportItem
+              key={item.id}
+              onClick={() =>
+                navigate(`/manage/achievement/report/detail/${item.id}`)
+              }
+            >
               <PS.RowWrapper>
                 <PS.IconWrapper $alignLeft={true} onClick={() => {}}>
                   <PS.BtnIcon src={SelectedCheckBoxIcon} />
