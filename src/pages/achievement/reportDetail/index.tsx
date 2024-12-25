@@ -88,12 +88,16 @@ function ReportDetail() {
   });
 
   const [donutState, setDonutState] = useState<DonutChartState>({
-    series: [44, 55],
+    series: [75, 25],
 
     options: {
       colors: ['var(--color-blue)', '#DFEBFF', '#949494'],
       plotOptions: {
         pie: {
+          dataLabels: {
+            offset: 0,
+            minAngleToShowLabel: 500,
+          },
           customScale: 1.0,
           donut: {
             labels: {
