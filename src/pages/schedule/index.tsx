@@ -7,6 +7,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import * as S from './Schedule.styles';
+import ScheduleRegister from './scheduleRegister';
 
 function Schedule() {
   const navigate = useNavigate();
@@ -15,7 +16,9 @@ function Schedule() {
   return (
     <ScheduleLayout>
       <S.Container>
-
+        <Routes>
+          <Route path='/register' element={<ScheduleRegister />} />
+        </Routes>
       </S.Container>
     </ScheduleLayout>
   );
