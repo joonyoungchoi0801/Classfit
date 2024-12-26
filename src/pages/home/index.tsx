@@ -1,11 +1,10 @@
 import ManageLayout from '@/components/layout/managelayout';
 import Path from '@/components/path';
-
+import Calendar from '@/components/calendar';
 function Home() {
   return (
     <ManageLayout>
-      <Path />
-      <h1>Home</h1>
+      <Calendar />
     </ManageLayout>
   );
 }
