@@ -15,6 +15,7 @@ import AchievementRegister from './achievementRegister';
 import AchievementRegisterStudent from './achievementRegisterStudent';
 import ReportList from './reportList';
 import ReportRegister from './reportRegister';
+import ReportDetail from './reportDetail';
 
 function Achievement() {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ function Achievement() {
             />
             <Route path='report' element={<ReportList />} />
             <Route path='report/register' element={<ReportRegister />} />
+            <Route path='report/detail/:id' element={<ReportDetail />} />
 
             <Route index element={<AchievementList />} />
           </Routes>
