@@ -16,7 +16,7 @@ function Sidebar() {
   const url = location.pathname;
 
   const manage = url.startsWith('/manage') ? selectManageIcon : manageIcon;
-  const calendar = url.startsWith('/calendar')
+  const schedule = url.startsWith('/schedule')
     ? selectCalendarIcon
     : calendarIcon;
   const board = url.startsWith('/board') ? selectBoardIcon : boardIcon;
@@ -30,9 +30,9 @@ function Sidebar() {
           학생관리
         </S.SidebarText>
       </S.SidebarItem>
-      <S.SidebarItem onClick={() => navigate('/calendar')}>
-        <S.Icon src={calendar} alt='calendar' />
-        <S.SidebarText $isSelected={url.startsWith('/calendar')}>
+      <S.SidebarItem onClick={() => navigate('/schedule')}>
+        <S.Icon src={schedule} alt='schedule' />
+        <S.SidebarText $isSelected={url.startsWith('/schedule')}>
           일정관리
         </S.SidebarText>
       </S.SidebarItem>
