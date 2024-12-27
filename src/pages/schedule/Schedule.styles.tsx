@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   width: 100%;
-  position: relative;
+  overflow-y: auto;
+  overflow: hidden;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;

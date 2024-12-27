@@ -15,11 +15,9 @@ function Schedule() {
 
   return (
     <ScheduleLayout>
-      <S.Container>
-        <Routes>
-          <Route path='/register' element={<ScheduleRegister />} />
-        </Routes>
-      </S.Container>
+      <Routes>
+        <Route path='/register' element={<ScheduleRegister />} />
+      </Routes>
     </ScheduleLayout>
   );
 }
