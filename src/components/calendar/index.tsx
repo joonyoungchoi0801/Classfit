@@ -16,14 +16,14 @@ const schedules: Schedule[] = [
   {
     id: 1,
     title: '13:00 잇타 중3 수학 직보',
-    start: '2024-12-06',
-    end: '2024-12-07',
+    start: '2024-12-16',
+    end: '2024-12-17',
   },
-  { id: 2, title: '제발좀 끝내줘', start: '2024-12-07', end: '2024-12-10' },
 ];
 
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const calendarWidth = 'calc(100vw - 44rem)';
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
@@ -53,6 +53,28 @@ function Calendar() {
     setCurrentDate(new Date());
   };
 
+  const getScheduleBarStyle = (schedule: Schedule, day: number) => {
+    const scheduleStart = new Date(schedule.start).getTime();
+    const scheduleEnd = new Date(schedule.end).getTime();
+    const currentDay = new Date(year, month, day).getTime();
+    const totalDays = (scheduleEnd - scheduleStart) / (1000 * 60 * 60 * 24) + 1;
+
+    const extractedWidth = parseFloat(calendarWidth.replace(/[^0-9.-]/g, ''));
+    const dayWidth = extractedWidth / 7;
+
+    if (currentDay >= scheduleStart && currentDay <= scheduleEnd) {
+      const left = new Date(schedule.start).getDay() * dayWidth;
+      const width = totalDays * dayWidth;
+
+      return {
+        left: `${left}%`,
+        width: `${width}%`,
+      };
+    }
+
+    return { display: 'none' };
+  };
+
   return (
     <S.CalendarContainer>
       <S.CalendarHeader>
@@ -69,19 +91,14 @@ function Calendar() {
             {index < 7 && <S.CalendarDate>{days[index]}</S.CalendarDate>}
             <S.CalendarDate>{day}</S.CalendarDate>
 
-            {schedules
-              .filter(
-                (schedule) =>
-                  new Date(schedule.start) <= new Date(year, month, day) &&
-                  new Date(schedule.end) >= new Date(year, month, day)
-              )
-              .map((schedule) => {
-                return (
-                  <S.ScheduleBar key={schedule.id}>
-                    {schedule.title}
-                  </S.ScheduleBar>
-                );
-              })}
+            {schedules.map((schedule) => {
+              const barStyle = getScheduleBarStyle(schedule, day);
+              return (
+                <S.ScheduleBar key={schedule.id} style={barStyle}>
+                  {schedule.title}
+                </S.ScheduleBar>
+              );
+            })}
           </S.CalendarDay>
         ))}
       </S.CalendarGrid>

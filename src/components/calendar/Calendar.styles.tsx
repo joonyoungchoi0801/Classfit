@@ -12,6 +12,7 @@ export const CalendarContainer = styled.div`
 export const CalendarHeader = styled.div`
   display: flex;
   width: 100%;
+  height: 3.5rem;
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
@@ -55,11 +56,12 @@ export const CalendarGrid = styled.div`
   width: 100%;
   height: 100%;
   background: #fafafa;
+  position: relative;
 `;
 
 export const CalendarDay = styled.div`
   display: flex;
-  padding: 1rem 2rem;
+  padding: 1rem 0 0 0;
   flex-direction: column;
   gap: 0.3rem;
   align-items: center;
@@ -111,7 +113,6 @@ export const ScheduleBar = styled.div`
   background: var(--color-blue);
   color: var(--color-white);
   height: 2.4rem;
-
   position: absolute;
   z-index: 1;
   text-align: center;
