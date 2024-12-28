@@ -3,6 +3,8 @@ import * as S from './AchievementList.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DropDown from '@/components/dropDown';
+import ClassDropDown from '@/components/dropDown/classDropDown';
 
 function AchievementList() {
   const [filter, setFilter] = useState('전체'); // 타입 필터
@@ -11,12 +13,18 @@ function AchievementList() {
   const [searchText, setSearchText] = useState(''); // 검색어 상태 추가
   const [previousFilteredData, setPreviousFilteredData] = useState<
     AchievementData[]
-  >([]); // 이전 필터링된 데이터 저장
+  >([]);
   const navigate = useNavigate();
+  const testMainClass: string[] = ['1학년', '2학년', '3학년'];
+  const testSearchOptions: string[] = ['강사명', '시험명'];
+  const testSubClass: { subClassId: number; subClassName: string }[] = [
+    { subClassId: 0, subClassName: 'A반' },
+    { subClassId: 1, subClassName: 'B반' },
+  ];
 
   const data = [
     {
-      type: '월간',
+      type: '데일리',
       class: '중3-A',
       test: '월말테스트',
       teacher: '김나나',
@@ -37,7 +45,7 @@ function AchievementList() {
       date: '24.11.15',
     },
     {
-      type: '주간',
+      type: '데일리',
       class: '중1-C',
       test: '영어퀴즈테스트',
       teacher: '박선호',
@@ -137,21 +145,37 @@ function AchievementList() {
           </PS.RegisterButton>
         </PS.RegisterWrapper>
 
+        <S.SearchWrapper>
+          <DropDown
+            options={testMainClass}
+            //   value={studentRegisterHandler.studentData.grade}
+            placeholder='메인 클래스'
+            onChange={
+              // (value) =>
+              // studentRegisterHandler.handleOnChangeValue(
+              //   STUDENT_FIELD.GRADE,
+              //   value
+              // )
+              () => {}
+            }
+          />
+          <ClassDropDown
+            options={testSubClass}
+            placeholder='서브 클래스'
+            onChange={
+              // (value) =>
+              // studentRegisterHandler.handleOnChangeSubClassValue(
+              //   STUDENT_FIELD.SUB_CLASS_LIST,
+              //   value
+              // )
+              () => {}
+            }
+          />
+        </S.SearchWrapper>
+
         <S.FilterWrapper>
-          <S.SelectBox>
-            <select
-              value={classFilter}
-              onChange={(e) => setClassFilter(e.target.value)}
-            >
-              {classOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </S.SelectBox>
           <S.SearchWrapper>
-            <S.SelectBox>
+            {/* <S.SelectBox>
               <select
                 value={teacherFilter}
                 onChange={(e) => setTeacherFilter(e.target.value)}
@@ -162,11 +186,26 @@ function AchievementList() {
                   </option>
                 ))}
               </select>
+            </S.SelectBox> */}
+            <S.SelectBox>
+              <DropDown
+                options={testSearchOptions}
+                value='강사명'
+                placeholder='메인 클래스'
+                onChange={
+                  // (value) =>
+                  // studentRegisterHandler.handleOnChangeValue(
+                  //   STUDENT_FIELD.GRADE,
+                  //   value
+                  // )
+                  () => {}
+                }
+              />
             </S.SelectBox>
             <S.SearchBox>
               <S.Input
                 type='text'
-                placeholder='테스트명 검색'
+                placeholder='검색어 입력'
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)} // 검색어 상태 업데이트
               />

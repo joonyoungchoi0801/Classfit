@@ -10,7 +10,7 @@ export const SelectButton = styled.button<{ $selectedOption?: string }>`
   width: 100%;
   padding: 1rem 2rem;
   background-color: var(--color-white);
-  border: 0.1rem solid #d5d7dd;
+  border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
   font-style: normal;
@@ -23,7 +23,7 @@ export const SelectButton = styled.button<{ $selectedOption?: string }>`
   color: ${(props) =>
     props.$selectedOption && props.$selectedOption.length > 0
       ? 'var(--color-black)'
-      : '#8a91a1'};
+      : 'var(--color-lightgray)'};
 
   &:after {
     content: url(${ArrowBottomIcon});

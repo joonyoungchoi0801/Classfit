@@ -39,7 +39,7 @@ function AchievementRegister() {
             <DropDown
               options={Object.keys(studentRegisterHandler.classInfo)}
               value={studentRegisterHandler.studentData.grade}
-              placeholder='학년 선택'
+              placeholder='메인 클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeValue(
                   STUDENT_FIELD.GRADE,
@@ -55,7 +55,7 @@ function AchievementRegister() {
                   studentRegisterHandler.studentData.grade
                 ]
               }
-              placeholder='클래스 선택'
+              placeholder='서브 클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeSubClassValue(
                   STUDENT_FIELD.SUB_CLASS_LIST,

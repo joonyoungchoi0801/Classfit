@@ -5,7 +5,7 @@ export const SelectButton = styled.button<{ $isPlaceholder: boolean }>`
   width: 100%;
   padding: 1rem 2rem;
   background-color: var(--color-white);
-  border: 0.1rem solid #d5d7dd;
+  border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
   font-style: normal;
@@ -16,7 +16,7 @@ export const SelectButton = styled.button<{ $isPlaceholder: boolean }>`
   align-items: center;
   justify-content: space-between;
   color: ${(props) =>
-    props.$isPlaceholder ? '#8a91a1' : 'var(--color-black)'};
+    props.$isPlaceholder ? 'var(--color-lightgray)' : 'var(--color-black)'};
 
   &:after {
     content: url(${ArrowBottomIcon});

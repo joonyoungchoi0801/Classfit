@@ -52,10 +52,13 @@ export const SearchBox = styled.div`
 export const Input = styled.input`
   flex: 1;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-gray);
   border-radius: 1rem 0 0 1rem;
   outline: none;
   font-size: 1.6rem;
+  &::placeholder {
+    color: var(--color-lightgray);
+  }
 `;
 
 export const Button = styled.button`
