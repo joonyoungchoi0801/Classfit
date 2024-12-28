@@ -22,7 +22,6 @@ function Signin() {
   const onSubmit = (data: SigninType) => {
     if (isMemoryChecked) {
       localStorage.setItem('savedEmail', data.email);
-      sessionStorage.setItem('email', data.email);
       navigate('/email');
     } else {
       localStorage.removeItem('savedEmail');

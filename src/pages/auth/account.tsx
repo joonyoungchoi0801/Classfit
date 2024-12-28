@@ -9,7 +9,7 @@ function Account() {
   const [selectedOption, setSelectedOption] = useState<'create' | 'join'>(
     'create'
   );
-  const [codeError, setCodeError] = useState<boolean>(true);
+  const [codeError, setCodeError] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleClickButton = () => {
