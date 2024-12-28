@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 export const Table = styled.div`
   display: flex;
-  width: 102rem;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
   min-width: 102rem;
   border: 0.1rem solid #e7e7e7;
   background: var(--color-white);
+  padding: 2.2rem;
 `;
 
 export const TableHeader = styled.div`
@@ -18,11 +18,54 @@ export const TableHeader = styled.div`
   background: #f9f9f9;
   padding: 1rem;
   width: 100%;
+  position: relative;
+`;
+
+export const FilterButton = styled.img`
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  cursor: pointer;
+`;
+
+export const DropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 10.1rem;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0rem 0rem 1rem 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+  text-align: left;
+`;
+
+export const DropdownItem = styled.div`
+  display: flex; 
+  align-items: center;
+  padding: 1rem 2rem;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+  img { 
+    margin-right: 0.5rem;
+  }
+`;
+
+export const DropdownText = styled.span`
+  line-height: 1.5rem;
 `;
 
 export const SearchContainer = styled.div`
   display: flex;
-  width: 17.4rem;
+  width: 24rem;
   height: 4rem;
   padding: 1rem 1rem;
   align-items: center;
@@ -61,6 +104,7 @@ export const PaginationItem = styled.div`
   font-size: 2rem;
   font-weight: 500;
   margin: 0 2.2rem; /*임의로 간격 설정 */
+  width: 9rem;
 `;
 
 export const ArrowButton = styled.img`
@@ -111,7 +155,7 @@ export const StudentName = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: 17.4rem;
+  width: 26.7rem;
   color: var(--color-black);
   font-size: 2rem;
   font-style: normal;
@@ -122,6 +166,7 @@ export const StudentName = styled.div`
 export const CheckBox = styled.input`
   width: 2.2rem;
   height: 2.2rem;
+  flex-shrink: 0;
 `;
 
 export const StudentNameText = styled.span`

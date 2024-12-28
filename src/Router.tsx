@@ -5,6 +5,8 @@ import Home from './pages/home';
 import Sms from './pages/sms';
 import Attendance from './pages/attendance';
 import Achievement from './pages/achievement';
+import Schedule from './pages/schedule';
+
 import Signin from './pages/auth/signin';
 import Signup from './pages/auth/signup';
 import Email from './pages/auth/email';
@@ -29,9 +31,9 @@ export default function Router() {
           element={<Attendance />}
         />
         <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
-        <Route path='/manage/achievement/:type/*' element={<Achievement />} />
+        <Route path='/manage/achievement/*' element={<Achievement />} />
         <Route path='/manage/studentinfo/:type' element={<StudentInfo />} />
-        <Route path='/calendar' element={<Home />} />
+        <Route path='/schedule/*' element={<Schedule />} />
         <Route path='/board' element={<Home />} />
         <Route path='/drive' element={<Home />} />
       </Routes>

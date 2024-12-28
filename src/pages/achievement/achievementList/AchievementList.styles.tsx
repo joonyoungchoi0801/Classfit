@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding-bottom: 10rem;
 `;
 
 export const Header = styled.div`
@@ -20,13 +21,6 @@ export const FilterWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 1rem;
-  width: 100%;
-`;
-
-export const RegisterWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   width: 100%;
 `;
 
@@ -65,7 +59,7 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  padding: 1rem 1rem;
+  padding: 1rem 2rem;
   border-radius: 0 1rem 1rem 0;
   background-color: var(--color-blue);
   color: white;
@@ -74,23 +68,6 @@ export const Button = styled.button`
   &:hover {
     background-color: #0056b3;
   }
-`;
-
-export const RegisterButton = styled.button`
-  padding: 0.6rem 1.4rem;
-  background-color: var(--color-blue);
-  color: var(--color-white);
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 1.792rem;
-  border-radius: 0.5rem;
 `;
 
 export const FilterTabs = styled.div`
@@ -137,25 +114,6 @@ export const ListItem = styled.div`
     background-color: #f5f5f5;
   }
   cursor: pointer;
-`;
-
-export const Tag = styled.div<{ isMonthly: boolean }>`
-  padding: 5px 1.2rem;
-  background-color: ${({ isMonthly }) => (isMonthly ? '#5DD2A9' : '#FF7173')};
-  color: white;
-  border-radius: 0.5rem;
-  font-size: 1.4rem;
-  margin-right: 10px;
-  font-weight: 600;
-  line-height: normal;
-`;
-
-export const Text = styled.div`
-  text-align: left;
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
 `;
 
 export const TeacherWrapper = styled.div`
