@@ -20,6 +20,10 @@ import { useForm, Controller } from 'react-hook-form';
 type FormData = {
   mainClass: string;
   category: string;
+  examDate: string;
+  standard: string;
+  examScore: number;
+  examName: string;
 };
 
 function AchievementRegister() {
@@ -41,7 +45,6 @@ function AchievementRegister() {
   const toggleCalendar = () => {
     setIsCalendarInitialized(true);
     setShowCalendar((prev) => !prev);
-    console.log(showCalendar);
   };
 
   const { control, handleSubmit } = useForm<FormData>();
@@ -69,7 +72,6 @@ function AchievementRegister() {
             <S.Label>클래스 선택</S.Label>
             <S.Label $color='var(--color-blue)'>(필수)</S.Label>
           </S.LabelWrapper>
-
           <S.Row>
             <S.FormGroup>
               <Controller
@@ -115,62 +117,104 @@ function AchievementRegister() {
                 <S.Label>시험 날짜</S.Label>
                 <S.Label $color='var(--color-blue)'>(필수)</S.Label>
               </S.LabelWrapper>
-              <S.InputWrapper onClick={toggleCalendar}>
-                <S.TextWithIcon $isSelected={isCalendarInitialized}>
-                  {isCalendarInitialized
-                    ? `${format(date, 'yy-MM-dd')}`
-                    : '연도-월-일'}
-                </S.TextWithIcon>
-                <S.IconWrapper>
-                  {showCalendar ? (
-                    <>
-                      <PS.BtnIcon src={CalendarFilledIcon} />
-                    </>
-                  ) : (
-                    <>
-                      <PS.BtnIcon src={CalendarIcon} />
-                    </>
-                  )}
-                </S.IconWrapper>
-              </S.InputWrapper>
-              {showCalendar && (
-                <S.CalendarWrapper>
-                  <Calendar date={date} onChange={handleSelectDate} />
-                  <S.CalendarButtonWrapper>
-                    <Button title='확인' onClick={toggleCalendar} />
-                  </S.CalendarButtonWrapper>
-                </S.CalendarWrapper>
-              )}
+              <Controller
+                name='examDate'
+                control={control}
+                defaultValue=''
+                rules={{
+                  required: '시험 날짜를 선택해주세요.',
+                }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <S.InputWrapper onClick={toggleCalendar}>
+                      <S.TextWithIcon $isSelected={isCalendarInitialized}>
+                        {isCalendarInitialized
+                          ? `${format(date, 'yy-MM-dd')}`
+                          : '연도-월-일'}
+                      </S.TextWithIcon>
+                      <S.IconWrapper>
+                        {showCalendar ? (
+                          <PS.BtnIcon src={CalendarFilledIcon} />
+                        ) : (
+                          <PS.BtnIcon src={CalendarIcon} />
+                        )}
+                      </S.IconWrapper>
+                    </S.InputWrapper>
+                    {fieldState.error && (
+                      <p style={{ color: 'red' }}>{fieldState.error.message}</p>
+                    )}
+                    {showCalendar && (
+                      <S.CalendarWrapper>
+                        <Calendar
+                          date={date}
+                          onChange={(selectedDate) => {
+                            field.onChange(selectedDate);
+                            handleSelectDate(selectedDate);
+                            toggleCalendar();
+                          }}
+                        />
+                        <S.CalendarButtonWrapper>
+                          <Button title='확인' onClick={toggleCalendar} />
+                        </S.CalendarButtonWrapper>
+                      </S.CalendarWrapper>
+                    )}
+                  </>
+                )}
+              />
             </S.FormGroup>
-            <S.FormGroup style={{ flex: 2 }}>
+            <S.FormGroup style={{ flex: 1 }}>
               <S.LabelWrapper>
                 <S.Label>채점 기준</S.Label>
                 <S.Label $color='var(--color-blue)'>(필수)</S.Label>
               </S.LabelWrapper>
               <S.Row>
-                <DropDown
-                  style={{ flex: 1 }}
-                  options={genderLst}
-                  value={studentRegisterHandler.studentData.gender}
-                  placeholder='기준 선택'
-                  onChange={(value) =>
-                    studentRegisterHandler.handleOnChangeGenderValue(
-                      STUDENT_FIELD.GENDER,
-                      value
-                    )
-                  }
-                />
-                <S.Input
-                  style={{ flex: 1 }}
-                  placeholder='점수'
-                  value={studentRegisterHandler.studentData.name}
-                  onChange={(e) =>
-                    studentRegisterHandler.handleOnChangeValue(
-                      STUDENT_FIELD.NAME,
-                      e.target.value
-                    )
-                  }
-                />
+                <div style={{ flex: 2 }}>
+                  <Controller
+                    name='standard'
+                    control={control}
+                    defaultValue=''
+                    rules={{ required: '기준을 선택해주세요' }}
+                    render={({ field, fieldState }) => (
+                      <PS.Column>
+                        <DropDown
+                          options={genderLst}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder='분류 선택'
+                        />
+                        {fieldState.error && (
+                          <p style={{ color: 'red' }}>
+                            {fieldState.error.message}
+                          </p>
+                        )}
+                      </PS.Column>
+                    )}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <Controller
+                    name='examScore'
+                    control={control}
+                    rules={{
+                      required: '점수를 입력해주세요.',
+                    }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <S.Input
+                          style={{ flex: 1 }}
+                          placeholder='점수'
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                        {fieldState.error && (
+                          <p style={{ color: 'red' }}>
+                            {fieldState.error.message}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
               </S.Row>
             </S.FormGroup>
           </S.Row>
@@ -203,17 +247,28 @@ function AchievementRegister() {
                   )}
                 />
               </S.FormGroup>
-
               <S.FormGroup style={{ flex: 2 }}>
-                <S.Input
-                  placeholder='시험명 입력'
-                  value={studentRegisterHandler.studentData.name}
-                  onChange={(e) =>
-                    studentRegisterHandler.handleOnChangeValue(
-                      STUDENT_FIELD.NAME,
-                      e.target.value
-                    )
-                  }
+                <Controller
+                  name='examName'
+                  control={control}
+                  rules={{
+                    required: '시험명을 입력해주세요.',
+                  }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <S.Input
+                        style={{ flex: 1 }}
+                        placeholder='시험명 입력'
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                      {fieldState.error && (
+                        <p style={{ color: 'red' }}>
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
                 />
               </S.FormGroup>
             </S.Row>
@@ -221,7 +276,6 @@ function AchievementRegister() {
           <S.Row>
             <S.FormGroup style={{ flex: 1 }}>
               <S.Label>시험 범위</S.Label>
-
               <PS.SearchBox>
                 <PS.Input
                   type='text'

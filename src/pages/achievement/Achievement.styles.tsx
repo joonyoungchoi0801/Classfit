@@ -110,6 +110,10 @@ export const RowWrapper = styled.div`
   flex-direction: row;
   align-items: center;
 `;
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const IconWrapper = styled.div<{
   $alignLeft?: boolean;
