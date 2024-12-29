@@ -7,10 +7,13 @@ function Button({
   backgroundColor = 'var(--color-blue)',
   borderColor = 'var(--color-black)',
   isBorder = false,
-  onClick = () => { },
+  onClick = () => {},
+  type = 'button',
 }: ButtonProps) {
+  console.log(type);
   return (
     <S.ButtonWrapper
+      type={type}
       onClick={onClick}
       $textColor={textColor}
       $backgroundColor={backgroundColor}

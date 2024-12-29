@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ArrowBottomIcon from '@/assets/info/arrowBottom.svg';
 
-export const SelectButton = styled.button<{ $isPlaceholder: boolean }>`
+export const SelectButton = styled.div<{ $isPlaceholder: boolean }>`
   width: 100%;
   padding: 1rem 2rem;
   background-color: var(--color-white);

@@ -15,9 +15,16 @@ import CalendarIcon from '@/assets/achievement/calendar.svg';
 import CalendarFilledIcon from '@/assets/achievement/calendarFilled.svg';
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { useForm, Controller } from 'react-hook-form';
+
+type FormData = {
+  mainClass: string;
+  category: string;
+};
 
 function AchievementRegister() {
   const genderLst = ['점수', '개수', 'P/F', '정성평가'];
+  const mainClassLst = ['중3', '고1'];
   const examLst = ['주간', '월간', '데일리', '기타'];
   const studentRegisterHandler = useStudentRegister();
   const navigate = useNavigate();
@@ -37,206 +44,222 @@ function AchievementRegister() {
     console.log(showCalendar);
   };
 
-  return (
-    <PS.Container>
-      <PS.ButtonWrapper>
-        <S.ButtonWrapper>
-          <Button
-            title='다음'
-            onClick={() => {
-              navigate('/manage/achievement/management/register/student');
-            }}
-          />
-        </S.ButtonWrapper>
-      </PS.ButtonWrapper>
-      <S.FormWrapper>
-        <S.LabelWrapper>
-          <S.Label>클래스 선택</S.Label>
-          <S.Label $color='var(--color-blue)'>(필수)</S.Label>
-        </S.LabelWrapper>
+  const { control, handleSubmit } = useForm<FormData>();
 
-        <S.Row>
-          <S.FormGroup>
-            <DropDown
-              options={Object.keys(studentRegisterHandler.classInfo)}
-              value={studentRegisterHandler.studentData.grade}
-              placeholder='메인 클래스 선택'
-              onChange={(value) =>
-                studentRegisterHandler.handleOnChangeValue(
-                  STUDENT_FIELD.GRADE,
-                  value
-                )
-              }
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <PS.Container>
+        <PS.ButtonWrapper>
+          <S.ButtonWrapper>
+            <Button
+              type='submit'
+              title='다음'
+              // onClick={() => {
+              //   navigate('/manage/achievement/management/register/student');
+              // }}
             />
-          </S.FormGroup>
-          <S.FormGroup>
-            <ClassDropDown
-              options={
-                studentRegisterHandler.classInfo[
-                  studentRegisterHandler.studentData.grade
-                ]
-              }
-              placeholder='서브 클래스 선택'
-              onChange={(value) =>
-                studentRegisterHandler.handleOnChangeSubClassValue(
-                  STUDENT_FIELD.SUB_CLASS_LIST,
-                  value
-                )
-              }
-            />
-          </S.FormGroup>
-        </S.Row>
-        <S.Row>
-          <S.FormGroup style={{ flex: 1, position: 'relative' }}>
-            <S.LabelWrapper>
-              <S.Label>시험 날짜</S.Label>
-              <S.Label $color='var(--color-blue)'>(필수)</S.Label>
-            </S.LabelWrapper>
-            <S.InputWrapper onClick={toggleCalendar}>
-              <S.TextWithIcon $isSelected={isCalendarInitialized}>
-                {isCalendarInitialized
-                  ? `${format(date, 'yy-MM-dd')}`
-                  : '연도-월-일'}
-              </S.TextWithIcon>
-              <S.IconWrapper>
-                {showCalendar ? (
-                  <>
-                    <PS.BtnIcon src={CalendarFilledIcon} />
-                  </>
-                ) : (
-                  <>
-                    <PS.BtnIcon src={CalendarIcon} />
-                  </>
-                )}
-              </S.IconWrapper>
-            </S.InputWrapper>
-            {showCalendar && (
-              <S.CalendarWrapper>
-                <Calendar date={date} onChange={handleSelectDate} />
-                <S.CalendarButtonWrapper>
-                  <Button title='확인' onClick={toggleCalendar} />
-                </S.CalendarButtonWrapper>
-              </S.CalendarWrapper>
-            )}
-            {/* <S.Input
-              placeholder='YYYY-MM-DD'
-              value={studentRegisterHandler.studentData.birth}
-              onChange={(e) =>
-                studentRegisterHandler.handleOnChangeValue(
-                  STUDENT_FIELD.BIRTH,
-                  e.target.value
-                )
-              }
-              type='date'
-            /> */}
-          </S.FormGroup>
-          <S.FormGroup style={{ flex: 2 }}>
-            <S.LabelWrapper>
-              <S.Label>채점 기준</S.Label>
-              <S.Label $color='var(--color-blue)'>(필수)</S.Label>
-            </S.LabelWrapper>
-            <S.Row>
-              <DropDown
-                style={{ flex: 1 }}
-                options={genderLst}
-                value={studentRegisterHandler.studentData.gender}
-                placeholder='기준 선택'
-                onChange={(value) =>
-                  studentRegisterHandler.handleOnChangeGenderValue(
-                    STUDENT_FIELD.GENDER,
-                    value
-                  )
-                }
-              />
-              <S.Input
-                style={{ flex: 1 }}
-                placeholder='점수'
-                value={studentRegisterHandler.studentData.name}
-                onChange={(e) =>
-                  studentRegisterHandler.handleOnChangeValue(
-                    STUDENT_FIELD.NAME,
-                    e.target.value
-                  )
-                }
-              />
-            </S.Row>
-          </S.FormGroup>
-        </S.Row>
-        <S.FormGroup>
+          </S.ButtonWrapper>
+        </PS.ButtonWrapper>
+        <S.FormWrapper>
           <S.LabelWrapper>
-            <S.Label>시험 정보</S.Label>
+            <S.Label>클래스 선택</S.Label>
             <S.Label $color='var(--color-blue)'>(필수)</S.Label>
           </S.LabelWrapper>
+
           <S.Row>
-            <S.FormGroup style={{ flex: 1 }}>
-              <DropDown
-                options={examLst}
-                value={studentRegisterHandler.studentData.gender}
-                placeholder='분류 선택'
-                onChange={(value) =>
-                  studentRegisterHandler.handleOnChangeGenderValue(
-                    STUDENT_FIELD.GENDER,
-                    value
-                  )
-                }
+            <S.FormGroup>
+              <Controller
+                name='mainClass'
+                control={control}
+                defaultValue=''
+                rules={{ required: '메인클래스를 선택해주세요.' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <DropDown
+                      options={mainClassLst}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder='메인클래스 선택'
+                    />
+                    {fieldState.error && (
+                      <p style={{ color: 'red' }}>{fieldState.error.message}</p>
+                    )}
+                  </>
+                )}
               />
             </S.FormGroup>
-
-            <S.FormGroup style={{ flex: 2 }}>
-              <S.Input
-                placeholder='시험명 입력'
-                value={studentRegisterHandler.studentData.name}
-                onChange={(e) =>
-                  studentRegisterHandler.handleOnChangeValue(
-                    STUDENT_FIELD.NAME,
-                    e.target.value
+            <S.FormGroup>
+              <ClassDropDown
+                options={
+                  studentRegisterHandler.classInfo[
+                    studentRegisterHandler.studentData.grade
+                  ]
+                }
+                placeholder='서브 클래스 선택'
+                onChange={(value) =>
+                  studentRegisterHandler.handleOnChangeSubClassValue(
+                    STUDENT_FIELD.SUB_CLASS_LIST,
+                    value
                   )
                 }
               />
             </S.FormGroup>
           </S.Row>
-        </S.FormGroup>
-        <S.Row>
-          <S.FormGroup style={{ flex: 1 }}>
-            <S.Label>시험 범위</S.Label>
+          <S.Row>
+            <S.FormGroup style={{ flex: 1, position: 'relative' }}>
+              <S.LabelWrapper>
+                <S.Label>시험 날짜</S.Label>
+                <S.Label $color='var(--color-blue)'>(필수)</S.Label>
+              </S.LabelWrapper>
+              <S.InputWrapper onClick={toggleCalendar}>
+                <S.TextWithIcon $isSelected={isCalendarInitialized}>
+                  {isCalendarInitialized
+                    ? `${format(date, 'yy-MM-dd')}`
+                    : '연도-월-일'}
+                </S.TextWithIcon>
+                <S.IconWrapper>
+                  {showCalendar ? (
+                    <>
+                      <PS.BtnIcon src={CalendarFilledIcon} />
+                    </>
+                  ) : (
+                    <>
+                      <PS.BtnIcon src={CalendarIcon} />
+                    </>
+                  )}
+                </S.IconWrapper>
+              </S.InputWrapper>
+              {showCalendar && (
+                <S.CalendarWrapper>
+                  <Calendar date={date} onChange={handleSelectDate} />
+                  <S.CalendarButtonWrapper>
+                    <Button title='확인' onClick={toggleCalendar} />
+                  </S.CalendarButtonWrapper>
+                </S.CalendarWrapper>
+              )}
+            </S.FormGroup>
+            <S.FormGroup style={{ flex: 2 }}>
+              <S.LabelWrapper>
+                <S.Label>채점 기준</S.Label>
+                <S.Label $color='var(--color-blue)'>(필수)</S.Label>
+              </S.LabelWrapper>
+              <S.Row>
+                <DropDown
+                  style={{ flex: 1 }}
+                  options={genderLst}
+                  value={studentRegisterHandler.studentData.gender}
+                  placeholder='기준 선택'
+                  onChange={(value) =>
+                    studentRegisterHandler.handleOnChangeGenderValue(
+                      STUDENT_FIELD.GENDER,
+                      value
+                    )
+                  }
+                />
+                <S.Input
+                  style={{ flex: 1 }}
+                  placeholder='점수'
+                  value={studentRegisterHandler.studentData.name}
+                  onChange={(e) =>
+                    studentRegisterHandler.handleOnChangeValue(
+                      STUDENT_FIELD.NAME,
+                      e.target.value
+                    )
+                  }
+                />
+              </S.Row>
+            </S.FormGroup>
+          </S.Row>
+          <S.FormGroup>
+            <S.LabelWrapper>
+              <S.Label>시험 정보</S.Label>
+              <S.Label $color='var(--color-blue)'>(필수)</S.Label>
+            </S.LabelWrapper>
+            <S.Row>
+              <S.FormGroup style={{ flex: 1 }}>
+                <Controller
+                  name='category'
+                  control={control}
+                  defaultValue=''
+                  rules={{ required: '카테고리를 선택해주세요.' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <DropDown
+                        options={examLst}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder='분류 선택'
+                      />
+                      {fieldState.error && (
+                        <p style={{ color: 'red' }}>
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                />
+              </S.FormGroup>
 
-            <PS.SearchBox>
-              <PS.Input
-                type='text'
-                placeholder='단원명 혹은 과목 목차를 입력해주세요'
-                value={studentRegisterHandler.studentData.address}
-                onChange={(e) =>
-                  studentRegisterHandler.handleOnChangeValue(
-                    STUDENT_FIELD.ADDRESS,
-                    e.target.value
-                  )
-                }
-              />
-              <PS.Button>입력</PS.Button>
-            </PS.SearchBox>
-            <S.TagRangeWrapper>
-              <S.TagItem>
-                1단원 소수의 이해
-                <S.LabelCloseBtn onClick={() => {}}>
-                  <img src={CloseIcon} alt='close' />
-                </S.LabelCloseBtn>
-              </S.TagItem>
-              <S.TagItem>
-                1단원 소수의 이해
-                <S.LabelCloseBtn onClick={() => {}}>
-                  <img src={CloseIcon} alt='close' />
-                </S.LabelCloseBtn>
-              </S.TagItem>
-            </S.TagRangeWrapper>
+              <S.FormGroup style={{ flex: 2 }}>
+                <S.Input
+                  placeholder='시험명 입력'
+                  value={studentRegisterHandler.studentData.name}
+                  onChange={(e) =>
+                    studentRegisterHandler.handleOnChangeValue(
+                      STUDENT_FIELD.NAME,
+                      e.target.value
+                    )
+                  }
+                />
+              </S.FormGroup>
+            </S.Row>
           </S.FormGroup>
-        </S.Row>
-      </S.FormWrapper>
-      <Modal
-        message={studentRegisterHandler.modalMessage}
-        onClose={studentRegisterHandler.handleOnModalClose}
-        isOpen={studentRegisterHandler.isModalVisible}
-      />
-    </PS.Container>
+          <S.Row>
+            <S.FormGroup style={{ flex: 1 }}>
+              <S.Label>시험 범위</S.Label>
+
+              <PS.SearchBox>
+                <PS.Input
+                  type='text'
+                  placeholder='단원명 혹은 과목 목차를 입력해주세요'
+                  value={studentRegisterHandler.studentData.address}
+                  onChange={(e) =>
+                    studentRegisterHandler.handleOnChangeValue(
+                      STUDENT_FIELD.ADDRESS,
+                      e.target.value
+                    )
+                  }
+                />
+                <PS.Button>입력</PS.Button>
+              </PS.SearchBox>
+              <S.TagRangeWrapper>
+                <S.TagItem>
+                  1단원 소수의 이해
+                  <S.LabelCloseBtn onClick={() => {}}>
+                    <img src={CloseIcon} alt='close' />
+                  </S.LabelCloseBtn>
+                </S.TagItem>
+                <S.TagItem>
+                  1단원 소수의 이해
+                  <S.LabelCloseBtn onClick={() => {}}>
+                    <img src={CloseIcon} alt='close' />
+                  </S.LabelCloseBtn>
+                </S.TagItem>
+              </S.TagRangeWrapper>
+            </S.FormGroup>
+          </S.Row>
+        </S.FormWrapper>
+        <Modal
+          message={studentRegisterHandler.modalMessage}
+          onClose={studentRegisterHandler.handleOnModalClose}
+          isOpen={studentRegisterHandler.isModalVisible}
+        />
+      </PS.Container>
+    </form>
   );
 }
 

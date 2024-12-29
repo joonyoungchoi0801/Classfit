@@ -6,7 +6,7 @@ export const SelectWrapper = styled.div`
   width: 100%;
 `;
 
-export const SelectButton = styled.button<{ $selectedOption?: string }>`
+export const SelectButton = styled.div<{ $selectedOption?: string }>`
   width: 100%;
   padding: 1rem 2rem;
   background-color: var(--color-white);
