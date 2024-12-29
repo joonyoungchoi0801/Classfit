@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 15rem;
+`;
+
 export const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -150,7 +157,7 @@ export const IconWrapper = styled.div`
 
 export const CalendarWrapper = styled.div`
   position: absolute;
-  top: 100%;
+  top: 90%;
   right: 0;
   z-index: 100;
   background-color: var(--color-white);

@@ -55,7 +55,7 @@ function AchievementRegister() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <PS.Container>
+      <S.Container>
         <PS.ButtonWrapper>
           <S.ButtonWrapper>
             <Button
@@ -312,7 +312,7 @@ function AchievementRegister() {
           onClose={studentRegisterHandler.handleOnModalClose}
           isOpen={studentRegisterHandler.isModalVisible}
         />
-      </PS.Container>
+      </S.Container>
     </form>
   );
 }
