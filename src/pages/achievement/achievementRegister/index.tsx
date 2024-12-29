@@ -1,4 +1,3 @@
-import Path from '@/components/path';
 import * as S from './AchievementRegister.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import DropDown from '@/components/dropDown';
@@ -9,12 +8,34 @@ import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import CloseIcon from '@/assets/label/close.svg';
 import { useNavigate } from 'react-router-dom';
+import { Calendar } from 'react-date-range';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import CalendarIcon from '@/assets/achievement/calendar.svg';
+import CalendarFilledIcon from '@/assets/achievement/calendarFilled.svg';
+import { useState } from 'react';
+import { format } from 'date-fns';
 
 function AchievementRegister() {
   const genderLst = ['점수', '개수', 'P/F', '정성평가'];
   const examLst = ['주간', '월간', '데일리', '기타'];
   const studentRegisterHandler = useStudentRegister();
   const navigate = useNavigate();
+  const [date, setDate] = useState(new Date());
+
+  const handleSelectDate = (date: Date) => {
+    setDate(date);
+  };
+
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [isCalendarInitialized, setIsCalendarInitialized] =
+    useState<boolean>(false);
+
+  const toggleCalendar = () => {
+    setIsCalendarInitialized(true);
+    setShowCalendar((prev) => !prev);
+    console.log(showCalendar);
+  };
 
   return (
     <PS.Container>
@@ -66,12 +87,38 @@ function AchievementRegister() {
           </S.FormGroup>
         </S.Row>
         <S.Row>
-          <S.FormGroup style={{ flex: 1 }}>
+          <S.FormGroup style={{ flex: 1, position: 'relative' }}>
             <S.LabelWrapper>
               <S.Label>시험 날짜</S.Label>
               <S.Label $color='var(--color-blue)'>(필수)</S.Label>
             </S.LabelWrapper>
-            <S.Input
+            <S.InputWrapper onClick={toggleCalendar}>
+              <S.TextWithIcon $isSelected={isCalendarInitialized}>
+                {isCalendarInitialized
+                  ? `${format(date, 'yy-MM-dd')}`
+                  : '연도-월-일'}
+              </S.TextWithIcon>
+              <S.IconWrapper>
+                {showCalendar ? (
+                  <>
+                    <PS.BtnIcon src={CalendarFilledIcon} />
+                  </>
+                ) : (
+                  <>
+                    <PS.BtnIcon src={CalendarIcon} />
+                  </>
+                )}
+              </S.IconWrapper>
+            </S.InputWrapper>
+            {showCalendar && (
+              <S.CalendarWrapper>
+                <Calendar date={date} onChange={handleSelectDate} />
+                <S.CalendarButtonWrapper>
+                  <Button title='확인' onClick={toggleCalendar} />
+                </S.CalendarButtonWrapper>
+              </S.CalendarWrapper>
+            )}
+            {/* <S.Input
               placeholder='YYYY-MM-DD'
               value={studentRegisterHandler.studentData.birth}
               onChange={(e) =>
@@ -81,7 +128,7 @@ function AchievementRegister() {
                 )
               }
               type='date'
-            />
+            /> */}
           </S.FormGroup>
           <S.FormGroup style={{ flex: 2 }}>
             <S.LabelWrapper>

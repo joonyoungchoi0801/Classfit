@@ -47,14 +47,14 @@ export const LabelWrapper = styled.div`
 
 export const Input = styled.input`
   padding: 1rem;
-  border: 0.1rem solid #d5d7dd;
+  border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
   height: 4rem;
   align-items: center;
   background-color: var(--color-white);
   &::placeholder {
-    color: #8a91a1;
+    color: var(--color-lightgray);
     opacity: 1;
   }
 `;
@@ -119,3 +119,58 @@ export const TagRangeWrapper = styled.div`
   padding: 10px;
   box-sizing: border-box;
 `;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+export const TextWithIcon = styled.div<{ $isSelected: boolean }>`
+  width: 100%;
+  padding-right: 4rem;
+  padding: 1rem;
+  border: 0.1rem solid #d5d7dd;
+  border-radius: 1rem;
+  height: 4rem;
+  font-size: 1.6rem;
+  color: ${({ $isSelected }) =>
+    $isSelected ? 'var(--color-black)' : '#8a91a1'};
+`;
+
+export const IconWrapper = styled.div`
+  position: absolute;
+  right: 1rem; /* Input 오른쪽 끝에서 간격 */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* 클릭 방지 */
+  color: var(--color-blue); /* 아이콘 색상 */
+  cursor: pointer;
+`;
+
+export const CalendarWrapper = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  background-color: var(--color-white);
+  border: 0.1rem solid var(--color-gray);
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+`;
+
+export const CalendarButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem 3rem;
+`;
+
+// export const CalendarWrapper = styled.div`
+//   display: block; /* 캘린더가 숨겨지지 않도록 설정 */
+//   position: absolute;
+//   z-index: 10;
+//   top: 50px; /* Input 아래에 배치 */
+//   left: 0;
+// `;
