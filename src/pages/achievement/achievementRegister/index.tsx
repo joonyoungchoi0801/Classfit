@@ -50,33 +50,31 @@ function AchievementRegister() {
   };
 
   const { control, handleSubmit, getValues, setValue } = useForm<FormData>();
-  const [inputValue, setInputValue] = useState(''); // 입력 필드 값 관리
+  const [inputValue, setInputValue] = useState('');
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    navigate('/manage/achievement/management/register/student');
   };
 
   const handleAddExamRange = () => {
-    const currentRanges = getValues('examRange'); // 현재 examRange 배열 가져오기
+    const currentRanges = getValues('examRange');
     if (inputValue.trim() !== '') {
-      setValue('examRange', [...currentRanges, inputValue]); // 배열에 값 추가
-      setInputValue(''); // 입력 필드 초기화
+      setValue('examRange', [...currentRanges, inputValue]);
+      setInputValue('');
     }
   };
 
-  const examRanges = getValues('examRange') || []; // 기본값 빈 배열
+  const examRanges = getValues('examRange') || [];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <S.Container>
         <PS.ButtonWrapper>
           <S.ButtonWrapper>
             <Button
-              type='submit'
+              type='button'
               title='다음'
-              // onClick={() => {
-              //   navigate('/manage/achievement/management/register/student');
-              // }}
+              onClick={handleSubmit(onSubmit)}
             />
           </S.ButtonWrapper>
         </PS.ButtonWrapper>
