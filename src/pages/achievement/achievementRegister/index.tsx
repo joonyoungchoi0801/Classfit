@@ -3,7 +3,6 @@ import * as PS from '@/pages/achievement/Achievement.styles';
 import DropDown from '@/components/dropDown';
 import Button from '@/components/button';
 import useStudentRegister from '@/hooks/student/useStudentRegister';
-import { STUDENT_FIELD } from '@/constants/STUDENT';
 import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import CloseIcon from '@/assets/label/close.svg';
@@ -17,9 +16,11 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
 import Message from '@/components/message';
+import useClassList from '@/hooks/useClassList';
 
 type FormData = {
   mainClass: string;
+  subClass: string;
   category: string;
   examDate: string;
   standard: string;
@@ -29,8 +30,8 @@ type FormData = {
 };
 
 function AchievementRegister() {
+  const { classList } = useClassList();
   const genderLst = ['점수', '개수', 'P/F', '정성평가'];
-  const mainClassLst = ['중3', '고1'];
   const examLst = ['주간', '월간', '데일리', '기타'];
   const studentRegisterHandler = useStudentRegister();
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function AchievementRegister() {
       setInputValue('');
     }
   };
-
+  const mainClass = getValues('mainClass') || '';
   const examRanges = getValues('examRange') || [];
 
   return (
@@ -93,7 +94,7 @@ function AchievementRegister() {
                 render={({ field, fieldState }) => (
                   <>
                     <DropDown
-                      options={mainClassLst}
+                      options={Object.keys(classList) || []}
                       value={field.value}
                       onChange={field.onChange}
                       placeholder='메인클래스 선택'
@@ -106,19 +107,24 @@ function AchievementRegister() {
               />
             </S.FormGroup>
             <S.FormGroup>
-              <ClassDropDown
-                options={
-                  studentRegisterHandler.classInfo[
-                    studentRegisterHandler.studentData.grade
-                  ]
-                }
-                placeholder='서브 클래스 선택'
-                onChange={(value) =>
-                  studentRegisterHandler.handleOnChangeSubClassValue(
-                    STUDENT_FIELD.SUB_CLASS_LIST,
-                    value
-                  )
-                }
+              <Controller
+                name='subClass'
+                control={control}
+                defaultValue=''
+                rules={{ required: '서브클래스를 선택해주세요.' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ClassDropDown
+                      options={classList[mainClass]}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder='서브클래스 선택'
+                    />
+                    {fieldState.error && (
+                      <Message content={fieldState.error.message || ''} />
+                    )}
+                  </>
+                )}
               />
             </S.FormGroup>
           </S.Row>

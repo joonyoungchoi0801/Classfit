@@ -6,7 +6,7 @@ import * as S from './ClassDropDown.styles';
 function ClassDropDown({
   options = [],
   placeholder = '선택',
-  value,
+  value = '',
   onChange,
 }: ClassDropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ function ClassDropDown({
 
   useEffect(() => {
     if (value && value.length > 0) {
-      const option = options.find((option) => option.subClassName === value[0]);
+      const option = options.find((option) => option.subClassName === value);
       if (!option) return;
       setSelectedOption([option.subClassId]);
     }
