@@ -151,6 +151,7 @@ export const Tag = styled.div<{ $type: string }>`
     if (props.$type === '월간') return '#5DD2A9';
     if (props.$type === '주간') return '#FF7173';
     if (props.$type === '데일리') return 'var(--color-blue)';
+    if (props.$type === '기타') return '#A294F9';
     return 'var(--color-gray)';
   }};
   color: var(--color-white);
