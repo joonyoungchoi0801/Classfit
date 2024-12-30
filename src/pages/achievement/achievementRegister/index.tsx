@@ -16,6 +16,7 @@ import CalendarFilledIcon from '@/assets/achievement/calendarFilled.svg';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
+import Message from '@/components/message';
 
 type FormData = {
   mainClass: string;
@@ -24,6 +25,7 @@ type FormData = {
   standard: string;
   examScore: number;
   examName: string;
+  examRange: string[];
 };
 
 function AchievementRegister() {
@@ -47,11 +49,22 @@ function AchievementRegister() {
     setShowCalendar((prev) => !prev);
   };
 
-  const { control, handleSubmit } = useForm<FormData>();
+  const { control, handleSubmit, getValues, setValue } = useForm<FormData>();
+  const [inputValue, setInputValue] = useState(''); // 입력 필드 값 관리
 
   const onSubmit = (data: FormData) => {
     console.log(data);
   };
+
+  const handleAddExamRange = () => {
+    const currentRanges = getValues('examRange'); // 현재 examRange 배열 가져오기
+    if (inputValue.trim() !== '') {
+      setValue('examRange', [...currentRanges, inputValue]); // 배열에 값 추가
+      setInputValue(''); // 입력 필드 초기화
+    }
+  };
+
+  const examRanges = getValues('examRange') || []; // 기본값 빈 배열
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,7 +101,7 @@ function AchievementRegister() {
                       placeholder='메인클래스 선택'
                     />
                     {fieldState.error && (
-                      <p style={{ color: 'red' }}>{fieldState.error.message}</p>
+                      <Message content={fieldState.error.message || ''} />
                     )}
                   </>
                 )}
@@ -141,7 +154,7 @@ function AchievementRegister() {
                       </S.IconWrapper>
                     </S.InputWrapper>
                     {fieldState.error && (
-                      <p style={{ color: 'red' }}>{fieldState.error.message}</p>
+                      <Message content={fieldState.error.message || ''} />
                     )}
                     {showCalendar && (
                       <S.CalendarWrapper>
@@ -183,9 +196,7 @@ function AchievementRegister() {
                           placeholder='분류 선택'
                         />
                         {fieldState.error && (
-                          <p style={{ color: 'red' }}>
-                            {fieldState.error.message}
-                          </p>
+                          <Message content={fieldState.error.message || ''} />
                         )}
                       </PS.Column>
                     )}
@@ -207,9 +218,7 @@ function AchievementRegister() {
                           onChange={field.onChange}
                         />
                         {fieldState.error && (
-                          <p style={{ color: 'red' }}>
-                            {fieldState.error.message}
-                          </p>
+                          <Message content={fieldState.error.message || ''} />
                         )}
                       </>
                     )}
@@ -239,9 +248,7 @@ function AchievementRegister() {
                         placeholder='분류 선택'
                       />
                       {fieldState.error && (
-                        <p style={{ color: 'red' }}>
-                          {fieldState.error.message}
-                        </p>
+                        <Message content={fieldState.error.message || ''} />
                       )}
                     </>
                   )}
@@ -263,9 +270,7 @@ function AchievementRegister() {
                         onChange={field.onChange}
                       />
                       {fieldState.error && (
-                        <p style={{ color: 'red' }}>
-                          {fieldState.error.message}
-                        </p>
+                        <Message content={fieldState.error.message || ''} />
                       )}
                     </>
                   )}
@@ -277,32 +282,34 @@ function AchievementRegister() {
             <S.FormGroup style={{ flex: 1 }}>
               <S.Label>시험 범위</S.Label>
               <PS.SearchBox>
-                <PS.Input
-                  type='text'
-                  placeholder='단원명 혹은 과목 목차를 입력해주세요'
-                  value={studentRegisterHandler.studentData.address}
-                  onChange={(e) =>
-                    studentRegisterHandler.handleOnChangeValue(
-                      STUDENT_FIELD.ADDRESS,
-                      e.target.value
-                    )
-                  }
+                <Controller
+                  name='examRange'
+                  control={control}
+                  defaultValue={[]}
+                  render={({ field }) => (
+                    <>
+                      <PS.Input
+                        type='text'
+                        placeholder='단원명 혹은 과목 목차를 입력해주세요'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <PS.Button type='button' onClick={handleAddExamRange}>
+                        입력
+                      </PS.Button>
+                    </>
+                  )}
                 />
-                <PS.Button>입력</PS.Button>
               </PS.SearchBox>
               <S.TagRangeWrapper>
-                <S.TagItem>
-                  1단원 소수의 이해
-                  <S.LabelCloseBtn onClick={() => {}}>
-                    <img src={CloseIcon} alt='close' />
-                  </S.LabelCloseBtn>
-                </S.TagItem>
-                <S.TagItem>
-                  1단원 소수의 이해
-                  <S.LabelCloseBtn onClick={() => {}}>
-                    <img src={CloseIcon} alt='close' />
-                  </S.LabelCloseBtn>
-                </S.TagItem>
+                {examRanges.map((range, index) => (
+                  <S.TagItem key={index}>
+                    {range}
+                    <S.LabelCloseBtn onClick={() => {}}>
+                      <img src={CloseIcon} alt='close' />
+                    </S.LabelCloseBtn>
+                  </S.TagItem>
+                ))}
               </S.TagRangeWrapper>
             </S.FormGroup>
           </S.Row>
