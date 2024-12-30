@@ -52,9 +52,8 @@ function Signup() {
     /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,20}$/;
 
   const onSubmit = (data: SignupType) => {
-    console.log(errors);
-    console.log(data);
     sessionStorage.setItem('email', data.email);
+    sessionStorage.setItem('signupData', JSON.stringify(data));
     navigate('/email');
   };
 

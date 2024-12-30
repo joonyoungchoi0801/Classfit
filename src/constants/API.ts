@@ -32,3 +32,22 @@ export const API_SMS = Object.freeze({
 export const API_EXCEL = Object.freeze({
   EXCEL: '/v1/home/excel/download',
 });
+
+export const API_AUTH = Object.freeze({
+  LOGIN: '/v1/login',
+  SIGNUP: '/v1/sign_in',
+  LOGOUT: '/v1/logout',
+  REISSUE: '/v1/reissue',
+  PASSWORD: '/v1/password',
+});
+
+export const API_ACADEMY = Object.freeze({
+  INVITE: '/v1/academy/invite',
+  CREATE: '/v1/academy/create',
+  CODE: '/v1/academy/code',
+});
+
+export const API_EMAIL = Object.freeze({
+  VERIFY: '/v1/mail/verify',
+  SEND: '/v1/mail/send',
+});

@@ -6,25 +6,40 @@ import Checkbox from '@/assets/auth/signin/checkbox.svg';
 import BlueCheckBox from '@/assets/auth/signin/bluecheckbox.svg';
 import Id from '@/assets/auth/signin/id.svg';
 import Password from '@/assets/auth/signin/password.svg';
-
+import axios, { AxiosError } from 'axios';
 import type { SigninType } from './type/signin.type';
 import { Link, useNavigate } from 'react-router-dom';
+import { postLogin } from '@/api/authAPI';
 
 function Signin() {
   const [emailValue, setEmailValue] = useState<string>(
     localStorage.getItem('savedEmail') || ''
   );
-  const [isMemoryChecked, setIsMemoryChecked] = useState(false);
+  const [isMemoryChecked, setIsMemoryChecked] = useState(
+    localStorage.getItem('savedEmail') ? true : false
+  );
   const { register, handleSubmit, watch } = useForm<SigninType>();
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: SigninType) => {
+  const onSubmit = async (data: SigninType) => {
     if (isMemoryChecked) {
       localStorage.setItem('savedEmail', data.email);
-      navigate('/email');
     } else {
       localStorage.removeItem('savedEmail');
+    }
+    try {
+      const response = await postLogin(data);
+      const { accessToken } = response.data;
+      localStorage.setItem('accessToken', accessToken);
+      navigate('/');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
+        sessionStorage.setItem('email', data.email);
+        navigate('/account');
+      } else {
+        alert('아이디 또는 비밀번호가 일치하지 않습니다');
+      }
     }
   };
   return (
