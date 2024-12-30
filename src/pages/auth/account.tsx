@@ -4,20 +4,36 @@ import * as S from './style/account.styles';
 import profileIcon from '@/assets/auth/account/profile.svg';
 import checkBoxIcon from '@/assets/auth/account/checkbox.svg';
 import error from '@/assets/auth/account/error.svg';
+import { postAcademyInvite } from '@/api/authAPI';
 
 function Account() {
   const [selectedOption, setSelectedOption] = useState<'create' | 'join'>(
     'create'
   );
   const [codeError, setCodeError] = useState<boolean>(false);
+  const [inviteCode, setInviteCode] = useState<string>('');
   const navigate = useNavigate();
 
-  const handleClickButton = () => {
+  const handleClickButton = async () => {
     if (selectedOption === 'create') {
       navigate('/class');
     } else {
-      navigate('/');
+      try {
+        const inviteData = {
+          email: sessionStorage.getItem('email') || '',
+          code: inviteCode,
+        };
+        await postAcademyInvite(inviteData);
+        navigate('/');
+      } catch (error) {
+        setCodeError(true);
+      }
     }
+  };
+
+  const handleInviteCode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setInviteCode(value);
   };
 
   return (
@@ -53,7 +69,10 @@ function Account() {
           </S.AccountOptionLabel>
           {selectedOption === 'join' && (
             <S.InputWrapper>
-              <S.AccountInput placeholder='초대 코드를 입력해주세요' />
+              <S.AccountInput
+                placeholder='초대 코드를 입력해주세요'
+                onChange={handleInviteCode}
+              />
               {codeError && <S.ErrorIcon src={error} alt='error' />}
             </S.InputWrapper>
           )}

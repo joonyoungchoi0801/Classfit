@@ -141,6 +141,26 @@ export const PersonalLink = styled.span`
   font-weight: 600;
   line-height: normal;
 `;
+export const Error = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const ErrorMessage = styled.span`
+  color: #ff5858;
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const ErrorIcon = styled.img`
+  width: 1.6rem;
+  height: 1.6rem;
+`;
 
 export const PersonalCheck = styled.span`
   color: var(--color-black);
@@ -152,10 +172,10 @@ export const PersonalCheck = styled.span`
 `;
 
 export const SubmitButton = styled.button<{
-  $isDisabled?: boolean;
+  $isDisabled?: boolean | null;
 }>`
   display: flex;
-  width: 42rem;
+  width: 100%;
   padding: 1.5rem 2rem;
   justify-content: center;
   align-items: center;

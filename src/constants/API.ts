@@ -34,8 +34,8 @@ export const API_EXCEL = Object.freeze({
 });
 
 export const API_AUTH = Object.freeze({
-  LOGIN: '/v1/login',
-  SIGNUP: '/v1/sign_in',
+  LOGIN: '/v1/sigin',
+  SIGNUP: '/v1/signup',
   LOGOUT: '/v1/logout',
   REISSUE: '/v1/reissue',
   PASSWORD: '/v1/password',

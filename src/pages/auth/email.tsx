@@ -3,11 +3,12 @@ import emailIcon from '@/assets/auth/email/email.svg';
 import sendemail from '@/assets/auth/email/sendemail.svg';
 import checkboxIcon from '@/assets/auth/email/checkbox.svg';
 import bluecheckboxIcon from '@/assets/auth/email/bluecheckbox.svg';
+import errorIcon from '@/assets/auth/email/error.svg';
 import type { EmailType } from './type/email.type';
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postSendEmail, postVerifyEmail } from '@/api/authAPI';
+import { postSendEmail, postSignup, postVerifyEmail } from '@/api/authAPI';
 
 function Email() {
   const { register, handleSubmit, watch } = useForm<EmailType>();
@@ -20,6 +21,7 @@ function Email() {
   const [serviceInfo, setServiceInfo] = useState<boolean>(false);
   const [locationInfo, setLocationInfo] = useState<boolean>(false);
   const [marketingInfo, setMarketingInfo] = useState<boolean>(false);
+  const [emailToken, setEmailToken] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -63,14 +65,16 @@ function Email() {
 
   const handleVerifyEmail = useCallback(async () => {
     try {
-      await postVerifyEmail({
+      const res = await postVerifyEmail({
         email: emailValue,
         code: emailConfirmValue,
         purpose: 'SIGN_IN',
       });
+      const { emailToken } = res.data.data;
+
+      setEmailToken(emailToken);
       setEmailCodeVerify(true);
     } catch (error) {
-      alert('이메일 인증에 실패했습니다.');
       setEmailCodeVerify(false);
     }
   }, [emailConfirmValue, emailValue]);
@@ -78,12 +82,34 @@ function Email() {
   useEffect(() => {
     if (emailConfirmValue.length === 8) {
       handleVerifyEmail();
+    } else {
+      setEmailCodeVerify(null);
     }
   }, [emailConfirmValue, handleVerifyEmail]); // 에러 설정
 
-  const onSubmit = (data: EmailType) => {
-    console.log(data);
-    navigate('/account');
+  const onSubmit = async (data: EmailType) => {
+    try {
+      const signupDataString = sessionStorage.getItem('signupData');
+      if (!signupDataString) {
+        alert('회원가입 데이터가 없습니다.');
+        navigate('/signup');
+        return;
+      }
+      const { name, phonenum, email, password, passwordConfirm } =
+        JSON.parse(signupDataString);
+      const signupData = {
+        name: name,
+        phoneNumber: phonenum,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm,
+        emailToken: emailToken,
+      };
+      await postSignup(signupData);
+      navigate('/account');
+    } catch (error) {
+      alert('회원가입에 실패했습니다.');
+    }
   };
 
   return (
@@ -117,13 +143,19 @@ function Email() {
           </S.LabelWrapper>
           <S.Input
             type='text'
-            placeholder='이메일로 전송된 인증번호를 입력해주세요'
+            placeholder='이메일로 전송된 8자리 인증번호를 입력해주세요'
             {...register('emailconfirm', {
-              required: '이메일로 전송된 인증번호를 입력해주세요',
+              required: '이메일로 전송된 8자리 인증번호를 입력해주세요',
             })}
             onChange={handleEmailConfirmChange}
             value={emailConfirmValue}
           />
+          {emailCodeVerify === false && (
+            <S.Error>
+              <S.ErrorIcon src={errorIcon} alt='error' />
+              <S.ErrorMessage>인증번호가 일치하지 않습니다. </S.ErrorMessage>
+            </S.Error>
+          )}
         </S.InputWrapper>
         <S.PersonalContainer>
           <S.PersonalWrapper>
@@ -181,7 +213,7 @@ function Email() {
         </S.PersonalWrapper>
         <S.SubmitButton
           type='submit'
-          $isDisabled={!isAvailable}
+          $isDisabled={!isAvailable || !emailCodeVerify}
           onClick={handleSubmit(onSubmit)}
         >
           다음

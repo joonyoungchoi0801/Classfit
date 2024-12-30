@@ -92,7 +92,9 @@ function Signin() {
           </S.Form>
 
           <S.AdditionWrapper>
-            <S.AdditionLabel>회원가입</S.AdditionLabel>
+            <S.AdditionLabel onClick={() => navigate('/signup')}>
+              회원가입
+            </S.AdditionLabel>
             <S.Bar />
             <S.AdditionLabel>비밀번호 찾기</S.AdditionLabel>
           </S.AdditionWrapper>

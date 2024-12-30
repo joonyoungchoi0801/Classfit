@@ -1,13 +1,17 @@
+import { postAcademyCreate } from '@/api/authAPI';
 import * as S from './style/class.styles';
 import AcademyIcon from '@/assets/auth/class/academy.svg';
 import KeyIcon from '@/assets/auth/class/key.svg';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Class() {
   const [codeValue, setCodeValue] = useState<string>('');
+  const [academyName, setAcademyName] = useState<string>('');
+  const navigate = useNavigate();
   const generateCode = () => {
     const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     let result = '';
     for (let i = 0; i < 8; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -15,6 +19,35 @@ function Class() {
     }
     setCodeValue(result);
   };
+  const handleAcademyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAcademyName(e.target.value);
+    console.log(academyName);
+  };
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    const allowedCharacters = /^[A-Za-z0-9!@#$%^&*()]*$/;
+
+    if (allowedCharacters.test(input)) {
+      setCodeValue(input);
+    } else {
+      alert('영어, 숫자, 특수문자만 입력 가능합니다.');
+    }
+  };
+
+  const handleComplete = async () => {
+    try {
+      const academyData = {
+        email: sessionStorage.getItem('email') || '',
+        name: academyName,
+        code: codeValue,
+      };
+      await postAcademyCreate(academyData);
+      navigate('/');
+    } catch (error) {
+      alert('학원 정보를 다시 입력해주세요');
+    }
+  };
+
   return (
     <S.PageWrapper>
       <S.ClassWrapper>
@@ -25,7 +58,11 @@ function Class() {
             &nbsp;학원명
           </S.OptionTitle>
           <S.InputWrapper>
-            <S.OptionInput placeholder='학원 이름을 입력해주세요' />
+            <S.OptionInput
+              placeholder='학원 이름을 입력해주세요'
+              value={academyName}
+              onChange={handleAcademyNameChange}
+            />
           </S.InputWrapper>
         </S.ClassOption>
         <S.ClassOption>
@@ -37,13 +74,19 @@ function Class() {
             <S.OptionInput
               placeholder='학원 코드 8자리를 입력해주세요'
               value={codeValue}
+              onChange={handleCodeChange}
             />
             <S.AutoButton onClick={() => generateCode()}>
               자동 생성
             </S.AutoButton>
           </S.InputWrapper>
         </S.ClassOption>
-        <S.CompleteButton>완료</S.CompleteButton>
+        <S.CompleteButton
+          onClick={() => handleComplete()}
+          $isDisabled={!academyName || codeValue.length !== 8}
+        >
+          완료
+        </S.CompleteButton>
       </S.ClassWrapper>
     </S.PageWrapper>
   );
