@@ -132,3 +132,20 @@ export const TitleWrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const EmptyListSection = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 5rem;
+`;
+
+export const AchievementInfoText = styled.div`
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  padding-top: 5.314rem;
+`;

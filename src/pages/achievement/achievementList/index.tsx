@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DropDown from '@/components/dropDown';
 import ClassDropDown from '@/components/dropDown/classDropDown';
+import ImageIcon from '@/components/imageIcon';
 const data = [
   {
     type: '데일리',
@@ -34,13 +35,13 @@ const data = [
     teacher: '박선호',
     date: '24.11.15',
   },
-  {
-    type: '기타',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
+  // {
+  //   type: '기타',
+  //   class: '중3-A',
+  //   test: '월말테스트',
+  //   teacher: '김나나',
+  //   date: '24.11.15',
+  // },
   {
     type: '주간',
     class: '중1-C',
@@ -62,13 +63,13 @@ const data = [
     teacher: '박선호',
     date: '24.11.15',
   },
-  {
-    type: '기타',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
+  // {
+  //   type: '기타',
+  //   class: '중3-A',
+  //   test: '월말테스트',
+  //   teacher: '김나나',
+  //   date: '24.11.15',
+  // },
   {
     type: '주간',
     class: '중1-C',
@@ -215,10 +216,9 @@ function AchievementList() {
           </S.FilterButton>
         ))}
       </S.FilterTabs>
-
-      <S.List>
-        {displayData.length > 0 ? (
-          displayData.map((item, index) => (
+      {displayData.length > 0 ? (
+        <S.List>
+          {displayData.map((item, index) => (
             <S.ListItem
               key={index}
               onClick={() =>
@@ -235,13 +235,14 @@ function AchievementList() {
                 <PS.Text>{item.date}</PS.Text>
               </S.TeacherWrapper>
             </S.ListItem>
-          ))
-        ) : (
-          <div>검색 결과 없음</div>
-        )}
-      </S.List>
+          ))}
+        </S.List>
+      ) : (
+        <S.EmptyListSection>
+          <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
+          <S.AchievementInfoText>검색된 결과가 없습니다.</S.AchievementInfoText>
+        </S.EmptyListSection>
+      )}
     </S.Container>
   );
 }
-
-export default AchievementList;
