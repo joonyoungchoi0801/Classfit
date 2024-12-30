@@ -10,7 +10,6 @@ function Button({
   onClick = () => {},
   type = 'button',
 }: ButtonProps) {
-  console.log(type);
   return (
     <S.ButtonWrapper
       type={type}
