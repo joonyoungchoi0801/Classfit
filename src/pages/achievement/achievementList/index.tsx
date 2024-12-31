@@ -129,7 +129,8 @@ function AchievementList() {
     });
 
     setFilteredData(_data);
-    setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
+    // setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
+    setPreviousFilteredData(_data);
     setDisplayData(_data);
   };
 
@@ -156,6 +157,25 @@ function AchievementList() {
       setPreviousFilteredData(_data);
       setDisplayData(_data);
     }
+  };
+
+  const handleOnClickSearch = () => {
+    const _data = data.filter((item) => {
+      const matchesType = filter === '전체' || item.type === filter;
+      let matchesSearch;
+
+      if (searchFilter === '강사명') {
+        matchesSearch = item.teacher == searchText;
+      } else {
+        matchesSearch = item.test == searchText;
+      }
+
+      return matchesType && matchesSearch;
+    });
+
+    setFilteredData(_data);
+    setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
+    setDisplayData(_data);
   };
 
   return (
@@ -198,8 +218,13 @@ function AchievementList() {
                 placeholder='검색어 입력'
                 value={searchText}
                 onChange={(e) => handleOnChangeSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleOnClickSearch();
+                  }
+                }}
               />
-              <S.Button>검색</S.Button>
+              <S.Button onClick={handleOnClickSearch}>검색</S.Button>
             </S.SearchBox>
           </S.SearchWrapper>
         </S.FilterWrapper>
@@ -246,3 +271,5 @@ function AchievementList() {
     </S.Container>
   );
 }
+
+export default AchievementList;
