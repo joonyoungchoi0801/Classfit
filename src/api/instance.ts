@@ -19,21 +19,44 @@ const noAuthRequiredEndpoints: string[] = [
   API_EMAIL.VERIFY,
 ];
 
+interface RefreshQueue {
+  (token: string): void;
+}
+
+let isRefreshing = false;
+let refreshQueue: RefreshQueue[] = [];
+
 const reissueToken = async () => {
+  if (isRefreshing) {
+    return new Promise((resolve) => {
+      refreshQueue.push(resolve);
+    });
+  }
+
   try {
+    isRefreshing = true;
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}${API_AUTH.REISSUE}`,
+      'https://classfit.duckdns.org/api/v1/reissue',
+      {},
       {
         withCredentials: true,
       }
     );
-    const { accessToken } = response.data;
+
+    const authHeader = response.headers['authorization'];
+    const accessToken = authHeader.split(' ')[1];
     localStorage.setItem('accessToken', accessToken);
+
+    refreshQueue.forEach((callback) => callback(accessToken));
+    refreshQueue = [];
+
     return accessToken;
   } catch (error) {
     alert('다시한번 로그인해주세요');
     window.location.href = '/signin';
     return null;
+  } finally {
+    isRefreshing = false;
   }
 };
 
