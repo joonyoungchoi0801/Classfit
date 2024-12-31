@@ -24,6 +24,7 @@ export const Row = styled.div`
   display: flex;
   gap: 1rem;
   flex-direction: row;
+  width: 100%;
   padding-bottom: 1rem;
   @media (max-width: 76.8rem) {
     flex-direction: column;

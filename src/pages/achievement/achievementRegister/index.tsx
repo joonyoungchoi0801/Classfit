@@ -29,6 +29,31 @@ type FormData = {
   examRange: string[];
 };
 
+type ScoreStandardProps = {
+  [key: string]: {
+    placeholder: string;
+    isBlocked: boolean;
+  };
+};
+
+const scoreStandard: ScoreStandardProps = {
+  점수: {
+    placeholder: '100 (최고점수는 100으로 고정됩니다)',
+    isBlocked: true,
+  },
+  개수: {
+    placeholder: '최대 개수 입력',
+    isBlocked: false,
+  },
+  'P/F': {
+    placeholder: '',
+    isBlocked: true,
+  },
+  정성평가: {
+    placeholder: '',
+    isBlocked: true,
+  },
+};
 function AchievementRegister() {
   const { classList } = useClassList();
   const genderLst = ['점수', '개수', 'P/F', '정성평가'];
@@ -52,6 +77,7 @@ function AchievementRegister() {
 
   const { control, handleSubmit, getValues, setValue } = useForm<FormData>();
   const [inputValue, setInputValue] = useState('');
+  const [standardValue, setStandardValue] = useState('점수');
 
   const onSubmit = (data: FormData) => {
     navigate('/manage/achievement/management/register/student');
@@ -184,19 +210,22 @@ function AchievementRegister() {
                 <S.Label>채점 기준</S.Label>
                 <S.Label $color='var(--color-blue)'>(필수)</S.Label>
               </S.LabelWrapper>
-              <S.Row>
-                <div style={{ flex: 2 }}>
+              <S.Row style={{ display: 'flex', width: '100%' }}>
+                <div style={{ flex: 1 }}>
                   <Controller
                     name='standard'
                     control={control}
-                    defaultValue=''
+                    defaultValue='점수'
                     rules={{ required: '기준을 선택해주세요' }}
                     render={({ field, fieldState }) => (
                       <PS.Column>
                         <DropDown
                           options={genderLst}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value: string) => {
+                            field.onChange(value);
+                            setStandardValue(value);
+                          }}
                           placeholder='분류 선택'
                         />
                         {fieldState.error && (
@@ -206,7 +235,7 @@ function AchievementRegister() {
                     )}
                   />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 2 }}>
                   <Controller
                     name='examScore'
                     control={control}
@@ -216,10 +245,13 @@ function AchievementRegister() {
                     render={({ field, fieldState }) => (
                       <>
                         <S.Input
-                          style={{ flex: 1 }}
-                          placeholder='점수'
+                          style={{ width: '100%' }}
+                          placeholder={
+                            scoreStandard[standardValue]?.placeholder
+                          }
                           value={field.value}
                           onChange={field.onChange}
+                          disabled={scoreStandard[standardValue]?.isBlocked}
                         />
                         {fieldState.error && (
                           <Message content={fieldState.error.message || ''} />
