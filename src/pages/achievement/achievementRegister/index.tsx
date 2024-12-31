@@ -122,7 +122,9 @@ function AchievementRegister() {
                     <DropDown
                       options={Object.keys(classList) || []}
                       value={field.value}
-                      onChange={field.onChange}
+                      onChange={(value) => {
+                        field.onChange(value);
+                      }}
                       placeholder='메인클래스 선택'
                     />
                     {fieldState.error && (
@@ -143,7 +145,9 @@ function AchievementRegister() {
                     <ClassDropDown
                       options={classList[mainClass]}
                       value={field.value}
-                      onChange={field.onChange}
+                      onChange2={(value1, value2) => {
+                        field.onChange(value2);
+                      }}
                       placeholder='서브클래스 선택'
                     />
                     {fieldState.error && (
@@ -239,9 +243,9 @@ function AchievementRegister() {
                   <Controller
                     name='examScore'
                     control={control}
-                    rules={{
-                      required: '점수를 입력해주세요.',
-                    }}
+                    // rules={{
+                    //   required: '점수를 입력해주세요.',
+                    // }}
                     render={({ field, fieldState }) => (
                       <>
                         <S.Input
@@ -280,7 +284,9 @@ function AchievementRegister() {
                       <DropDown
                         options={examLst}
                         value={field.value}
-                        onChange={field.onChange}
+                        onChange={(value) => {
+                          field.onChange(value);
+                        }}
                         placeholder='분류 선택'
                       />
                       {fieldState.error && (

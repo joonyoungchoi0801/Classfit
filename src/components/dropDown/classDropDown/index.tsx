@@ -8,14 +8,16 @@ function ClassDropDown({
   placeholder = '선택',
   value = '',
   onChange,
+  onChange2,
 }: ClassDropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number[]>([]);
 
-  const handleOptionClick = (option: number) => {
+  const handleOptionClick = (option: number, optionName: string) => {
     setSelectedOption([option]);
     setIsOpen(false);
     if (onChange) onChange(option);
+    if (onChange2) onChange2(option, optionName);
   };
 
   useEffect(() => {
@@ -50,7 +52,9 @@ function ClassDropDown({
           {options.map((option) => (
             <PS.OptionItem
               key={option.subClassId}
-              onClick={() => handleOptionClick(option.subClassId)}
+              onClick={() =>
+                handleOptionClick(option.subClassId, option.subClassName)
+              }
             >
               {option.subClassName}
             </PS.OptionItem>
