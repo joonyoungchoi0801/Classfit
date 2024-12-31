@@ -42,7 +42,7 @@ function Class() {
         code: codeValue,
       };
       await postAcademyCreate(academyData);
-      navigate('/');
+      navigate('/signin');
     } catch (error) {
       alert('학원 정보를 다시 입력해주세요');
     }

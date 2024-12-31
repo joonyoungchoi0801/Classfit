@@ -24,7 +24,7 @@ function Account() {
           code: inviteCode,
         };
         await postAcademyInvite(inviteData);
-        navigate('/');
+        navigate('/signin');
       } catch (error) {
         setCodeError(true);
       }

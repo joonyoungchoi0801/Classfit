@@ -30,7 +30,8 @@ function Signin() {
     }
     try {
       const response = await postLogin(data);
-      const { accessToken } = response.data;
+      const authHeader = response.headers['authorization'];
+      const accessToken = authHeader.split(' ')[1];
       localStorage.setItem('accessToken', accessToken);
       navigate('/');
     } catch (error) {

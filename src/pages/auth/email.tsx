@@ -56,7 +56,7 @@ function Email() {
 
   const handleSendEmail = async () => {
     try {
-      await postSendEmail({ email: emailValue, purpose: 'SIGN_IN' });
+      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
     } catch (error) {
       alert('이메일 전송에 실패했습니다.');
@@ -68,7 +68,7 @@ function Email() {
       const res = await postVerifyEmail({
         email: emailValue,
         code: emailConfirmValue,
-        purpose: 'SIGN_IN',
+        purpose: 'SIGN_UP',
       });
       const { emailToken } = res.data.data;
 
