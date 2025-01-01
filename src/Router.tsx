@@ -13,8 +13,8 @@ export default function Router() {
       <GlobalStyles />
       <Routes>
         <Route path='/' element={<Attendance />} />
-        <Route path='/manage' element={<Attendance />} />
-        <Route path='/manage/attendance' element={<Attendance />} />
+        <Route path='/manage/*' element={<Attendance />} />
+        <Route path='/manage/attendance/*' element={<Attendance />} />
         <Route path='/manage/attendance/all' element={<Attendance />} />
         <Route path='/manage/attendance/all/sms' element={<Sms />} />
         <Route path='/manage/attendance/:grade' element={<Attendance />} />

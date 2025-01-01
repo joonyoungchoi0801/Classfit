@@ -27,19 +27,19 @@ function Attendance() {
         <S.Header>
           <S.TabButton
             onClick={() => navigate('/manage/attendance/all')}
-            isActive={type === 'attendance'}
+            $isActive={type === 'attendance'}
           >
             출결
           </S.TabButton>
           <S.TabButton
             onClick={() => navigate('/manage/attendance/statistics/date')}
-            isActive={type === 'statistics'}
+            $isActive={type === 'statistics'}
           >
             통계
           </S.TabButton>
           <S.TabButton
             onClick={() => navigate('/manage/attendance/message')}
-            isActive={type === 'message'}
+            $isActive={type === 'message'}
           >
             메세지함
           </S.TabButton>
