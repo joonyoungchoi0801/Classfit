@@ -86,10 +86,10 @@ export const Label = styled.label`
 `;
 
 export const Input = styled.input`
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   border-radius: 1rem;
   border: 1px solid #DEDEDE;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 600;
   width: 100%;
@@ -120,7 +120,7 @@ export const SelectWrapper = styled.div`
 
 export const Select = styled.div<{ hasValue: boolean }>`
   width: 100%;
-  padding: 1rem 1rem 1rem 2rem;
+  padding: 1rem 1rem 1rem 1rem;
   font-size: 1.4rem;
   border-radius: 1rem;
   border: 1px solid #DEDEDE;
@@ -189,6 +189,39 @@ export const DateWrapper = styled.div`
 export const DateInputWrapper = styled.div`
   display: flex;
   width: 100%;
+`;
+
+export const TimeSelectWrapper = styled.div`  
+  display: flex;
+  width: 100%;
+  margin-left: 0.48rem;
+`;
+
+export const TimeSelect = styled.div<{ hasValue: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 3.764rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid #DEDEDE;
+  color: ${({ hasValue }) => (hasValue ? '#000' : '#CACACA')};
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  cursor: pointer;
+`;
+
+export const TimeDropdownIcon = styled.img`
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-black);
 `;
 
 export const CheckboxGroup = styled.div`

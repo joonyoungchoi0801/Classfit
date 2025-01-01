@@ -9,6 +9,10 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
   const [categoryValue, setCategoryValue] = useState('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isAllDay, setIsAllDay] = useState(false);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
 
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
@@ -18,6 +22,15 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
   const handleCategoryChange = (value: string) => {
     setCategoryValue(value);
     setIsCategoryOpen(false);
+  };
+
+  const handleAllDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsAllDay(e.target.checked);
+  };
+
+  const handleStartTimeChange = (value: string) => {
+    setStartTime(value);
+    setIsTimeOpen(false);
   };
 
   if (!isOpen) return null;
@@ -84,15 +97,57 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
             <S.DateInputWrapper>
               <S.Input type="date" placeholder="날짜 선택" />
             </S.DateInputWrapper>
+            {isAllDay && (
+              <S.TimeSelectWrapper>
+                <S.SelectWrapper>
+                  <S.TimeSelect onClick={() => setIsTimeOpen(!isTimeOpen)} hasValue={Boolean(startTime)}>
+                    {startTime || '시간 선택'}
+                    <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
+                  </S.TimeSelect>
+                  {isTimeOpen && (
+                    <S.Options>
+                      <S.Option onClick={() => handleStartTimeChange('09:00')}>
+                        09:00
+                      </S.Option>
+                      <S.Option onClick={() => handleStartTimeChange('10:00')}>
+                        10:00
+                      </S.Option>
+                    </S.Options>
+                  )
+                  }
+                </S.SelectWrapper>
+              </S.TimeSelectWrapper>
+            )}
             <span>—</span>
             <S.DateInputWrapper>
               <S.Input type="date" placeholder="날짜 선택" />
             </S.DateInputWrapper>
+            {isAllDay && (
+              <S.TimeSelectWrapper>
+                <S.SelectWrapper>
+                  <S.TimeSelect onClick={() => setIsTimeOpen(!isTimeOpen)} hasValue={Boolean(endTime)}>
+                    {endTime || '시간 선택'}
+                    <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
+                  </S.TimeSelect>
+                  {isTimeOpen && (
+                    <S.Options>
+                      <S.Option onClick={() => handleStartTimeChange('09:00')}>
+                        09:00
+                      </S.Option>
+                      <S.Option onClick={() => handleStartTimeChange('10:00')}>
+                        10:00
+                      </S.Option>
+                    </S.Options>
+                  )
+                  }
+                </S.SelectWrapper>
+              </S.TimeSelectWrapper>
+            )}
           </S.DateWrapper>
         </S.ColumnRow>
 
         <S.CheckboxGroup>
-          <S.Checkbox type="checkbox" />
+          <S.Checkbox type="checkbox" checked={isAllDay} onChange={handleAllDayChange} />
           <span>종일</span>
         </S.CheckboxGroup>
 
