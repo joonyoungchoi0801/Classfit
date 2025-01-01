@@ -110,7 +110,9 @@ export const AutoButton = styled.button`
   line-height: normal;
 `;
 
-export const CompleteButton = styled.button`
+export const CompleteButton = styled.button<{
+  $isDisabled?: boolean | null;
+}>`
   display: flex;
   width: 100%;
   padding: 1.5rem 2rem;
@@ -118,11 +120,12 @@ export const CompleteButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   border-radius: 5rem;
-  background: var(--color-blue);
   color: var(--color-white);
   font-family: Pretendard;
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  background: ${(props) =>
+    props.$isDisabled ? '#dedede' : 'var(--color-blue)'};
 `;
