@@ -12,7 +12,9 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
   const [isAllDay, setIsAllDay] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [isTimeOpen, setIsTimeOpen] = useState(false);
+  const [isStartTimeOpen, setIsStartTimeOpen] = useState(false);
+  const [isEndTimeOpen, setIsEndTimeOpen] = useState(false);
+
 
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
@@ -30,7 +32,12 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
 
   const handleStartTimeChange = (value: string) => {
     setStartTime(value);
-    setIsTimeOpen(false);
+    setIsStartTimeOpen(false);
+  };
+
+  const handleEndTimeChange = (value: string) => {
+    setEndTime(value);
+    setIsEndTimeOpen(false);
   };
 
   if (!isOpen) return null;
@@ -100,11 +107,11 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
             {isAllDay && (
               <S.TimeSelectWrapper>
                 <S.SelectWrapper>
-                  <S.TimeSelect onClick={() => setIsTimeOpen(!isTimeOpen)} hasValue={Boolean(startTime)}>
+                  <S.TimeSelect onClick={() => setIsStartTimeOpen(!isStartTimeOpen)} hasValue={Boolean(startTime)}>
                     {startTime || '시간 선택'}
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
-                  {isTimeOpen && (
+                  {isStartTimeOpen && (
                     <S.Options>
                       <S.Option onClick={() => handleStartTimeChange('09:00')}>
                         09:00
@@ -125,16 +132,16 @@ const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, o
             {isAllDay && (
               <S.TimeSelectWrapper>
                 <S.SelectWrapper>
-                  <S.TimeSelect onClick={() => setIsTimeOpen(!isTimeOpen)} hasValue={Boolean(endTime)}>
+                  <S.TimeSelect onClick={() => setIsEndTimeOpen(!isEndTimeOpen)} hasValue={Boolean(endTime)}>
                     {endTime || '시간 선택'}
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
-                  {isTimeOpen && (
+                  {isEndTimeOpen && (
                     <S.Options>
-                      <S.Option onClick={() => handleStartTimeChange('09:00')}>
+                      <S.Option onClick={() => handleEndTimeChange('09:00')}>
                         09:00
                       </S.Option>
-                      <S.Option onClick={() => handleStartTimeChange('10:00')}>
+                      <S.Option onClick={() => handleEndTimeChange('10:00')}>
                         10:00
                       </S.Option>
                     </S.Options>
