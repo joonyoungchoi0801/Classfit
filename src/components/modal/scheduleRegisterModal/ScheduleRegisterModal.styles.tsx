@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import React from 'react';
 
 export const ModalWrapper = styled.div`
   position: fixed;
@@ -46,7 +45,7 @@ export const OptionGroup = styled.div`
   margin-top: 2rem;
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ $isActive?: boolean }>`
   padding: 0.6rem 1.4rem;
   justify-content: center;
   align-items: center;
@@ -57,15 +56,12 @@ export const Button = styled.button`
   font-style: normal;
   font-weight: 600;
   cursor: pointer;
+  background: ${({ $isActive }) => ($isActive ? 'var(--color-blue)' : '#E5E5E5')};
+`;
 
-  &:first-child {
-    background: var(--color-blue);
-    margin-left: 0;
-  }
-  &:last-child {
-    background: #E5E5E5;
-    margin-right: 0;
-  }
+export const Row = styled.div`
+  display: flex;  
+  gap: 1rem;
 `;
 
 export const FormGroup = styled.div`
@@ -86,12 +82,13 @@ export const Label = styled.label`
 `;
 
 export const Input = styled.input`
-  padding: 1rem 1rem;
+  padding: 1rem 2rem;
   border-radius: 1rem;
   border: 1px solid #DEDEDE;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
+  line-height: 2.4rem;
   width: 100%;
 
   ::placeholder {
@@ -100,16 +97,6 @@ export const Input = styled.input`
     font-style: normal;
     font-weight: 600;
     line-height: 2.4rem;
-  }
-`;
-
-export const Row = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  span {
-    margin: 0 8px;
   }
 `;
 
@@ -139,6 +126,7 @@ export const DropdownIcon = styled.img`
   width: 2.4rem;
   height: 2.4rem;
   color: var(--color-black);
+  cursor: pointer;
 `;
 
 export const Options = styled.div`
@@ -150,7 +138,7 @@ export const Options = styled.div`
   overflow-y: auto;
   border: 1px solid #DEDEDE;
   border-radius: 1rem;
-  background-color: white;
+  background-color: var(--color-white);
   z-index: 1;
 `;
 
@@ -168,27 +156,42 @@ export const Option = styled.div`
   }
 `;
 
-export const ColumnRow = styled.div`
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-
-  span {
-    font-size: 1rem;
-    margin: 0 1.5rem;
-  }
-`;
-
 export const DateWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
+
+  span {
+    font-size: 1rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+  }
 `;
 
 export const DateInputWrapper = styled.div`
   display: flex;
   width: 100%;
+  margin-left: 0.4rem;
+  margin-right:  0.4rem;
+`;
+
+export const DateInput = styled.input`
+  padding: 1rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #DEDEDE;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 600;
+  width: 100%;
+
+  ::placeholder {
+    color: #CACACA;
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 2.4rem;
+  }
 `;
 
 export const TimeSelectWrapper = styled.div`  
@@ -241,9 +244,43 @@ export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   margin-right: 0.4rem;
 `;
 
+export const DateSelect = styled.div`
+  width: 100%;
+  padding: 1rem 1rem 1rem 1rem;
+  font-size: 1.4rem;
+  border-radius: 1rem;
+  border: 1px solid #DEDEDE;
+  color: var(--color-black);
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+`;
+
 export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
+export const CloseButton = styled.button`
+  display: flex;
+  padding: 1rem 2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 1px solid #CACACA;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.344rem;
 `;
