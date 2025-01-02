@@ -19,7 +19,7 @@ export const ModalContainer = styled.div`
   padding: 2rem 2.5rem;
   background: var(--color-white);
   border-radius: 1rem;
-  box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 0.4rem 1.5rem 0rem rgba(0, 0, 0, 0.15);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -36,7 +36,7 @@ export const Title = styled.h2`
 export const Divider = styled.div`
   margin: 1rem 0;
   border: none;
-  border-top: 1px solid #A7A7A7;
+  border-top: 0.1rem solid #A7A7A7;
 `;
 
 export const OptionGroup = styled.div`
@@ -84,7 +84,7 @@ export const Label = styled.label`
 export const Input = styled.input`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 0.1rem solid #DEDEDE;
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
@@ -105,13 +105,13 @@ export const SelectWrapper = styled.div`
   width: 100%;
 `;
 
-export const Select = styled.div<{ hasValue: boolean }>`
+export const Select = styled.div<{ $hasValue: boolean }>`
   width: 100%;
   padding: 1rem 1rem 1rem 1rem;
   font-size: 1.4rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
-  color: ${({ hasValue }) => (hasValue ? '#000' : '#CACACA')};
+  border: 0.1rem solid #DEDEDE;
+  color: ${({ $hasValue }) => ($hasValue ? '#000' : '#CACACA')};
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem;
@@ -134,9 +134,9 @@ export const Options = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  max-height: 200px;
+  max-height: 20rem;
   overflow-y: auto;
-  border: 1px solid #DEDEDE;
+  border: 0.1rem solid #DEDEDE;
   border-radius: 1rem;
   background-color: var(--color-white);
   z-index: 1;
@@ -161,12 +161,12 @@ export const DateWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+`;
 
-  span {
-    font-size: 1rem;
-    margin-left: 0.4rem;
-    margin-right: 0.4rem;
-  }
+export const SpanTag = styled.span`
+  font-size: 1rem;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 `;
 
 export const DateInputWrapper = styled.div`
@@ -179,7 +179,7 @@ export const DateInputWrapper = styled.div`
 export const DateInput = styled.input`
   padding: 1rem 1rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 0.1rem solid #DEDEDE;
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 600;
@@ -200,7 +200,7 @@ export const TimeSelectWrapper = styled.div`
   margin-left: 0.48rem;
 `;
 
-export const TimeSelect = styled.div<{ hasValue: boolean }>`
+export const TimeSelect = styled.div<{ $hasValue: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -209,8 +209,8 @@ export const TimeSelect = styled.div<{ hasValue: boolean }>`
   padding: 1rem;
   font-size: 1.2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
-  color: ${({ hasValue }) => (hasValue ? '#000' : '#CACACA')};
+  border: 0.1rem solid #DEDEDE;
+  color: ${({ $hasValue }) => ($hasValue ? '#000' : '#CACACA')};
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem;
@@ -234,18 +234,18 @@ export const ScrollableOptions = styled.div`
   width: 100%;
   max-height: 15rem;
   overflow-y: auto; 
-  border: 1px solid #DEDEDE;
+  border: 0.1rem solid #DEDEDE;
   border-radius: 1rem;
   background-color: var(--color-white);
   z-index: 1000;
 
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 0.8rem;
   }
 
   &::-webkit-scrollbar-thumb {
     background-color: #888;
-    border-radius: 4px;
+    border-radius: 0.4rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -254,7 +254,7 @@ export const ScrollableOptions = styled.div`
 
   &::-webkit-scrollbar-track {
     background-color: #f1f1f1;
-    border-radius: 4px;
+    border-radius: 0.4rem;
   }
 `;
 
@@ -278,10 +278,10 @@ export const CheckboxGroup = styled.div`
   margin-top: 1rem;
   margin-bottom: 2rem;
   cursor: pointer;
+`;
 
-  span {
-    font-size: 1.4rem;
-  }
+export const SpanText = styled.span`
+  font-size: 1.4rem;
 `;
 
 export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
@@ -295,7 +295,7 @@ export const DateSelect = styled.div`
   padding: 1rem 1rem 1rem 1rem;
   font-size: 1.4rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 0.1rem solid #DEDEDE;
   color: var(--color-black);
   font-style: normal;
   font-weight: 600;
@@ -322,7 +322,7 @@ export const CloseButton = styled.button`
   justify-content: center;
   align-items: center;
   border-radius: 0.5rem;
-  border: 1px solid #CACACA;
+  border: 0.1rem solid #CACACA;
   background: var(--color-white);
   color: var(--color-black);
   font-size: 1.6rem;

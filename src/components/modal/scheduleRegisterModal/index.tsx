@@ -18,7 +18,7 @@ const generateTimeOptions = () => {
 
 const timeOptions = generateTimeOptions();
 
-const Schedule: React.FC = () => {
+const Schedule = () => {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -64,7 +64,7 @@ const Schedule: React.FC = () => {
         <S.FormGroup>
           <S.Label>캘린더</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} hasValue={!!calendarValue}>
+            <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} $hasValue={!!calendarValue}>
               {calendarValue || '캘린더 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
@@ -84,7 +84,7 @@ const Schedule: React.FC = () => {
         <S.FormGroup>
           <S.Label>카테고리</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsCategoryOpen(!isCategoryOpen)} hasValue={!!categoryValue}>
+            <S.Select onClick={() => setIsCategoryOpen(!isCategoryOpen)} $hasValue={!!categoryValue}>
               {categoryValue || '카테고리 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
@@ -112,7 +112,7 @@ const Schedule: React.FC = () => {
             <>
               <S.TimeSelectWrapper>
                 <S.SelectWrapper>
-                  <S.TimeSelect hasValue={!!startTime} onClick={() => setIsStartTimeOpen(!isStartTimeOpen)}>
+                  <S.TimeSelect $hasValue={!!startTime} onClick={() => setIsStartTimeOpen(!isStartTimeOpen)}>
                     {startTime || '시간 선택'}
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
@@ -129,7 +129,7 @@ const Schedule: React.FC = () => {
               </S.TimeSelectWrapper>
             </>
           )}
-          <span>—</span>
+          <S.SpanTag>—</S.SpanTag>
           <S.DateInputWrapper>
             <S.DateInput type="date" placeholder="날짜 선택" />
           </S.DateInputWrapper>
@@ -137,7 +137,7 @@ const Schedule: React.FC = () => {
             <>
               <S.TimeSelectWrapper>
                 <S.SelectWrapper>
-                  <S.TimeSelect hasValue={!!endTime} onClick={() => setIsEndTimeOpen(!isEndTimeOpen)}>
+                  <S.TimeSelect $hasValue={!!endTime} onClick={() => setIsEndTimeOpen(!isEndTimeOpen)}>
                     {endTime || '시간 선택'}
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
@@ -159,13 +159,13 @@ const Schedule: React.FC = () => {
 
       <S.CheckboxGroup>
         <S.Checkbox type="checkbox" checked={isAllDay} onChange={handleAllDayChange} />
-        <span>종일</span>
+        <S.SpanText>종일</S.SpanText>
       </S.CheckboxGroup>
     </>
   );
 };
 
-const Todo: React.FC = () => {
+const Todo = () => {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
@@ -195,7 +195,7 @@ const Todo: React.FC = () => {
         <S.FormGroup>
           <S.Label>캘린더</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} hasValue={!!calendarValue}>
+            <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} $hasValue={!!calendarValue}>
               {calendarValue || '캘린더 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
@@ -215,7 +215,7 @@ const Todo: React.FC = () => {
         <S.FormGroup>
           <S.Label>카테고리</S.Label>
           <S.SelectWrapper>
-            <S.Select hasValue={!!categoryValue}>
+            <S.Select $hasValue={!!categoryValue}>
               {categoryValue || '-'}
             </S.Select>
           </S.SelectWrapper>
@@ -237,7 +237,7 @@ const Todo: React.FC = () => {
         <S.FormGroup>
           <S.Label>반복</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsRepeatOpen(!isRepeatOpen)} hasValue={!!repeatValue}>
+            <S.Select onClick={() => setIsRepeatOpen(!isRepeatOpen)} $hasValue={!!repeatValue}>
               {repeatValue || '반복 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
@@ -258,7 +258,7 @@ const Todo: React.FC = () => {
   );
 };
 
-const ScheduleRegisterModal: React.FC<ScheduleRegisterModalProps> = ({ isOpen, onClose }) => {
+const ScheduleRegisterModal = ({ isOpen, onClose }: ScheduleRegisterModalProps) => {
   const [isSchedule, setIsSchedule] = useState(true);
 
   if (!isOpen) return null;
