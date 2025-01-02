@@ -3,20 +3,25 @@ import emailIcon from '@/assets/auth/email/email.svg';
 import sendemail from '@/assets/auth/email/sendemail.svg';
 import checkboxIcon from '@/assets/auth/email/checkbox.svg';
 import bluecheckboxIcon from '@/assets/auth/email/bluecheckbox.svg';
+import errorIcon from '@/assets/auth/email/error.svg';
 import type { EmailType } from './type/email.type';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { postSendEmail, postSignup, postVerifyEmail } from '@/api/authAPI';
 
 function Email() {
   const { register, handleSubmit, watch } = useForm<EmailType>();
   const [emailValue, setEmailValue] = useState<string>(
     sessionStorage.getItem('email') || ''
   );
+  const [emailConfirmValue, setEmailConfirmValue] = useState<string>('');
+  const [emailCodeVerify, setEmailCodeVerify] = useState<boolean | null>(null);
   const [personalInfo, setPersonalInfo] = useState<boolean>(false);
   const [serviceInfo, setServiceInfo] = useState<boolean>(false);
   const [locationInfo, setLocationInfo] = useState<boolean>(false);
   const [marketingInfo, setMarketingInfo] = useState<boolean>(false);
+  const [emailToken, setEmailToken] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -24,11 +29,17 @@ function Email() {
     const { value } = e.target;
     setEmailValue(value);
   };
+  const handleEmailConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setEmailConfirmValue(value);
+  };
+
   const isAllChecked =
     personalInfo && serviceInfo && locationInfo && marketingInfo;
   const isAvailable = personalInfo && serviceInfo && locationInfo;
   const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
   const handleAllCheck = () => {
     if (!isAllChecked) {
       setPersonalInfo(true);
@@ -42,10 +53,65 @@ function Email() {
       setMarketingInfo(false);
     }
   };
-  const onSubmit = (data: EmailType) => {
-    console.log(data);
-    navigate('/account');
+
+  const handleSendEmail = async () => {
+    try {
+      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
+      alert('이메일로 전송된 코드를 입력해주세요');
+    } catch (error) {
+      alert('이메일 전송에 실패했습니다.');
+    }
   };
+
+  const handleVerifyEmail = useCallback(async () => {
+    try {
+      const res = await postVerifyEmail({
+        email: emailValue,
+        code: emailConfirmValue,
+        purpose: 'SIGN_UP',
+      });
+      const { emailToken } = res.data.data;
+
+      setEmailToken(emailToken);
+      setEmailCodeVerify(true);
+    } catch (error) {
+      setEmailCodeVerify(false);
+    }
+  }, [emailConfirmValue, emailValue]);
+
+  useEffect(() => {
+    if (emailConfirmValue.length === 8) {
+      handleVerifyEmail();
+    } else {
+      setEmailCodeVerify(null);
+    }
+  }, [emailConfirmValue, handleVerifyEmail]); // 에러 설정
+
+  const onSubmit = async (data: EmailType) => {
+    try {
+      const signupDataString = sessionStorage.getItem('signupData');
+      if (!signupDataString) {
+        alert('회원가입 데이터가 없습니다.');
+        navigate('/signup');
+        return;
+      }
+      const { name, phonenum, email, password, passwordConfirm } =
+        JSON.parse(signupDataString);
+      const signupData = {
+        name: name,
+        phoneNumber: phonenum,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm,
+        emailToken: emailToken,
+      };
+      await postSignup(signupData);
+      navigate('/account');
+    } catch (error) {
+      alert('회원가입에 실패했습니다.');
+    }
+  };
+
   return (
     <S.PageWrapper>
       <S.EmailForm>
@@ -62,7 +128,11 @@ function Email() {
             {...register('email', { required: '이메일을 입력해주세요' })}
             onChange={handleEmailChange}
           />
-          <S.SendButton type='button' $disabled={!emailRegex.test(emailValue)}>
+          <S.SendButton
+            type='button'
+            $disabled={!emailRegex.test(emailValue)}
+            onClick={() => handleSendEmail()}
+          >
             전송
           </S.SendButton>
         </S.InputWrapper>
@@ -73,11 +143,19 @@ function Email() {
           </S.LabelWrapper>
           <S.Input
             type='text'
-            placeholder='이메일로 전송된 인증번호를 입력해주세요'
+            placeholder='이메일로 전송된 8자리 인증번호를 입력해주세요'
             {...register('emailconfirm', {
-              required: '이메일로 전송된 인증번호를 입력해주세요',
+              required: '이메일로 전송된 8자리 인증번호를 입력해주세요',
             })}
+            onChange={handleEmailConfirmChange}
+            value={emailConfirmValue}
           />
+          {emailCodeVerify === false && (
+            <S.Error>
+              <S.ErrorIcon src={errorIcon} alt='error' />
+              <S.ErrorMessage>인증번호가 일치하지 않습니다. </S.ErrorMessage>
+            </S.Error>
+          )}
         </S.InputWrapper>
         <S.PersonalContainer>
           <S.PersonalWrapper>
@@ -135,7 +213,7 @@ function Email() {
         </S.PersonalWrapper>
         <S.SubmitButton
           type='submit'
-          $isDisabled={!isAvailable}
+          $isDisabled={!isAvailable || !emailCodeVerify}
           onClick={handleSubmit(onSubmit)}
         >
           다음

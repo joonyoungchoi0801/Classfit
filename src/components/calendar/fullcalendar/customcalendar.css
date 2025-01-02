@@ -1,0 +1,120 @@
+.fc {
+  width: 100%;
+  height: 100%;
+  overflow-y: visible;
+}
+
+.fc .fc-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+.fc .fc-button-primary:disabled {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 0.1rem solid #5f6368;
+  background: var(--color-white);
+  color: #5f6368;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.344rem;
+  background: #fff;
+}
+.fc .fc-button:not(:disabled) {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 0.1rem solid #5f6368;
+  background: var(--color-white);
+  color: #5f6368;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.344rem;
+  background: #fff;
+}
+.fc-toolbar-title {
+  color: #000;
+  font-family: Pretendard;
+  font-size: 2.4rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.344rem;
+}
+.fc-toolbar-chunk {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fc-today-button .fc-button {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 0.1rem solid #5f6368;
+  background: var(--color-white);
+  color: #5f6368;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.344rem;
+  background: #fff;
+}
+.fc .fc-scroller {
+  overflow-y: hidden !important;
+}
+
+.fc .fc-daygrid-day-top {
+  flex-direction: column;
+  align-items: center;
+}
+
+.fc-h-event .fc-event-main-frame {
+  color: var(--color-white);
+  font-family: Pretendard;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.4rem;
+  gap: 0.5rem;
+}
+
+.fc-daygrid-dot-event .fc-event-title {
+  display: flex;
+  color: var(--color-black);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin-left: 0.5rem;
+}
+
+.fc-direction-ltr .fc-daygrid-event {
+  display: flex;
+  color: var(--color-black);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin-left: 0.5rem;
+}
+
+.fc-daygrid-event-dot {
+  border-color: var(--color-black) !important;
+}
