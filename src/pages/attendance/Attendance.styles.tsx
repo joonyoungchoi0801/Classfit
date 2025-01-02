@@ -16,18 +16,18 @@ export const Header = styled.div`
   padding: 2.45rem 5rem;
 `;
 
-export const TabButton = styled.button<{ isActive: boolean }>`
+export const TabButton = styled.button<{ $isActive: boolean }>`
   border: none;
   background: none;
   font-size: 2rem;
   font-style: normal;
   line-height: normal;
-  color: ${({ isActive }) =>
-    isActive
+  color: ${({ $isActive }) =>
+    $isActive
       ? 'var(--color-blue)'
       : 'var(--color-black)'}; /* 활성화된 탭 색상 */
-  font-weight: ${({ isActive }) =>
-    isActive ? 700 : 600}; /* 활성화된 탭 굵기 */
+  font-weight: ${({ $isActive }) =>
+    $isActive ? 700 : 600}; /* 활성화된 탭 굵기 */
   cursor: pointer;
   &:hover {
     color: var(--color-blue); /* 호버 시 색상 변경 */
