@@ -2,8 +2,6 @@ import * as S from './AchievementRegister.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import DropDown from '@/components/dropDown';
 import Button from '@/components/button';
-import useStudentRegister from '@/hooks/student/useStudentRegister';
-import Modal from '@/components/modal';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import CloseIcon from '@/assets/label/close.svg';
 import { useNavigate } from 'react-router-dom';
@@ -17,17 +15,9 @@ import { format } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
 import Message from '@/components/message';
 import useClassList from '@/hooks/useClassList';
-
-type FormData = {
-  mainClass: string;
-  subClass: string;
-  category: string;
-  examDate: string;
-  standard: string;
-  examScore: number;
-  examName: string;
-  examRange: string[];
-};
+import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
+import { registerExamData } from '@/types/exam.type';
+import { registerExam } from '@/api/examAPI';
 
 type ScoreStandardProps = {
   [key: string]: {
@@ -55,10 +45,23 @@ const scoreStandard: ScoreStandardProps = {
   },
 };
 function AchievementRegister() {
-  const { classList } = useClassList();
+  const { classList, mainClassList } = useClassList();
   const genderLst = ['점수', '개수', 'P/F', '정성평가'];
   const examLst = ['주간', '월간', '데일리', '기타'];
-  const studentRegisterHandler = useStudentRegister();
+  const examPeriodList: Record<string, string> = {
+    주간: 'WEEK',
+    월간: 'MONTH',
+    데일리: 'DAILY',
+    기타: 'ETC',
+  };
+
+  const standardList: Record<string, string> = {
+    점수: 'SCORE',
+    개수: 'COUNT',
+    P_F: 'P_F',
+    정성평가: 'QUALITATIVE',
+  };
+
   const navigate = useNavigate();
   const [date, setDate] = useState(new Date());
 
@@ -75,23 +78,40 @@ function AchievementRegister() {
     setShowCalendar((prev) => !prev);
   };
 
-  const { control, handleSubmit, getValues, setValue } = useForm<FormData>();
+  const { control, handleSubmit, getValues, setValue } =
+    useForm<registerExamData>();
   const [inputValue, setInputValue] = useState('');
   const [standardValue, setStandardValue] = useState('점수');
 
-  const onSubmit = (data: FormData) => {
-    navigate('/manage/achievement/management/register/student');
+  const onSubmit = async (data: registerExamData) => {
+    if (!data.highestScore) {
+      data.highestScore = 0;
+    }
+    const selectedExamPeriod = getValues('examPeriod');
+
+    data.examPeriod = examPeriodList[selectedExamPeriod] || 'SCORE';
+    data.standard = standardList[data.standard] || 'SCORE';
+
+    const res = await registerExam(data);
+    if (res.status === 200) {
+      navigate(
+        `/manage/achievement/management/register/student/${res.data.data.examId}`
+      );
+    } else {
+      alert('시험지 등록에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleAddExamRange = () => {
-    const currentRanges = getValues('examRange');
+    const currentRanges = getValues('range');
     if (inputValue.trim() !== '') {
-      setValue('examRange', [...currentRanges, inputValue]);
+      setValue('range', [...currentRanges, inputValue]);
       setInputValue('');
     }
   };
-  const mainClass = getValues('mainClass') || '';
-  const examRanges = getValues('examRange') || [];
+
+  const [mainClass, setMainClass] = useState('');
+  const examRanges = getValues('range') || [];
 
   return (
     <form>
@@ -113,17 +133,18 @@ function AchievementRegister() {
           <S.Row>
             <S.FormGroup>
               <Controller
-                name='mainClass'
+                name='mainClassId'
                 control={control}
-                defaultValue=''
+                defaultValue={0}
                 rules={{ required: '메인클래스를 선택해주세요.' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <DropDown
-                      options={Object.keys(classList) || []}
-                      value={field.value}
-                      onChange={(value) => {
-                        field.onChange(value);
+                    <MainClassDropDown
+                      options={mainClassList}
+                      value={mainClass}
+                      onChange2={(value1, value2) => {
+                        field.onChange(value1); // mainClassId
+                        setMainClass(value2); // mainClassName
                       }}
                       placeholder='메인클래스 선택'
                     />
@@ -136,17 +157,17 @@ function AchievementRegister() {
             </S.FormGroup>
             <S.FormGroup>
               <Controller
-                name='subClass'
+                name='subClassId'
                 control={control}
-                defaultValue=''
+                defaultValue={0}
                 rules={{ required: '서브클래스를 선택해주세요.' }}
                 render={({ field, fieldState }) => (
                   <>
                     <ClassDropDown
                       options={classList[mainClass]}
-                      value={field.value}
+                      // value={field.value}
                       onChange2={(value1, value2) => {
-                        field.onChange(value2);
+                        field.onChange(value1); //subClassId
                       }}
                       placeholder='서브클래스 선택'
                     />
@@ -195,7 +216,7 @@ function AchievementRegister() {
                         <Calendar
                           date={date}
                           onChange={(selectedDate) => {
-                            field.onChange(selectedDate);
+                            field.onChange(format(date, 'yyyy-MM-dd'));
                             handleSelectDate(selectedDate);
                             toggleCalendar();
                           }}
@@ -241,7 +262,8 @@ function AchievementRegister() {
                 </div>
                 <div style={{ flex: 2 }}>
                   <Controller
-                    name='examScore'
+                    name='highestScore'
+                    // defaultValue={0}
                     control={control}
                     // rules={{
                     //   required: '점수를 입력해주세요.',
@@ -275,7 +297,7 @@ function AchievementRegister() {
             <S.Row>
               <S.FormGroup style={{ flex: 1 }}>
                 <Controller
-                  name='category'
+                  name='examPeriod'
                   control={control}
                   defaultValue=''
                   rules={{ required: '카테고리를 선택해주세요.' }}
@@ -325,7 +347,7 @@ function AchievementRegister() {
               <S.Label>시험 범위</S.Label>
               <PS.SearchBox>
                 <Controller
-                  name='examRange'
+                  name='range'
                   control={control}
                   defaultValue={[]}
                   render={({ field }) => (
@@ -356,11 +378,6 @@ function AchievementRegister() {
             </S.FormGroup>
           </S.Row>
         </S.FormWrapper>
-        <Modal
-          message={studentRegisterHandler.modalMessage}
-          onClose={studentRegisterHandler.handleOnModalClose}
-          isOpen={studentRegisterHandler.isModalVisible}
-        />
       </S.Container>
     </form>
   );

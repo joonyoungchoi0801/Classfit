@@ -10,7 +10,8 @@ import Button from '@/components/button';
 
 function AchievementRegisterStudent() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { examId } = useParams();
+  console.log('id', examId);
   const [data] = useState([
     { id: 1, name: '손화영', score: '86', checked: true },
     { id: 2, name: '김나나', score: '86', checked: false },

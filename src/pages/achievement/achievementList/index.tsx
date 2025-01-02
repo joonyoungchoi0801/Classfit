@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import DropDown from '@/components/dropDown';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import ImageIcon from '@/components/imageIcon';
+import useClassList from '@/hooks/useClassList';
 const data = [
   {
     type: '데일리',
@@ -102,13 +103,10 @@ function AchievementList() {
   const [displayData, setDisplayData] = useState<AchievementData[]>(data);
   const [searchFilter, setSearchFilter] = useState('강사명');
   const navigate = useNavigate();
+  const [mainClass, setMainClass] = useState('');
 
-  const testMainClass: string[] = ['1학년', '2학년', '3학년'];
+  const { classList } = useClassList();
   const testSearchOptions: string[] = ['강사명', '시험명'];
-  const testSubClass: { subClassId: number; subClassName: string }[] = [
-    { subClassId: 0, subClassName: 'A반' },
-    { subClassId: 1, subClassName: 'B반' },
-  ];
 
   const filterData = ['전체', '월간', '주간', '데일리', '기타'];
 
@@ -191,12 +189,14 @@ function AchievementList() {
 
         <S.SearchWrapper>
           <DropDown
-            options={testMainClass}
+            options={Object.keys(classList) || []}
             placeholder='메인 클래스'
-            onChange={() => {}}
+            onChange={(value) => {
+              setMainClass(value);
+            }}
           />
           <ClassDropDown
-            options={testSubClass}
+            options={classList[mainClass]}
             placeholder='서브 클래스'
             onChange={() => {}}
           />
