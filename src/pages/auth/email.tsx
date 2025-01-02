@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postSendEmail, postSignup, postVerifyEmail } from '@/api/authAPI';
+import axios from 'axios';
 
 function Email() {
   const { register, handleSubmit, watch } = useForm<EmailType>();
@@ -59,7 +60,13 @@ function Email() {
       await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
     } catch (error) {
-      alert('이메일 전송에 실패했습니다.');
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        alert(
+          '이미 가입된 이메일 주소입니다. 다른 이메일 주소를 입력해주세요.'
+        );
+      } else {
+        alert('이메일 전송에 실패했습니다.');
+      }
     }
   };
 
