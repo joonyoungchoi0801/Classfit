@@ -4,6 +4,20 @@ import type { ScheduleRegisterModalProps } from './ScheduleRegisterModal.types';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 
+const generateTimeOptions = () => {
+  const times: string[] = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const formattedTime = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      times.push(formattedTime);
+    }
+  }
+  times.push('24:00');
+  return times;
+};
+
+const timeOptions = generateTimeOptions();
+
 const Schedule: React.FC = () => {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
@@ -103,10 +117,13 @@ const Schedule: React.FC = () => {
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
                   {isStartTimeOpen && (
-                    <S.Options>
-                      <S.Option onClick={() => handleStartTimeChange('09:00')}>09:00</S.Option>
-                      <S.Option onClick={() => handleStartTimeChange('10:00')}>10:00</S.Option>
-                    </S.Options>
+                    <S.ScrollableOptions>
+                      {timeOptions.map((time) => (
+                        <S.TimeOption key={time} onClick={() => handleStartTimeChange(time)}>
+                          {time}
+                        </S.TimeOption>
+                      ))}
+                    </S.ScrollableOptions>
                   )}
                 </S.SelectWrapper>
               </S.TimeSelectWrapper>
@@ -125,10 +142,13 @@ const Schedule: React.FC = () => {
                     <S.TimeDropdownIcon src={dropdown} alt="dropdown icon" />
                   </S.TimeSelect>
                   {isEndTimeOpen && (
-                    <S.Options>
-                      <S.Option onClick={() => handleEndTimeChange('09:00')}>09:00</S.Option>
-                      <S.Option onClick={() => handleEndTimeChange('10:00')}>10:00</S.Option>
-                    </S.Options>
+                    <S.ScrollableOptions>
+                      {timeOptions.map((time) => (
+                        <S.TimeOption key={time} onClick={() => handleEndTimeChange(time)}>
+                          {time}
+                        </S.TimeOption>
+                      ))}
+                    </S.ScrollableOptions>
                   )}
                 </S.SelectWrapper>
               </S.TimeSelectWrapper>

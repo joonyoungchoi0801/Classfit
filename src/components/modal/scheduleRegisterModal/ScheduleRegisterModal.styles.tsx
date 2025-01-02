@@ -227,11 +227,57 @@ export const TimeDropdownIcon = styled.img`
   color: var(--color-black);
 `;
 
+export const ScrollableOptions = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 15rem;
+  overflow-y: auto; 
+  border: 1px solid #DEDEDE;
+  border-radius: 1rem;
+  background-color: var(--color-white);
+  z-index: 1000;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 4px;
+  }
+`;
+
+export const TimeOption = styled.div`
+  padding: 1rem 1rem;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  color: var(--color-black);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #DFEBFF;
+  }
+`;
+
 export const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
   margin-top: 1rem;
   margin-bottom: 2rem;
+  cursor: pointer;
 
   span {
     font-size: 1.4rem;
