@@ -7,12 +7,22 @@ import Attendance from './pages/attendance';
 import Achievement from './pages/achievement';
 import Schedule from './pages/schedule';
 
+import Signin from './pages/auth/signin';
+import Signup from './pages/auth/signup';
+import Email from './pages/auth/email';
+import Account from './pages/auth/account';
+import Class from './pages/auth/class';
 export default function Router() {
   return (
     <BrowserRouter>
       <GlobalStyles />
       <Routes>
         <Route path='/' element={<Attendance />} />
+        <Route path='/signin' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/email' element={<Email />} />
+        <Route path='/class' element={<Class />} />
+        <Route path='/account' element={<Account />} />
         <Route path='/manage/*' element={<Attendance />} />
         <Route path='/manage/attendance/*' element={<Attendance />} />
         <Route path='/manage/attendance/all' element={<Attendance />} />
