@@ -61,6 +61,12 @@ export const InputLabel = styled.label`
   line-height: normal;
 `;
 
+export const InputContainer = styled.div`
+  display: flex;
+  position: relative;
+  width: 100%;
+`;
+
 export const Input = styled.input`
   display: flex;
   width: 100%;
@@ -90,7 +96,7 @@ export const InputImg = styled.img`
   height: 2.4rem;
   right: 1rem;
   top: 50%;
-  transform: translateY(19%);
+  transform: translateY(-50%);
 `;
 
 export const SubmitButton = styled.button<{
@@ -124,6 +130,24 @@ export const ErrorImg = styled.img`
 `;
 export const ErrorMsg = styled.span`
   color: #ff5858;
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const LabelContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+`;
+
+export const SubLabel = styled.label`
+  color: #939393;
   font-family: Pretendard;
   font-size: 1.4rem;
   font-style: normal;

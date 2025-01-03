@@ -116,23 +116,26 @@ function Signup() {
             <S.LabelImg src={passwordIcon} alt='password' />
             <S.InputLabel>비밀번호</S.InputLabel>
           </S.LabelWrapper>
-          <S.Input
-            type={isPasswordVisible ? 'text' : 'password'}
-            placeholder='비밀번호를 입력해주세요 (8-20자, 영문 숫자 혼합)'
-            {...register('password', {
-              required: '비밀번호를 입력해주세요',
-              pattern: {
-                value: passwordRegex,
-                message:
-                  '비밀번호를 8-20자 사이로 지정해주세요.(영문 숫자 혼합)',
-              },
-            })}
-          />
-          <S.InputImg
-            src={isPasswordVisible ? eyeon : eyeoff}
-            alt='eye'
-            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-          />
+          <S.InputContainer>
+            <S.Input
+              type={isPasswordVisible ? 'text' : 'password'}
+              placeholder='비밀번호를 입력해주세요 (8-20자, 영문 숫자 혼합)'
+              {...register('password', {
+                required: '비밀번호를 입력해주세요',
+                pattern: {
+                  value: passwordRegex,
+                  message:
+                    '비밀번호를 8-20자 사이로 지정해주세요.(영문 숫자 혼합)',
+                },
+              })}
+            />
+            <S.InputImg
+              src={isPasswordVisible ? eyeon : eyeoff}
+              alt='eye'
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            />
+          </S.InputContainer>
+
           {errors.password && (
             <ErrorComponent message={errors?.password.message} />
           )}
