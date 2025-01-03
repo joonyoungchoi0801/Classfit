@@ -40,11 +40,13 @@ export const InputWrapper = styled.div`
   width: 100%;
 `;
 
-export const ProfileIcon = styled.img`
+export const Icon = styled.img`
   width: 2.4rem;
   height: 2.4rem;
 `;
 export const EmailLabel = styled.span`
+  display: flex;
+  align-items: center;
   color: #121212;
   font-family: Pretendard;
   font-size: 1.6rem;
@@ -61,6 +63,8 @@ export const EmailInput = styled.input`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  border-radius: 1rem;
+  border: 0.1rem solid #dedede;
   &::placeholder {
     color: #cacaca;
     font-family: Pretendard;
@@ -95,4 +99,15 @@ export const NextButton = styled.button<{
   line-height: normal;
   background: ${(props) =>
     props.$isDisabled ? '#dedede' : 'var(--color-blue)'};
+`;
+
+export const ErrorMessage = styled.span`
+  display: flex;
+  align-items: center;
+  color: #ff5858;
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;
