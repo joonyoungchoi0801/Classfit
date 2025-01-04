@@ -35,8 +35,6 @@ import useAttendanceStore from '@/store/attendancedataStore';
 function AttendanceTable({
   selectedMonth,
   isEditMode,
-  sourceStudents,
-  setSourceStudents,
   setStudentData,
   setUpdatedStudents,
 }: AttendanceTableProps) {
@@ -103,6 +101,7 @@ function AttendanceTable({
                 status: record.status || 'PRESENT',
               })),
             }));
+            setAttendanceData(formattedData);
             setOriginalStudents(formattedData);
             setStudents(formattedData);
           } else {

@@ -61,7 +61,7 @@ function AttendanceDashboard() {
     !!classParam || location.pathname === '/manage/attendance/all';
   const isButtonGroupEnabled = url === '/manage/attendance/all' || !!classParam;
   const isStatisticsPage = location.pathname.startsWith('/manage/attendance/statistics');
-  const { attendanceData } = useAttendanceStore();
+  const { attendanceData, setAttendanceData } = useAttendanceStore();
   console.log(attendanceData);
 
   useEffect(() => {
@@ -182,9 +182,31 @@ function AttendanceDashboard() {
 
   const handleSaveAttendance = async () => {
     try {
-      console.log(updatedStudents);
+      // 1. 출결 상태가 변경된 데이터를 확인
+      const updatedData = updatedStudents.map((student) => {
+        const updatedAttendance = attendanceData.find(
+          (updated) => updated.id === student.studentId
+        );
+        return {
+          studentId: student.studentId,
+          attendance: student.attendance.map((record) => {
+            const originalRecord = updatedAttendance?.attendance.find(
+              (original) => original.id === record.attendanceId
+            );
+            return {
+              attendanceId: record.attendanceId,
+              status: record.status === 'blank' ? originalRecord?.status || 'PRESENT' : record.status,
+            };
+          }),
+        };
+      });
+      await AttendanceEdit(updatedData);
+
+      console.log('출결 데이터 저장 성공:', updatedData);
+      alert('출결 상태가 저장되었습니다!');
     } catch (error) {
-      alert('출결저장에 실패했습니다');
+      console.error('출결 데이터 저장 실패:', error);
+      alert('출결 저장에 실패했습니다');
     }
   };
 
@@ -243,8 +265,6 @@ function AttendanceDashboard() {
         <AttendanceTable
           selectedMonth={selectedMonth}
           isEditMode={isEditMode}
-          sourceStudents={originalStudents}
-          setSourceStudents={handleSetOriginalStudents}
           setStudentData={setSelectedStudent}
           setUpdatedStudents={setUpdatedStudents}
         />
