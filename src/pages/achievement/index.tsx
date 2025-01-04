@@ -63,7 +63,7 @@ function Achievement() {
               element={<AchievementRegister />}
             />
             <Route
-              path='management/register/student'
+              path='management/register/student/:examId'
               element={<AchievementRegisterStudent />}
             />
             <Route path='report' element={<ReportList />} />

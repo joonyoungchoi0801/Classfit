@@ -56,10 +56,14 @@ export const Button = styled.button`
 export const Input = styled.input`
   flex: 1;
   padding: 1rem;
-  border: 0.1rem solid #ddd;
+  border: 0.1rem solid var(--color-gray);
   border-radius: 1rem 0 0 1rem;
   outline: none;
   font-size: 1.6rem;
+  &::placeholder {
+    color: var(--color-lightgray);
+    opacity: 1;
+  }
 `;
 
 export const Content = styled.div`
@@ -106,6 +110,10 @@ export const RowWrapper = styled.div`
   flex-direction: row;
   align-items: center;
 `;
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const IconWrapper = styled.div<{
   $alignLeft?: boolean;
@@ -143,6 +151,7 @@ export const Tag = styled.div<{ $type: string }>`
     if (props.$type === '월간') return '#5DD2A9';
     if (props.$type === '주간') return '#FF7173';
     if (props.$type === '데일리') return 'var(--color-blue)';
+    if (props.$type === '기타') return '#A294F9';
     return 'var(--color-gray)';
   }};
   color: var(--color-white);

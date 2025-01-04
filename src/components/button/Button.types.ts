@@ -5,4 +5,5 @@ export interface ButtonProps {
   borderColor?: string;
   isBorder?: boolean;
   onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
 }

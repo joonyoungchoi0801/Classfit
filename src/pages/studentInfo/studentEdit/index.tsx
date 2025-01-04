@@ -87,7 +87,7 @@ function StudentEdit({ studentId }: { studentId: string }) {
                   studentRegisterHandler.studentData.grade
                 ]
               }
-              value={studentRegisterHandler.studentData.subClassList}
+              value={studentRegisterHandler.studentData.subClassList[0]}
               placeholder='클래스 선택'
               onChange={(value) =>
                 studentRegisterHandler.handleOnChangeSubClassValue(

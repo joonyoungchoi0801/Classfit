@@ -1,5 +1,5 @@
-export interface ClassDropDownProps {
-  options: { subClassId: number; subClassName: string }[];
+export interface MainClassDropDownProps {
+  options: { mainClassId: number; mainClassName: string }[];
   value?: string;
   placeholder?: string;
   onChange?: (optionId: number) => void;

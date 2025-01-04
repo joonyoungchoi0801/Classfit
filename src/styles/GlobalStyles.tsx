@@ -49,6 +49,9 @@ button {
   --color-gray: #EDEDED;
   --color-skyblue: #E0EBFF;
   --color-lightblue: #F2F5FC;
+  --color-lightgray: #CACACA;
+  --color-dddgray: #ddd;
+  --color-red: #FF5858;
 }
 
 `;

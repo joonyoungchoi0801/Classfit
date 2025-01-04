@@ -21,5 +21,5 @@ export const ButtonWrapper = styled.button<{
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.344rem; /* 89.6% */
+  line-height: 1.344rem;
 `;
