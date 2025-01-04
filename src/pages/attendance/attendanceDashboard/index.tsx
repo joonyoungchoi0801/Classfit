@@ -18,6 +18,7 @@ import { Attendance, ExcelData } from '@/types/excel.type';
 import { excelDownload } from '@/api/excelAPI';
 import { formatDate, formatStatus } from '@/utils/formatExcelData';
 import AttendanceStatistics from '@/pages/attendance/attendanceStatistics';
+import useAttendanceStore from '@/store/attendancedataStore';
 
 // 드롭다운 최근 6개월 
 const getLastSixMonths = () => {
@@ -42,6 +43,7 @@ function AttendanceDashboard() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<StudentData[]>([]);
   const [updatedStudents, setUpdatedStudents] = useState<
     UpdateAttendanceRequest[]
@@ -59,10 +61,17 @@ function AttendanceDashboard() {
     !!classParam || location.pathname === '/manage/attendance/all';
   const isButtonGroupEnabled = url === '/manage/attendance/all' || !!classParam;
   const isStatisticsPage = location.pathname.startsWith('/manage/attendance/statistics');
+  const { attendanceData } = useAttendanceStore();
+  console.log(attendanceData);
 
   useEffect(() => {
     setIsEditMode(false);
   }, [grade, subClassId, classParam]);
+
+
+  const handleSetOriginalStudents = (students: StudentData[]) => {
+    setOriginalStudents(students);
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -173,7 +182,7 @@ function AttendanceDashboard() {
 
   const handleSaveAttendance = async () => {
     try {
-      await AttendanceEdit(updatedStudents);
+      console.log(updatedStudents);
     } catch (error) {
       alert('출결저장에 실패했습니다');
     }
@@ -234,6 +243,8 @@ function AttendanceDashboard() {
         <AttendanceTable
           selectedMonth={selectedMonth}
           isEditMode={isEditMode}
+          sourceStudents={originalStudents}
+          setSourceStudents={handleSetOriginalStudents}
           setStudentData={setSelectedStudent}
           setUpdatedStudents={setUpdatedStudents}
         />

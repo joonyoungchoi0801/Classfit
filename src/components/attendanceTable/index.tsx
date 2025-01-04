@@ -30,10 +30,13 @@ import white_status from '@/assets/attendanceTable/white_status.svg';
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
 import formatDateToISO from '@/utils/formatDate';
+import useAttendanceStore from '@/store/attendancedataStore';
 
 function AttendanceTable({
   selectedMonth,
   isEditMode,
+  sourceStudents,
+  setSourceStudents,
   setStudentData,
   setUpdatedStudents,
 }: AttendanceTableProps) {
@@ -41,7 +44,7 @@ function AttendanceTable({
   const [originalStudents, setOriginalStudents] = useState<StudentData[]>([]);
   const [students, setStudents] = useState<StudentData[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [checkedDays, setCheckedDays] = useState(new Array(7).fill(false));
+  const [checkedDays, setCheckedDays] = useState(new Array(7).fill(true));
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,6 +55,7 @@ function AttendanceTable({
     grade?: string;
     class?: string;
   }>();
+  const { setAttendanceData } = useAttendanceStore();
 
   const { mainClassId, subClassId } = useClassStore();
 
@@ -76,6 +80,7 @@ function AttendanceTable({
               })),
             }));
             setOriginalStudents(formattedData);
+            setAttendanceData(formattedData);
             setStudents(formattedData);
           } else {
             console.error('Error:', attendanceData.error.message);
@@ -114,8 +119,11 @@ function AttendanceTable({
 
   const getIconByStatus = (status: string | undefined, isEditMode: boolean) => {
     if (status === 'PRESENT') return isEditMode ? circle_Black : circle_Blue;
-    else if (status === 'LATE') return isEditMode ? triangle_Black : triangle_Blue;
-    else if (status === 'ABSENT') return isEditMode ? absent_Black : absent_Blue;
+    else if (status === 'LATE')
+      return isEditMode ? triangle_Black : triangle_Blue;
+    else if (status === 'ABSENT')
+      return isEditMode ? absent_Black : absent_Blue;
+    else if (status === 'blank') return white_status;
     else return white_status;
   };
 
@@ -183,18 +191,23 @@ function AttendanceTable({
 
       const formattedDay = day < 10 ? `0${day}` : `${day}`;
       // 월요일(0)을 시작으로, 요일을 0 (월)부터 6 (일)로 설정
-      const dayLabel = ['(월)', '(화)', '(수)', '(목)', '(금)', '(토)', '(일)'][(date.getDay() + 6) % 7];
+      const dayLabel = ['(월)', '(화)', '(수)', '(목)', '(금)', '(토)', '(일)'][
+        (date.getDay() + 6) % 7
+      ];
 
       const isToday = date.toDateString() === new Date().toDateString();
 
-      weekDates.push({ date: `${month}/${formattedDay}${dayLabel}`, isToday, week: (date.getDay() + 6) % 7 });
+      weekDates.push({
+        date: `${month}/${formattedDay}${dayLabel}`,
+        isToday,
+        week: (date.getDay() + 6) % 7,
+      });
     }
 
     return weekDates.sort((a, b) => a.week - b.week);
   };
 
   const weekDates = calculateWeekDates(currentDate);
-
 
   const handlePrevWeek = () => {
     const newDate = new Date(currentDate);
@@ -221,13 +234,13 @@ function AttendanceTable({
 
   const handleStatusClick = (studentName: string, date: string) => {
     if (!isEditMode) return;
-
+    const formattedDate = formatDateToISO(date);
     setStudents((prevStudents) => {
       const updatedStudents = prevStudents.map((student) => {
         if (student.name === studentName) {
           const updatedAttendance = student.attendance.map(
             (attendanceRecord) =>
-              attendanceRecord.date === formatDateToISO(date)
+              attendanceRecord.date === formattedDate
                 ? {
                   ...attendanceRecord,
                   status:
@@ -257,13 +270,14 @@ function AttendanceTable({
           })),
         }))
       );
-      console.log(updatedStudents);
+
       return updatedStudents;
     });
   };
 
-  //요일 필터링
-  const handleFilterClick = () => { setIsDropdownOpen(!isDropdownOpen); };
+  const handleFilterClick = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleCheckboxClick = (index: number) => {
     const updatedCheckedDays = [...checkedDays];
@@ -271,7 +285,23 @@ function AttendanceTable({
     setCheckedDays(updatedCheckedDays);
   };
 
-  const filteredWeekDates = weekDates.filter((_, index) => checkedDays[index]);
+  useEffect(() => {
+    setStudents(
+      originalStudents.map((student) => {
+        const updatedAttendance = student.attendance.map((record) => {
+          if (checkedDays[record.week] === false) {
+            return { ...record, status: 'blank' };
+          }
+          return record;
+        });
+
+        return {
+          ...student,
+          attendance: updatedAttendance,
+        };
+      })
+    );
+  }, [checkedDays, originalStudents]);
 
   return (
     <S.Table>
@@ -286,7 +316,7 @@ function AttendanceTable({
             {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => (
               <S.DropdownItem key={index}>
                 <S.CheckBox
-                  as="img"
+                  as='img'
                   src={checkedDays[index] ? SelectedCheckBoxIcon : CheckBoxIcon}
                   alt={`${day} checkbox`}
                   onClick={() => handleCheckboxClick(index)}
@@ -313,18 +343,19 @@ function AttendanceTable({
           alt='Previous Week'
           onClick={handlePrevWeek}
         />
-        {weekDates.sort((a, b) => a.week - b.week) // 월요일부터 일요일까지 순서대로 정렬
+        {weekDates
+          .sort((a, b) => a.week - b.week) // 월요일부터 일요일까지 순서대로 정렬
           .map(({ date, isToday, week }, index) => (
             <S.PaginationItem
               key={index}
               style={{
                 color: checkedDays.includes(true) // 요일 필터링이 활성화된 경우
                   ? checkedDays[week]
-                    ? "var(--color-black)" // 필터링된 요일은 검은색
-                    : "var(--color-gray)" // 선택되지 않은 요일은 회색
+                    ? 'var(--color-black)' // 필터링된 요일은 검은색
+                    : 'var(--color-gray)' // 선택되지 않은 요일은 회색
                   : isToday
-                    ? "var(--color-blue)" // 오늘 날짜는 파란색
-                    : "var(--color-black)", // 나머지 날짜는 검은색
+                    ? 'var(--color-blue)' // 오늘 날짜는 파란색
+                    : 'var(--color-black)', // 나머지 날짜는 검은색
               }}
               onClick={() => handleCheckboxClick(week)}
             >
@@ -355,7 +386,7 @@ function AttendanceTable({
               </S.StudentNameText>
             </S.StudentName>
             <S.Blank />
-            {filteredWeekDates.map((date) => {
+            {weekDates.map((date) => {
               const attendanceRecord = student.attendance.find(
                 (record) => record.week === date.week
               );
@@ -363,7 +394,6 @@ function AttendanceTable({
                 attendanceRecord?.status || 'PRESENT',
                 isEditMode
               );
-
               return (
                 <S.PaginationItem key={date.date}>
                   <S.StatusIcon
