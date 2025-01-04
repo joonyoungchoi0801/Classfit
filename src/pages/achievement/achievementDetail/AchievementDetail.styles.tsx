@@ -197,3 +197,36 @@ export const ScoreWrapper = styled.div`
   flex-direction: row;
   align-items: center;
 `;
+
+export const ToggleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+`;
+
+export const Toggle = styled.div`
+  display: flex;
+  flex-direction: row;
+  /* gap: 0.5rem; */
+  align-items: center;
+`;
+
+export const IconWrapper = styled.div<{
+  $alignLeft?: boolean;
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: ${(props) => (props.$alignLeft ? 'flex-start' : 'center')};
+  margin-right: 1rem;
+  cursor: pointer;
+`;
+
+export const BtnIcon = styled.img<{ $size?: string }>`
+  width: ${({ $size }) => $size || '2.2rem'};
+  height: ${({ $size }) => $size || '2.2rem'};
+`;
+
+export const Label = styled.div`
+  font-size: 1.6rem;
+  font-weight: 500;
+`;

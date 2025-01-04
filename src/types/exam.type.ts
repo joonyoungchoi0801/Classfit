@@ -43,3 +43,19 @@ export interface ExamData {
   examName: string;
   createdAt: string;
 }
+
+export interface ExamInfoData {
+  examPeriod: string;
+  examName: string;
+  examDate: string;
+  mainClassName: string;
+  subClassName: string;
+  lowestScore: number;
+  perfectScore: number;
+  average: number;
+  examRange: string[];
+  standard: string;
+}
+export interface ExamDetailData extends ExamInfoData {
+  examClassStudents: ExamStudentData[];
+}

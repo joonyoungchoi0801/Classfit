@@ -95,6 +95,22 @@ const data = [
   },
 ];
 
+export const filterData: Record<string, string> = {
+  전체: 'TOTAL',
+  월간: 'MONTHLY',
+  주간: 'WEEK',
+  데일리: 'DAILY',
+  기타: 'OTHER',
+};
+
+export const reverseFilterData: Record<string, string> = {
+  TOTAL: '전체',
+  MONTHLY: '월간',
+  WEEK: '주간',
+  DAILY: '데일리',
+  OTHER: '기타',
+};
+
 function AchievementList() {
   const [filter, setFilter] = useState('전체');
   const [searchText, setSearchText] = useState('');
@@ -110,22 +126,6 @@ function AchievementList() {
 
   const { classList } = useClassList();
   const testSearchOptions: string[] = ['강사명', '시험명'];
-
-  const filterData: Record<string, string> = {
-    전체: 'TOTAL',
-    월간: 'MONTHLY',
-    주간: 'WEEK',
-    데일리: 'DAILY',
-    기타: 'OTHER',
-  };
-
-  const reverseFilterData: Record<string, string> = {
-    TOTAL: '전체',
-    MONTHLY: '월간',
-    WEEK: '주간',
-    DAILY: '데일리',
-    OTHER: '기타',
-  };
 
   useEffect(() => {
     const fetchData = async () => {
