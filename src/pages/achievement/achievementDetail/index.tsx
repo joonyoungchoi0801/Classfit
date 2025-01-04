@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { reverseFilterData } from '../achievementList';
 import SelectedToggleIcon from '@/assets/buttonIcon/toggleFilled.svg';
 import ToggleIcon from '@/assets/buttonIcon/toggle.svg';
+import useExamStudentStore from '@/store/examStudentStore';
 
 function AchievementDetail() {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ function AchievementDetail() {
     examRange: [],
     standard: '',
   };
+
+  const { setExamStudentData } = useExamStudentStore();
   const [examInfoData, setExamInfoData] = useState<ExamInfoData>(initialData);
   const [studentData, setStudentData] = useState<ExamStudentData[]>([]);
   const [totalScore, setTotalScore] = useState<string>('');
@@ -47,6 +50,16 @@ function AchievementDetail() {
     };
     fetchData();
   }, []);
+
+  const handleOnClickStudentScore = () => {
+    setExamStudentData(studentData);
+    navigate(`/manage/achievement/management/detail/${id}/editscore`, {
+      state: {
+        standard: examInfoData.standard,
+        highestScore: examInfoData.perfectScore,
+      },
+    });
+  };
 
   return (
     <S.Container>
@@ -103,9 +116,7 @@ function AchievementDetail() {
           <S.ScoreTitle>성적</S.ScoreTitle>
           <PS.RegisterButton
             $color='var(--color-black)'
-            onClick={() =>
-              navigate(`/manage/achievement/management/detail/${id}/editscore`)
-            }
+            onClick={handleOnClickStudentScore}
           >
             수정
           </PS.RegisterButton>
