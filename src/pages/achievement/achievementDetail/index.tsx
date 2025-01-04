@@ -54,7 +54,12 @@ function AchievementDetail() {
         <PS.RegisterWrapper>
           <PS.RegisterButton
             onClick={() =>
-              navigate(`/manage/achievement/management/detail/${id}/edit`)
+              navigate(`/manage/achievement/management/detail/${id}/edit`, {
+                state: {
+                  ...examInfoData,
+                  examRange: JSON.stringify(examInfoData.examRange),
+                },
+              })
             }
           >
             수정

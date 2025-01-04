@@ -19,6 +19,15 @@ export interface RegisterExamData {
   range: string[];
 }
 
+export interface ModifyExamData {
+  examDate: string;
+  standard: string;
+  highestScore: number;
+  examPeriod: string;
+  examName: string;
+  examRange: string[];
+}
+
 export interface ExamStudentData {
   studentId: number;
   name: string;

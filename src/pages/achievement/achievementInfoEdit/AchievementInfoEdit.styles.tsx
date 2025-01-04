@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 15rem;
+`;
+
 export const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,8 +18,9 @@ export const FormWrapper = styled.div`
 
 export const Row = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   flex-direction: row;
+  width: 100%;
   padding-bottom: 1rem;
   @media (max-width: 76.8rem) {
     flex-direction: column;
@@ -43,14 +51,14 @@ export const LabelWrapper = styled.div`
 
 export const Input = styled.input`
   padding: 1rem;
-  border: 0.1rem solid #d5d7dd;
+  border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
   height: 4rem;
   align-items: center;
   background-color: var(--color-white);
   &::placeholder {
-    color: #8a91a1;
+    color: var(--color-lightgray);
     opacity: 1;
   }
 `;
@@ -73,7 +81,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  padding: 2rem;
+  padding: 2rem 0;
 `;
 
 export const TagItem = styled.span`
@@ -114,4 +122,51 @@ export const TagRangeWrapper = styled.div`
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+export const TextWithIcon = styled.div<{ $isSelected: boolean }>`
+  width: 100%;
+  padding-right: 4rem;
+  padding: 1rem;
+  border: 0.1rem solid #d5d7dd;
+  border-radius: 1rem;
+  height: 4rem;
+  font-size: 1.6rem;
+  color: ${({ $isSelected }) =>
+    $isSelected ? 'var(--color-black)' : '#8a91a1'};
+`;
+
+export const IconWrapper = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-blue);
+  cursor: pointer;
+`;
+
+export const CalendarWrapper = styled.div`
+  position: absolute;
+  top: 90%;
+  right: 0;
+  z-index: 100;
+  background-color: var(--color-white);
+  border: 0.1rem solid var(--color-gray);
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+`;
+
+export const CalendarButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem 3rem;
 `;

@@ -19,14 +19,14 @@ import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
 import type { RegisterExamData } from '@/types/exam.type';
 import { registerExam } from '@/api/examAPI';
 
-type ScoreStandardProps = {
+export type ScoreStandardProps = {
   [key: string]: {
     placeholder: string;
     isBlocked: boolean;
   };
 };
 
-const scoreStandard: ScoreStandardProps = {
+export const scoreStandard: ScoreStandardProps = {
   점수: {
     placeholder: '100 (최고점수는 100으로 고정됩니다)',
     isBlocked: true,
@@ -44,24 +44,40 @@ const scoreStandard: ScoreStandardProps = {
     isBlocked: true,
   },
 };
+
+export const examPeriodList: Record<string, string> = {
+  주간: 'WEEK',
+  월간: 'MONTHLY',
+  데일리: 'DAILY',
+  기타: 'OTHER',
+};
+
+export const reverseExamPeriodList: Record<string, string> = {
+  WEEK: '주간',
+  MONTHLY: '월간',
+  DAILY: '데일리',
+  OTHER: '기타',
+};
+
+export const standardList: Record<string, string> = {
+  점수: 'SCORE',
+  개수: 'QUESTION',
+  'P/F': 'PF',
+  정성평가: 'EVALUATION',
+};
+
+export const reverseStandardList: Record<string, string> = {
+  SCORE: '점수',
+  QUESTION: '개수',
+  PF: 'P/F',
+  EVALUATION: '정성평가',
+};
+
+export const genderLst = ['점수', '개수', 'P/F', '정성평가'];
+export const examLst = ['주간', '월간', '데일리', '기타'];
+
 function AchievementRegister() {
   const { classList, mainClassList } = useClassList();
-  const genderLst = ['점수', '개수', 'P/F', '정성평가'];
-  const examLst = ['주간', '월간', '데일리', '기타'];
-  const examPeriodList: Record<string, string> = {
-    주간: 'WEEK',
-    월간: 'MONTHLY',
-    데일리: 'DAILY',
-    기타: 'OTHER',
-  };
-
-  const standardList: Record<string, string> = {
-    점수: 'SCORE',
-    개수: 'QUESTION',
-    'P/F': 'PF',
-    정성평가: 'EVALUATION',
-  };
-
   const navigate = useNavigate();
   const [date, setDate] = useState(new Date());
 

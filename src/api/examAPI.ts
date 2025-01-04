@@ -3,6 +3,7 @@ import { API_EXAM } from '@/constants/API';
 import instance from './instance';
 import type {
   ExamData,
+  ModifyExamData,
   RegisterExamData,
   StudentScoreData,
 } from '@/types/exam.type';
@@ -14,7 +15,7 @@ export const getExamStudent = (examId: number) => {
   });
 };
 
-export const putExam = (examId: number, data: ExamData) => {
+export const putExam = (examId: number, data: ModifyExamData) => {
   return instance({
     url: API_EXAM.EXAM(examId),
     method: 'PUT',
