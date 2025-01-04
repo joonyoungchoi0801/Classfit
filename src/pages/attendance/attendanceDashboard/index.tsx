@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as S from './AttendanceDashboard.styles';
 import AttendanceTable from '@/components/attendanceTable';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
@@ -7,17 +7,17 @@ import defaultImg from '@/assets/attendanceTable/default.svg';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import {
-  Student,
   StudentData,
   UpdateAttendanceRequest,
 } from '@/types/attendance.type';
 import { Student as ExcelStudentData } from '@/pages/attendance/Attendance.type';
 import { AttendanceEdit } from '@/api/attendanceAPI';
 import useClassStore from '@/store/classStore';
-import { Attendance, ExcelData } from '@/types/excel.type';
+import { ExcelData } from '@/types/excel.type';
 import { excelDownload } from '@/api/excelAPI';
 import { formatDate, formatStatus } from '@/utils/formatExcelData';
 import AttendanceStatistics from '@/pages/attendance/attendanceStatistics';
+import useAttendanceStore from '@/store/attendancedataStore';
 
 // 드롭다운 최근 6개월 
 const getLastSixMonths = () => {
@@ -48,9 +48,8 @@ function AttendanceDashboard() {
   >([]);
   const [excelData, setExcelData] = useState<ExcelStudentData[]>();
   const [smsQuery, setSmsQuery] = useState('');
-  const { subClassId } = useClassStore();
+  const { subClassId, setSubClassId } = useClassStore();
   const { grade, class: classParam } = useParams();
-  const { type } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const url = location.pathname;
@@ -59,6 +58,17 @@ function AttendanceDashboard() {
     !!classParam || location.pathname === '/manage/attendance/all';
   const isButtonGroupEnabled = url === '/manage/attendance/all' || !!classParam;
   const isStatisticsPage = location.pathname.startsWith('/manage/attendance/statistics');
+  const { attendanceData } = useAttendanceStore();
+
+  const initSubClassId = useCallback(() => {
+    if (url === '/manage/attendance/all') {
+      setSubClassId(0);
+    }
+  }, [url]);
+
+  useEffect(() => {
+    initSubClassId();
+  }, [initSubClassId]);
 
   useEffect(() => {
     setIsEditMode(false);
@@ -173,9 +183,30 @@ function AttendanceDashboard() {
 
   const handleSaveAttendance = async () => {
     try {
-      await AttendanceEdit(updatedStudents);
+      const updatedData = updatedStudents.map((student) => {
+        const updatedAttendance = attendanceData.find(
+          (updated) => updated.id === student.studentId
+        );
+        return {
+          studentId: student.studentId,
+          attendance: student.attendance.map((record) => {
+            const originalRecord = updatedAttendance?.attendance.find(
+              (original) => original.id === record.attendanceId
+            );
+            return {
+              attendanceId: record.attendanceId,
+              status: record.status === 'blank' ? originalRecord?.status || 'PRESENT' : record.status,
+            };
+          }),
+        };
+      });
+      await AttendanceEdit(updatedData);
+
+      console.log('출결 데이터 저장 성공:', updatedData);
+      alert('출결 상태가 저장되었습니다!');
     } catch (error) {
-      alert('출결저장에 실패했습니다');
+      console.error('출결 데이터 저장 실패:', error);
+      alert('출결 저장에 실패했습니다');
     }
   };
 
@@ -229,7 +260,7 @@ function AttendanceDashboard() {
         </S.ButtonGroup>
       )}
       {isStatisticsPage ? (
-        <AttendanceStatistics /> // 통계 페이지에서 AttendanceStatistics 렌더링
+        <AttendanceStatistics />
       ) : isTableOpen ? (
         <AttendanceTable
           selectedMonth={selectedMonth}
@@ -242,7 +273,7 @@ function AttendanceDashboard() {
           <S.DefaultImage src={defaultImg} />
           <S.DefaultText>클래스를 추가해 자유롭게 관리하세요 !</S.DefaultText>
         </S.DefaultImageWrapper>
-      ) : null} {/* Default image only for /manage/attendance */}
+      ) : null}
     </S.Container>
   );
 }

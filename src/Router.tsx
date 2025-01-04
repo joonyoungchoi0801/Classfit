@@ -25,9 +25,9 @@ export default function Router() {
         <Route path='/account' element={<Account />} />
         <Route path='/manage/*' element={<Attendance />} />
         <Route path='/manage/attendance/*' element={<Attendance />} />
-        <Route path='/manage/attendance/all' element={<Attendance />} />
+        <Route path='/manage/attendance/all/*' element={<Attendance />} />
         <Route path='/manage/attendance/all/sms' element={<Sms />} />
-        <Route path='/manage/attendance/:grade' element={<Attendance />} />
+        <Route path='/manage/attendance/:grade/*' element={<Attendance />} />
         <Route
           path='/manage/attendance/:grade/:class'
           element={<Attendance />}
