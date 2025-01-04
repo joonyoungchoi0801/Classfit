@@ -16,7 +16,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Message from '@/components/message';
 import useClassList from '@/hooks/useClassList';
 import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
-import { registerExamData } from '@/types/exam.type';
+import type { RegisterExamData } from '@/types/exam.type';
 import { registerExam } from '@/api/examAPI';
 
 type ScoreStandardProps = {
@@ -50,16 +50,16 @@ function AchievementRegister() {
   const examLst = ['주간', '월간', '데일리', '기타'];
   const examPeriodList: Record<string, string> = {
     주간: 'WEEK',
-    월간: 'MONTH',
+    월간: 'MONTHLY',
     데일리: 'DAILY',
-    기타: 'ETC',
+    기타: 'OTHER',
   };
 
   const standardList: Record<string, string> = {
     점수: 'SCORE',
-    개수: 'COUNT',
-    P_F: 'P_F',
-    정성평가: 'QUALITATIVE',
+    개수: 'QUESTION',
+    'P/F': 'PF',
+    정성평가: 'EVALUATION',
   };
 
   const navigate = useNavigate();
@@ -79,13 +79,17 @@ function AchievementRegister() {
   };
 
   const { control, handleSubmit, getValues, setValue } =
-    useForm<registerExamData>();
+    useForm<RegisterExamData>();
   const [inputValue, setInputValue] = useState('');
   const [standardValue, setStandardValue] = useState('점수');
 
-  const onSubmit = async (data: registerExamData) => {
+  const onSubmit = async (data: RegisterExamData) => {
     if (!data.highestScore) {
-      data.highestScore = 0;
+      if (standardValue === '점수') {
+        data.highestScore = 100;
+      } else {
+        data.highestScore = 0;
+      }
     }
     const selectedExamPeriod = getValues('examPeriod');
 
@@ -95,7 +99,13 @@ function AchievementRegister() {
     const res = await registerExam(data);
     if (res.status === 200) {
       navigate(
-        `/manage/achievement/management/register/student/${res.data.data.examId}`
+        `/manage/achievement/management/register/student/${res.data.data.examId}`,
+        {
+          state: {
+            standard: data.standard,
+            highestScore: data.highestScore,
+          },
+        }
       );
     } else {
       alert('시험지 등록에 실패했습니다. 다시 시도해주세요.');

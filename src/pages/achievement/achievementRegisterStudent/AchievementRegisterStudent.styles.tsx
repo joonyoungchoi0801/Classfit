@@ -70,11 +70,15 @@ export const CheckboxWrapper = styled.div`
   flex: 0 0 3%;
 `;
 
-export const Name = styled.div`
+export const Name = styled.div<{
+  $isChecked: boolean;
+}>`
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  color: ${(props) =>
+    props.$isChecked ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const Score = styled.div`
@@ -84,16 +88,40 @@ export const Score = styled.div`
   color: var(--color-blue);
 `;
 
-export const TotalScore = styled.div`
+export const ScoreInput = styled.input`
+  padding: 1rem;
+  border: 0.1rem solid #d5d7dd;
+  border-radius: 0.4rem;
+  font-size: 1.6rem;
+  width: 5rem;
+  height: 2.7rem;
+  align-items: center;
+  background-color: var(--color-white);
+  color: var(--color-blue);
+  &::placeholder {
+    color: #8a91a1;
+    opacity: 1;
+  }
+  margin-right: 0.5rem;
+  &:focus {
+    color: var(--color-black);
+  }
+`;
+
+export const TotalScore = styled.div<{
+  $isChecked: boolean;
+}>`
   font-size: 1.6rem;
   font-weight: 500;
-  color: var(--color-black);
+  color: ${(props) =>
+    props.$isChecked ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const ScoreWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 3rem;
 `;
 
 export const Label = styled.div`

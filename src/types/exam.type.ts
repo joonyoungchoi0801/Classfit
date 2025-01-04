@@ -1,4 +1,4 @@
-export interface examData {
+export interface ExamData {
   examData: string;
   examName: string;
   examPeriod: string;
@@ -8,7 +8,7 @@ export interface examData {
   highestScore: number;
 }
 
-export interface registerExamData {
+export interface RegisterExamData {
   subClassId: number;
   mainClassId: number;
   examDate: string;
@@ -17,4 +17,19 @@ export interface registerExamData {
   examPeriod: string;
   examName: string;
   range: string[];
+}
+
+export interface ExamStudentData {
+  studentId: number;
+  name: string;
+  score: string;
+}
+
+export interface ExamStudentDataWithChecked extends ExamStudentData {
+  checked: boolean;
+}
+
+export interface StudentScoreData {
+  studentId: number;
+  score: number;
 }

@@ -1,7 +1,11 @@
 import { API_EXAM } from '@/constants/API';
 
 import instance from './instance';
-import { examData, registerExamData } from '@/types/exam.type';
+import type {
+  ExamData,
+  RegisterExamData,
+  StudentScoreData,
+} from '@/types/exam.type';
 
 export const getExamStudent = (examId: number) => {
   return instance({
@@ -10,7 +14,7 @@ export const getExamStudent = (examId: number) => {
   });
 };
 
-export const putExam = (examId: number, data: examData) => {
+export const putExam = (examId: number, data: ExamData) => {
   return instance({
     url: API_EXAM.EXAM(examId),
     method: 'PUT',
@@ -25,7 +29,7 @@ export const deleteExam = (examId: number) => {
   });
 };
 
-export const registerExam = (data: registerExamData) => {
+export const registerExam = (data: RegisterExamData) => {
   return instance({
     url: API_EXAM.REGISTER,
     method: 'POST',
@@ -40,15 +44,11 @@ export const findExam = () => {
   });
 };
 
-export const scoreRegisterExam = (
-  examId: number,
-  studentId: number,
-  score: number
-) => {
+export const scoreRegisterExam = (examId: number, data: StudentScoreData[]) => {
   return instance({
     url: API_EXAM.EXAM_SCORE(examId),
-    method: 'POST',
-    data: { score },
+    method: 'PATCH',
+    data,
   });
 };
 
