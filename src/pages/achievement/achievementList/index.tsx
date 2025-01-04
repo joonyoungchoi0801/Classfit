@@ -1,4 +1,3 @@
-import { AchievementData } from '@/types/achievement.type';
 import * as S from './AchievementList.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import { useState, useEffect } from 'react';
@@ -7,6 +6,8 @@ import DropDown from '@/components/dropDown';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import ImageIcon from '@/components/imageIcon';
 import useClassList from '@/hooks/useClassList';
+import { ExamData } from '@/types/exam.type';
+import { findExam } from '@/api/examAPI';
 const data = [
   {
     type: '데일리',
@@ -97,37 +98,65 @@ const data = [
 function AchievementList() {
   const [filter, setFilter] = useState('전체');
   const [searchText, setSearchText] = useState('');
-  const [filteredData, setFilteredData] = useState<AchievementData[]>(data);
-  const [previousFilteredData, setPreviousFilteredData] =
-    useState<AchievementData[]>(data);
-  const [displayData, setDisplayData] = useState<AchievementData[]>(data);
+  const [filteredData, setFilteredData] = useState<ExamData[]>([]);
+  const [previousFilteredData, setPreviousFilteredData] = useState<ExamData[]>(
+    []
+  );
+  const [displayData, setDisplayData] = useState<ExamData[]>([]);
   const [searchFilter, setSearchFilter] = useState('강사명');
   const navigate = useNavigate();
   const [mainClass, setMainClass] = useState('');
+  const [data, setData] = useState<ExamData[]>([]);
 
   const { classList } = useClassList();
   const testSearchOptions: string[] = ['강사명', '시험명'];
 
-  const filterData = ['전체', '월간', '주간', '데일리', '기타'];
+  const filterData: Record<string, string> = {
+    전체: 'TOTAL',
+    월간: 'MONTHLY',
+    주간: 'WEEK',
+    데일리: 'DAILY',
+    기타: 'OTHER',
+  };
+
+  const reverseFilterData: Record<string, string> = {
+    TOTAL: '전체',
+    MONTHLY: '월간',
+    WEEK: '주간',
+    DAILY: '데일리',
+    OTHER: '기타',
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await findExam();
+      if (res.status === 200) {
+        setData(res.data.data);
+      } else {
+        alert('성적 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleOnChangeFilter = (newFilter: string) => {
     setFilter(newFilter);
 
     const _data = data.filter((item) => {
-      const matchesType = newFilter === '전체' || item.type === newFilter;
+      const matchesType =
+        newFilter === '전체' || item.standard === filterData[newFilter];
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = searchText === '' || item.teacher.includes(searchText);
+        matchesSearch = searchText === '' || item.examName.includes(searchText);
       } else {
-        matchesSearch = searchText === '' || item.test.includes(searchText);
+        matchesSearch = searchText === '' || item.examName.includes(searchText);
       }
 
       return matchesType && matchesSearch;
     });
 
     setFilteredData(_data);
-    // setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
     setPreviousFilteredData(_data);
     setDisplayData(_data);
   };
@@ -136,13 +165,14 @@ function AchievementList() {
     setSearchText(text);
 
     const _data = data.filter((item) => {
-      const matchesType = filter === '전체' || item.type === filter;
+      const matchesType =
+        filter === '전체' || item.standard === filterData[filter];
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = text === '' || item.teacher.includes(text);
+        matchesSearch = text === '' || item.examName.includes(text);
       } else {
-        matchesSearch = text === '' || item.test.includes(text);
+        matchesSearch = text === '' || item.examName.includes(text);
       }
 
       return matchesType && matchesSearch;
@@ -159,13 +189,14 @@ function AchievementList() {
 
   const handleOnClickSearch = () => {
     const _data = data.filter((item) => {
-      const matchesType = filter === '전체' || item.type === filter;
+      const matchesType =
+        filter === '전체' || item.standard === filterData[filter];
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = item.teacher == searchText;
+        matchesSearch = item.examName == searchText;
       } else {
-        matchesSearch = item.test == searchText;
+        matchesSearch = item.examName == searchText;
       }
 
       return matchesType && matchesSearch;
@@ -231,7 +262,7 @@ function AchievementList() {
       </S.Header>
 
       <S.FilterTabs>
-        {filterData.map((tab) => (
+        {Object.keys(filterData).map((tab) => (
           <S.FilterButton
             key={tab}
             isActive={filter === tab}
@@ -251,13 +282,17 @@ function AchievementList() {
               }
             >
               <S.TitleWrapper>
-                <PS.Tag $type={item.type}>{item.type}</PS.Tag>
-                <PS.Text>{item.class}</PS.Text>
-                <PS.Text>{item.test}</PS.Text>
+                <PS.Tag $type={item.standard}>
+                  {reverseFilterData[item.standard]}
+                </PS.Tag>
+                <PS.Text>
+                  {item.mainClassName}-{item.subClassName}
+                </PS.Text>
+                <PS.Text>{item.examName}</PS.Text>
               </S.TitleWrapper>
               <S.TeacherWrapper>
-                <PS.Text>{item.teacher}</PS.Text>
-                <PS.Text>{item.date}</PS.Text>
+                <PS.Text>{item.memberId}</PS.Text>
+                <PS.Text>{item.createdAt}</PS.Text>
               </S.TeacherWrapper>
             </S.ListItem>
           ))}

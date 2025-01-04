@@ -33,3 +33,13 @@ export interface StudentScoreData {
   studentId: number;
   score: number;
 }
+
+export interface ExamData {
+  examId: number;
+  memberId: number;
+  standard: string;
+  mainClassName: string;
+  subClassName: string;
+  examName: string;
+  createdAt: string;
+}
