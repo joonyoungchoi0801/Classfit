@@ -2,8 +2,11 @@ import * as S from './DateStatistics.styles';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
 import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
-
+import { getStatisticsDates } from '@/api/statisticsAPI';
+import useClassList from '@/hooks/useClassList';
 import { useState, useEffect } from 'react';
+import { statisticsDateData, statisticsDateResponse } from '@/types/statistics.type';
+import formatDateToISO from '@/utils/formatDate';
 
 const getLastSixMonths = (offset = 0) => {
   const currentDate = new Date();
@@ -33,12 +36,11 @@ const getDatesInMonth = (year: number, month: number) => {
   let currentDate = firstDayOfMonth;
 
   while (currentDate <= lastDayOfMonth) {
-    // getDay()는 일요일을 0으로 반환하므로, 이를 조정하여 월요일을 0, 일요일을 6으로 설정
     const weekday = (currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1);
 
     daysInMonth.push({
       date: currentDate.getDate(),
-      weekday, // 수정된 요일 값 (월요일=0, 일요일=6)
+      weekday,
     });
     currentDate.setDate(currentDate.getDate() + 1);
   }
@@ -50,10 +52,16 @@ function DateStatistics() {
   const [monthOffset, setMonthOffset] = useState(0);
   const { months, currentMonth } = getLastSixMonths(monthOffset);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState({
+    mainClass: '',
+    subClassId: 0,
+    subClassName: ''
+  });
   const [datesInMonth, setDatesInMonth] = useState<{ date: number, weekday: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (7일씩 끊어서)
-
-  const subclass = [{ class: "1학년 A반" }, { class: "2학년 A반" }];
+  const { classList } = useClassList();
+  const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>([]);
+  console.log("statisticsData:", statisticsData);
 
   const handlePrevMonth = () => {
     if (monthOffset < 5) {
@@ -83,6 +91,33 @@ function DateStatistics() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleSelectClass = (mainClass: string, subClass: { subClassId: number; subClassName: string }) => {
+    setSelectedClass({
+      mainClass,
+      subClassId: subClass.subClassId,
+      subClassName: subClass.subClassName,
+    });
+    setIsDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    if (!selectedClass.mainClass || !selectedClass.subClassId) return; // 클래스 선택이 안 됐으면 무시
+
+    const startDate = formatDateToISO(`${currentMonth}/01`); // 현재 월의 1일을 ISO 형식으로 변환
+    const endDate = formatDateToISO(`${currentMonth}/${datesInMonth[datesInMonth.length - 1]?.date}`); // 마지막 날을 ISO 형식으로 변환
+
+    const fetchStatisticsDates = async () => {
+      try {
+        const response = await getStatisticsDates(startDate, endDate, selectedClass.subClassId); // 선택된 SubClass의 ID 전달
+        setStatisticsData(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch statistics data:", error);
+      }
+    };
+
+    fetchStatisticsDates();
+  }, [selectedClass, currentMonth, datesInMonth]);
+
   useEffect(() => {
     const currentMonthData = new Date();
     const currentYear = currentMonthData.getFullYear();
@@ -96,6 +131,8 @@ function DateStatistics() {
     const endIdx = startIdx + 7;
     return datesInMonth.slice(startIdx, endIdx);
   };
+
+  const weekDates = getCurrentWeekDates().map((dateInfo) => `${currentMonth}/${dateInfo.date}(${['월', '화', '수', '목', '금', '토', '일'][dateInfo.weekday]})`);
 
   return (
     <S.Container>
@@ -124,24 +161,28 @@ function DateStatistics() {
           </S.DropdownClass>
           {isDropdownOpen && (
             <S.DropdownList>
-              {subclass.map((item, index) => (
-                <S.DropdownItem
-                  key={index}
-                >
-                  {item.class}
-                </S.DropdownItem>
+              {Object.keys(classList).map((mainClass) => (
+                classList[mainClass].map((subClass) => (
+                  <S.DropdownItem
+                    key={`${mainClass}-${subClass.subClassId}`}
+                    onClick={() => handleSelectClass(mainClass, subClass)}
+                  >
+                    {`${mainClass} ${subClass.subClassName}`}
+                  </S.DropdownItem>
+                ))
               ))}
             </S.DropdownList>
           )}
+
           <S.PaginationContainer>
             <S.ArrowButton
               src={paginationLeft}
               alt='Previous Week'
               onClick={handlePrevPage}
             />
-            {getCurrentWeekDates().map((dateInfo, index) => (
+            {weekDates.map((date, index) => (
               <S.DatePaginationItem key={index}>
-                {`${currentMonth}/${dateInfo.date}(${['월', '화', '수', '목', '금', '토', '일'][dateInfo.weekday]})`}
+                {date}
               </S.DatePaginationItem>
             ))}
             <S.ArrowButton
@@ -155,49 +196,42 @@ function DateStatistics() {
         <S.StatisticsContainer>
           <S.RowTitle>출석</S.RowTitle>
           <S.ValueContainer>
-            <S.Value>27</S.Value>
-            <S.Value>30</S.Value>
-            <S.Value>30</S.Value>
-            <S.Value>28</S.Value>
-            <S.Value>25</S.Value>
-            <S.Value>30</S.Value>
-            <S.Value>30</S.Value>
+            <S.Blank />
+            {weekDates.map((date) => {
+              // weekDates: MM/DD(요일) 형태에서 MM/DD를 추출
+              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+
+              // currentYear를 사용하여 ISO 형식 (YYYY-MM-DD)으로 변환
+              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+              // statisticsData에서 매칭
+              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+
+              return (
+                <S.Value key={date}>
+                  {statisticsRecord?.present ?? '-'}
+                </S.Value>
+              );
+            })}
+            <S.Blank />
           </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
           <S.RowTitle>결석</S.RowTitle>
           <S.ValueContainer>
-            <S.Value>3</S.Value>
-            <S.Value>0</S.Value>
-            <S.Value>0</S.Value>
-            <S.Value>2</S.Value>
-            <S.Value>5</S.Value>
-            <S.Value>0</S.Value>
-            <S.Value>0</S.Value>
+
           </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
-          <S.RowTitle>보강</S.RowTitle>
+          <S.RowTitle>지각</S.RowTitle>
           <S.ValueContainer>
-            <S.Value>1</S.Value>
-            <S.Value>2</S.Value>
-            <S.Value>2</S.Value>
-            <S.Value>5</S.Value>
-            <S.Value>0</S.Value>
-            <S.Value>0</S.Value>
-            <S.Value>0</S.Value>
+
           </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
           <S.RowTitle>기타</S.RowTitle>
           <S.ValueContainer>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
-            <S.Value>-</S.Value>
+
           </S.ValueContainer>
         </S.StatisticsContainer>
       </S.Table>

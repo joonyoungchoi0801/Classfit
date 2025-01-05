@@ -59,3 +59,10 @@ export const API_EXAM = Object.freeze({
   EXAM_FIND: 'v1/exam/findexam',
   EXAM_DETAIL: (examId: number) => `v1/exam/findexam/${examId}`,
 });
+
+export const API_STATISTICS = Object.freeze({
+  DATE: '/v1/home/statistics/date',
+  MEMBER: '/v1/home/statistics/member',
+  DATE_DETAIL: '/v1/home/statistics/date/detail',
+  MEMBER_DETAIL: '/v1/home/statistics/member/detail',
+});
