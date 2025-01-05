@@ -11,10 +11,6 @@ const CalendarComponent = () => {
     const event = info.event;
     const start = event.start;
     const end = event.end;
-
-    console.log('Event Title:', event.title);
-    console.log('New Start Time:', start.toISOString());
-    console.log('New End Time:', end ? end.toISOString() : 'No end time');
   };
   const handleEventClick = (info: any) => {
     console.log(info.event);
