@@ -63,6 +63,6 @@ export const API_EXAM = Object.freeze({
 export const API_STATISTICS = Object.freeze({
   DATE: '/v1/home/statistics/date',
   MEMBER: '/v1/home/statistics/member',
-  DATE_DETAIL: '/v1/home/statistics/date/detail',
-  MEMBER_DETAIL: '/v1/home/statistics/member/detail',
+  DATE_DETAIL: '/v1/home/statistics/date/details',
+  MEMBER_DETAIL: '/v1/home/statistics/member/details',
 });

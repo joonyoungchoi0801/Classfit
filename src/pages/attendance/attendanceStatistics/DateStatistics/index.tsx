@@ -61,7 +61,6 @@ function DateStatistics() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (7일씩 끊어서)
   const { classList } = useClassList();
   const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>([]);
-  console.log("statisticsData:", statisticsData);
 
   const handlePrevMonth = () => {
     if (monthOffset < 5) {
@@ -215,19 +214,58 @@ function DateStatistics() {
         <S.StatisticsContainer>
           <S.RowTitle>결석</S.RowTitle>
           <S.ValueContainer>
+            <S.Blank />
+            {weekDates.map((date) => {
+              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
+              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+
+              return (
+                <S.Value key={date}>
+                  {statisticsRecord?.absent ?? '-'}
+                </S.Value>
+              );
+            })}
+            <S.Blank />
           </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
           <S.RowTitle>지각</S.RowTitle>
           <S.ValueContainer>
+            <S.Blank />
+            {weekDates.map((date) => {
+              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
+              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+
+              return (
+                <S.Value key={date}>
+                  {statisticsRecord?.late ?? '-'}
+                </S.Value>
+              );
+            })}
+            <S.Blank />
           </S.ValueContainer>
         </S.StatisticsContainer>
         <S.StatisticsContainer>
           <S.RowTitle>기타</S.RowTitle>
           <S.ValueContainer>
+            <S.Blank />
+            {weekDates.map((date) => {
+              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
+              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+
+              return (
+                <S.Value key={date}>
+                  {statisticsRecord?.extra ?? '-'}
+                </S.Value>
+              );
+            })}
+            <S.Blank />
           </S.ValueContainer>
         </S.StatisticsContainer>
       </S.Table>
