@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './style/certificate.styles';
 import errorIcon from '@/assets/auth/password/error.svg';
 import { postSendEmail, postVerifyEmail } from '@/api/authAPI';
@@ -7,8 +7,27 @@ import { useNavigate } from 'react-router-dom';
 function Certification() {
   const [code, setCode] = useState('');
   const [isError, setIsError] = useState(false);
+  const [isResendOccur, setIsResendOccur] = useState(false);
+  const [timer, setTimer] = useState(60);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdown);
+          setIsResendOccur(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdown);
+  }, [isResendOccur]);
+
   const handleResend = async () => {
+    if (timer > 0) return;
     try {
       const emailData = {
         email: sessionStorage.getItem('certificateEmail') || '',
@@ -16,6 +35,8 @@ function Certification() {
       };
       await postSendEmail(emailData);
       alert('인증번호를 재발송했습니다.');
+      setIsResendOccur(true);
+      setTimer(60);
     } catch (error) {
       alert('인증번호 재발송에 실패했습니다.');
     }
@@ -66,8 +87,10 @@ function Certification() {
           )}
           <S.Resend>
             이메일을 받지 못했다면{' '}
-            <S.ResendText onClick={handleResend}>재발송</S.ResendText>을
-            눌러주세요.
+            <S.ResendText onClick={handleResend} $isDisabled={timer > 0}>
+              재발송
+            </S.ResendText>
+            을 눌러주세요.
           </S.Resend>
         </S.ResendWrapper>
 

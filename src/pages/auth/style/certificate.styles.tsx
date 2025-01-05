@@ -98,14 +98,15 @@ export const Resend = styled.div`
   line-height: normal;
 `;
 
-export const ResendText = styled.span`
-  color: #0056f6;
+export const ResendText = styled.span<{ $isDisabled?: boolean }>`
+  color: ${({ $isDisabled }) =>
+    $isDisabled ? '#dedede' : 'var(--color-blue)'};
   font-family: Pretendard;
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  cursor: pointer;
+  cursor: ${({ $isDisabled }) => ($isDisabled ? 'not-allowed' : 'pointer')};
 `;
 
 export const CertificateButton = styled.button<{
