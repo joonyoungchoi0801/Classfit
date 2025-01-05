@@ -6,6 +6,7 @@ import {
   AcademyCreateData,
   AcademyInviteData,
   EmailVerifyData,
+  PasswordData,
 } from '@/types/auth.type';
 
 export const postLogin = (data: LoginData) => {
@@ -58,6 +59,13 @@ export const postVerifyEmail = (data: EmailVerifyData) => {
 export const postSendEmail = (data: Omit<EmailVerifyData, 'code'>) => {
   return instance({
     url: API_EMAIL.SEND,
+    method: 'POST',
+    data,
+  });
+};
+export const postChangePassword = (data: PasswordData) => {
+  return instance({
+    url: API_AUTH.PASSWORD,
     method: 'POST',
     data,
   });

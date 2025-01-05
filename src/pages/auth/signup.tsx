@@ -145,18 +145,22 @@ function Signup() {
             <S.LabelImg src={passwordIcon} alt='password' />
             <S.InputLabel>비밀번호 확인</S.InputLabel>
           </S.LabelWrapper>
-          <S.Input
-            type='password'
-            placeholder='비밀번호를 재입력해주세요'
-            {...register('passwordConfirm', {
-              required: '비밀번호를 재입력해주세요',
-              validate: (value) =>
-                value === watch('password') || '비밀번호가 일치하지 않습니다.',
-            })}
-          />
-          {isPasswordConfirm && password && passwordConfirm && (
-            <S.InputImg src={check} alt='check' />
-          )}
+          <S.InputContainer>
+            <S.Input
+              type='password'
+              placeholder='비밀번호를 재입력해주세요'
+              {...register('passwordConfirm', {
+                required: '비밀번호를 재입력해주세요',
+                validate: (value) =>
+                  value === watch('password') ||
+                  '비밀번호가 일치하지 않습니다.',
+              })}
+            />
+            {isPasswordConfirm && password && passwordConfirm && (
+              <S.InputImg src={check} alt='check' />
+            )}
+          </S.InputContainer>
+
           {errors.passwordConfirm && (
             <ErrorComponent message={errors?.passwordConfirm.message} />
           )}

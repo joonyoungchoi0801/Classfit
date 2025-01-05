@@ -10,6 +10,7 @@ import eyeoff from '@/assets/auth/signup/eyeoff.svg';
 import type { ErrorProps } from './type/signup.type';
 import { useNavigate } from 'react-router-dom';
 import { NewPasswordType } from './type/newpassword.type';
+import { postChangePassword } from '@/api/authAPI';
 
 const ErrorComponent = ({ message }: ErrorProps) => (
   <S.Error>
@@ -46,8 +47,19 @@ function NewPassword() {
   const passwordRegex =
     /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,20}$/;
 
-  const onSubmit = (data: NewPasswordType) => {
-    navigate('/signin');
+  const onSubmit = async (data: NewPasswordType) => {
+    try {
+      const passwordData = {
+        email: sessionStorage.getItem('certificateEmail') || '',
+        password: data.password,
+        passwordConfirm: data.passwordConfirm,
+        emailToken: sessionStorage.getItem('certificateToken') || '',
+      };
+      await postChangePassword(passwordData);
+      navigate('/signin');
+    } catch (error) {
+      alert('비밀번호 변경에 실패했습니다.');
+    }
   };
 
   return (
@@ -91,18 +103,22 @@ function NewPassword() {
             <S.LabelImg src={passwordIcon} alt='password' />
             <S.InputLabel>비밀번호 확인</S.InputLabel>
           </S.LabelWrapper>
-          <S.Input
-            type='password'
-            placeholder='비밀번호를 재입력해주세요'
-            {...register('passwordConfirm', {
-              required: '비밀번호를 재입력해주세요',
-              validate: (value) =>
-                value === watch('password') || '비밀번호가 일치하지 않습니다.',
-            })}
-          />
-          {isPasswordConfirm && password && passwordConfirm && (
-            <S.InputImg src={check} alt='check' />
-          )}
+          <S.InputContainer>
+            <S.Input
+              type='password'
+              placeholder='비밀번호를 재입력해주세요'
+              {...register('passwordConfirm', {
+                required: '비밀번호를 재입력해주세요',
+                validate: (value) =>
+                  value === watch('password') ||
+                  '비밀번호가 일치하지 않습니다.',
+              })}
+            />
+            {isPasswordConfirm && password && passwordConfirm && (
+              <S.InputImg src={check} alt='check' />
+            )}
+          </S.InputContainer>
+
           {errors.passwordConfirm && (
             <ErrorComponent message={errors?.passwordConfirm.message} />
           )}

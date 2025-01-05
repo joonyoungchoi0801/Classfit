@@ -3,14 +3,32 @@ import * as S from './style/password.styles';
 import profileIcon from '@/assets/auth/password/profile.svg';
 import errorIcon from '@/assets/auth/password/error.svg';
 import { useNavigate } from 'react-router-dom';
+import { postSendEmail } from '@/api/authAPI';
 
 function Password() {
-  const [emailError, setEmailError] = useState(true);
+  const [emailError, setEmailError] = useState(false);
   const [emailValue, setEmailValue] = useState('');
 
   const navigate = useNavigate();
   const emailRegex =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+  const handleNextButton = async () => {
+    if (emailRegex.test(emailValue)) {
+      try {
+        const emailData = {
+          email: emailValue,
+          purpose: 'PASSWORD_RESET' as const,
+        };
+        await postSendEmail(emailData);
+        sessionStorage.setItem('certificateEmail', emailValue);
+        alert('이메일을 발송했습니다.');
+        navigate('/certificate');
+      } catch (error) {
+        setEmailError(true);
+      }
+    }
+  };
 
   return (
     <S.PageWrapper>
@@ -34,7 +52,10 @@ function Password() {
             </S.ErrorMessage>
           )}
         </S.InputWrapper>
-        <S.NextButton $isDisabled={!emailRegex.test(emailValue)}>
+        <S.NextButton
+          $isDisabled={!emailRegex.test(emailValue)}
+          onClick={handleNextButton}
+        >
           다음
         </S.NextButton>
       </S.PasswordWrapper>
