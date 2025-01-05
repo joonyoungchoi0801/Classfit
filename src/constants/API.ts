@@ -59,3 +59,12 @@ export const API_EXAM = Object.freeze({
   EXAM_FIND: 'v1/exam/findexam',
   EXAM_DETAIL: (examId: number) => `v1/exam/findexam/${examId}`,
 });
+
+export const API_REPORT = Object.freeze({
+  REGISTER: '/v1/report',
+  STUDENT_OPINION: '/v1/report/student-opinion',
+  DETAIL: (reportId: number) => `/v1/report/${reportId}`,
+  FIND: '/v1/report/student-report',
+  EXAM_FIND: '/v1/report/exam-list',
+  STUDENT_FIND: '/v1/report/class-student',
+});
