@@ -48,6 +48,46 @@ const getDatesInMonth = (year: number, month: number) => {
   return daysInMonth;
 };
 
+// 모달 컴포넌트
+const AttendanceModal = ({
+  isOpen,
+  onClose,
+  studentNames,
+  type,
+  date,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  studentNames: string[];
+  type: '출석' | '지각' | '결석' | '기타';
+  date: string;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <S.ModalOverlay onClick={onClose}>
+      <S.ModalContent onClick={(e) => e.stopPropagation()}>
+        <S.ModalHeader>
+          <S.ModalTitle>
+            {type} 명단
+            <S.DateText>{date}</S.DateText>
+          </S.ModalTitle>
+        </S.ModalHeader>
+        <S.Divider />
+        <S.StudentList>
+          {studentNames.length === 0 ? (
+            <S.NoStudents>학생명단이 없습니다.</S.NoStudents>
+          ) : (
+            studentNames.map((name, index) => <S.StudentItem key={index}>{name}</S.StudentItem>)
+          )}
+        </S.StudentList>
+
+        <S.CloseButton onClick={onClose}>확인</S.CloseButton>
+      </S.ModalContent>
+    </S.ModalOverlay>
+  );
+};
+
 function DateStatistics() {
   const [monthOffset, setMonthOffset] = useState(0);
   const { months, currentMonth } = getLastSixMonths(monthOffset);
@@ -61,6 +101,26 @@ function DateStatistics() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (7일씩 끊어서)
   const { classList } = useClassList();
   const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [attendingStudents, setAttendingStudents] = useState<string[]>([]);
+  const [attendanceType, setAttendanceType] = useState<'출석' | '지각' | '결석' | '기타'>('출석');
+
+  const handleValueClick = (date: string, type: '출석' | '지각' | '결석' | '기타') => {
+    // 해당 날짜의 출석 유형에 맞는 학생들의 목록을 가져옴 (모의 데이터 사용)
+    // const students = statisticsData
+    //   .filter((record) => record.date === isoDate && record[type] > 0)
+    //   .map((record) => record.studentName);
+
+    setSelectedDate(date);
+    // setAttendingStudents(students);
+    setAttendanceType(type); // 클릭한 항목에 맞는 출석 유형 설정
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handlePrevMonth = () => {
     if (monthOffset < 5) {
@@ -203,7 +263,10 @@ function DateStatistics() {
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 
               return (
-                <S.Value key={date}>
+                <S.Value
+                  key={date}
+                  onClick={() => handleValueClick(date, '출석')}
+                >
                   {statisticsRecord?.present ?? '-'}
                 </S.Value>
               );
@@ -222,7 +285,10 @@ function DateStatistics() {
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 
               return (
-                <S.Value key={date}>
+                <S.Value
+                  key={date}
+                  onClick={() => handleValueClick(isoDate, '결석')}
+                >
                   {statisticsRecord?.absent ?? '-'}
                 </S.Value>
               );
@@ -241,7 +307,10 @@ function DateStatistics() {
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 
               return (
-                <S.Value key={date}>
+                <S.Value
+                  key={date}
+                  onClick={() => handleValueClick(isoDate, '지각')}
+                >
                   {statisticsRecord?.late ?? '-'}
                 </S.Value>
               );
@@ -260,7 +329,10 @@ function DateStatistics() {
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 
               return (
-                <S.Value key={date}>
+                <S.Value
+                  key={date}
+                  onClick={() => handleValueClick(isoDate, '기타')}
+                >
                   {statisticsRecord?.extra ?? '-'}
                 </S.Value>
               );
@@ -269,6 +341,14 @@ function DateStatistics() {
           </S.ValueContainer>
         </S.StatisticsContainer>
       </S.Table>
+
+      <AttendanceModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        studentNames={attendingStudents}
+        type={attendanceType}
+        date={selectedDate ?? ''}
+      />
     </S.Container>
   );
 }
