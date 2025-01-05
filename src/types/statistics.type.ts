@@ -4,7 +4,6 @@ export interface statisticsDateData {
   present: number;
   absent: number;
   late: number;
-  extra: number;
 }
 
 export interface statisticsDateResponse {
@@ -12,5 +11,12 @@ export interface statisticsDateResponse {
   resultType: string;
   data: statisticsDateData[];
   error: { message: string };
+  message: string;
+}
+
+export interface statisticsDateDetail {
+  statusCode: number;
+  resultType: string;
+  data: string[];
   message: string;
 }

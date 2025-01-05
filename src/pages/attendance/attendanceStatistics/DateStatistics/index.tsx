@@ -2,10 +2,10 @@ import * as S from './DateStatistics.styles';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
 import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
-import { getStatisticsDates } from '@/api/statisticsAPI';
+import { getStatisticsDates, getStatisticsDateDetail } from '@/api/statisticsAPI';
 import useClassList from '@/hooks/useClassList';
 import { useState, useEffect } from 'react';
-import { statisticsDateData, statisticsDateResponse } from '@/types/statistics.type';
+import { statisticsDateData, statisticsDateDetail } from '@/types/statistics.type';
 import formatDateToISO from '@/utils/formatDate';
 
 const getLastSixMonths = (offset = 0) => {
@@ -59,7 +59,7 @@ const AttendanceModal = ({
   isOpen: boolean;
   onClose: () => void;
   studentNames: string[];
-  type: '출석' | '지각' | '결석' | '기타';
+  type: 'PRESENT' | 'LATE' | 'ABSENT';
   date: string;
 }) => {
   if (!isOpen) return null;
@@ -69,7 +69,7 @@ const AttendanceModal = ({
       <S.ModalContent onClick={(e) => e.stopPropagation()}>
         <S.ModalHeader>
           <S.ModalTitle>
-            {type} 명단
+            {type === 'PRESENT' ? '출석' : type === 'LATE' ? '지각' : '결석'}명단
             <S.DateText>{date}</S.DateText>
           </S.ModalTitle>
         </S.ModalHeader>
@@ -103,20 +103,27 @@ function DateStatistics() {
   const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [attendingStudents, setAttendingStudents] = useState<string[]>([]);
-  const [attendanceType, setAttendanceType] = useState<'출석' | '지각' | '결석' | '기타'>('출석');
+  const [attendingStudents, setAttendingStudents] = useState<string[]>();
+  const [attendanceType, setAttendanceType] = useState<'PRESENT' | 'LATE' | 'ABSENT'>('PRESENT');
 
-  const handleValueClick = (date: string, type: '출석' | '지각' | '결석' | '기타') => {
-    // 해당 날짜의 출석 유형에 맞는 학생들의 목록을 가져옴 (모의 데이터 사용)
-    // const students = statisticsData
-    //   .filter((record) => record.date === isoDate && record[type] > 0)
-    //   .map((record) => record.studentName);
+  const handleValueClick = async (date: string, type: 'PRESENT' | 'LATE' | 'ABSENT') => {
+    try {
+      const isoDate = formatDateToISO(date);
+      const response = await getStatisticsDateDetail(isoDate, selectedClass.subClassId, type);
+      const studentData = response.data.data;
 
+      setAttendingStudents(studentData);
+    } catch (error) {
+      console.error("Failed to fetch student attendance details:", error);
+      setAttendingStudents([]); // 에러 시 빈 데이터 설정
+    }
+
+    // 모달 상태 업데이트
     setSelectedDate(date);
-    // setAttendingStudents(students);
-    setAttendanceType(type); // 클릭한 항목에 맞는 출석 유형 설정
+    setAttendanceType(type);
     setIsModalOpen(true);
   };
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -265,7 +272,7 @@ function DateStatistics() {
               return (
                 <S.Value
                   key={date}
-                  onClick={() => handleValueClick(date, '출석')}
+                  onClick={() => handleValueClick(date, 'PRESENT')}
                 >
                   {statisticsRecord?.present ?? '-'}
                 </S.Value>
@@ -287,7 +294,7 @@ function DateStatistics() {
               return (
                 <S.Value
                   key={date}
-                  onClick={() => handleValueClick(isoDate, '결석')}
+                  onClick={() => handleValueClick(date, 'ABSENT')}
                 >
                   {statisticsRecord?.absent ?? '-'}
                 </S.Value>
@@ -309,31 +316,9 @@ function DateStatistics() {
               return (
                 <S.Value
                   key={date}
-                  onClick={() => handleValueClick(isoDate, '지각')}
+                  onClick={() => handleValueClick(date, 'LATE')}
                 >
                   {statisticsRecord?.late ?? '-'}
-                </S.Value>
-              );
-            })}
-            <S.Blank />
-          </S.ValueContainer>
-        </S.StatisticsContainer>
-        <S.StatisticsContainer>
-          <S.RowTitle>기타</S.RowTitle>
-          <S.ValueContainer>
-            <S.Blank />
-            {weekDates.map((date) => {
-              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
-              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
-
-              return (
-                <S.Value
-                  key={date}
-                  onClick={() => handleValueClick(isoDate, '기타')}
-                >
-                  {statisticsRecord?.extra ?? '-'}
                 </S.Value>
               );
             })}
@@ -345,7 +330,7 @@ function DateStatistics() {
       <AttendanceModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        studentNames={attendingStudents}
+        studentNames={attendingStudents ? attendingStudents.flatMap(student => student) : []}
         type={attendanceType}
         date={selectedDate ?? ''}
       />

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   background-color: #fafafa;
-  border: 1px solid #ddd;
+  border: 0.1rem solid var(--color-dddgray);
   width: 100%;
   padding: 2rem 5rem;
   display: flex;
@@ -56,7 +56,7 @@ export const TableHeader = styled.div`
 
 export const DropdownClass = styled.div`
   display: flex;
-  background: #EDEDED;
+  background: var(--color-gray);
   width: 24.5rem;
   height: 3rem;
   align-items: center;
@@ -72,7 +72,7 @@ export const Placeholder = styled.span`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  color: #CACACA;
+  color: var(--color-lightgray);
 `;
 
 export const DropdownButton = styled.img`
@@ -85,8 +85,8 @@ export const DropdownList = styled.ul`
   top: 100%;
   left: 0;
   width: 20.1rem;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: var( --color-white);
+  border: 0.1rem solid var(--color-lightgray);
   border-radius: 0rem 0rem 1rem 1rem;
   list-style: none;
   padding: 0;
@@ -105,7 +105,7 @@ export const DropdownItem = styled.li`
 
   cursor: pointer;
   &:hover {
-    background-color: #DFEBFF;
+    background-color: var(--color-skyblue);
   }
 `;
 
@@ -126,7 +126,6 @@ export const DatePaginationItem = styled.div`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  /* width: 8rem; */
 `;
 
 export const StatisticsContainer = styled.div`
@@ -134,7 +133,7 @@ export const StatisticsContainer = styled.div`
   width: 100%;
   height: 100%;
   height: 8rem;
-  border-bottom: 0.15rem solid #CACACA;
+  border-bottom: 0.15rem solid var(--color-lightgray);
   align-items: center ;
   justify-content: space-between;
   gap: 5rem;
@@ -167,6 +166,10 @@ export const Value = styled.div`
   width: 5.3rem;
   text-align: center;
   cursor: pointer;
+
+  &:hover {
+    color: var(--color-blue);
+  }
 `;
 
 // 출결 통계 날짜별 상세 모달
@@ -176,7 +179,6 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  /* background: rgba(0, 0, 0, 0.4);  */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,7 +194,7 @@ export const ModalContent = styled.div`
   width: 24.5rem;
   padding: 2rem 3rem;
   max-width: 90%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.2);
 `;
 
 export const ModalHeader = styled.div`
@@ -219,7 +221,7 @@ export const DateText = styled.span`
 
 export const Divider = styled.div`
   width: 100%;
-  border-bottom: 1px solid #CACACA;
+  border-bottom: 0.1rem solid var(--color-lightgray);
 `;
 
 export const StudentList = styled.ul`
