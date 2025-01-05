@@ -29,7 +29,7 @@ export default function Router() {
         <Route path='/manage/attendance/all/sms' element={<Sms />} />
         <Route path='/manage/attendance/:grade/*' element={<Attendance />} />
         <Route
-          path='/manage/attendance/:grade/:class'
+          path='/manage/attendance/:grade/:class/*'
           element={<Attendance />}
         />
         <Route path='/manage/attendance/:grade/:class/sms' element={<Sms />} />
