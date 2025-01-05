@@ -109,6 +109,10 @@ export const DropdownItem = styled.li`
   }
 `;
 
+export const SubClass = styled.span`
+  margin-left: 1rem;
+`;
+
 export const PaginationContainer = styled.div`
   display: flex;
   width: 100%;
@@ -122,7 +126,7 @@ export const DatePaginationItem = styled.div`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  width: 12rem;
+  /* width: 8rem; */
 `;
 
 export const StatisticsContainer = styled.div`
@@ -146,15 +150,21 @@ export const RowTitle = styled.div`
 export const ValueContainer = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 0 5rem;
+  margin-left: 2.4rem;
+  margin-right: 2.4rem;
+`;
+
+export const Blank = styled.div`
+  width: 0.5rem;  
 `;
 
 export const Value = styled.div`
   font-size: 1.8rem;
   font-style: normal;
-  font-weight: 500;
-  width: 8rem;
+  font-weight: 600;
+  width: 5.3rem;
   text-align: center;
   cursor: pointer;
 `;
