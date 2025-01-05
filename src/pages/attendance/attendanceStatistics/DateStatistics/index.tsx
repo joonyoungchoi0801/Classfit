@@ -156,7 +156,7 @@ function DateStatistics() {
       <S.Table>
         <S.TableHeader>
           <S.DropdownClass onClick={toggleDropdown}>
-            <S.Placeholder>구분</S.Placeholder>
+            <S.Placeholder>{selectedClass.mainClass ? `${selectedClass.mainClass} ${selectedClass.subClassName}` : '구분'}</S.Placeholder>
             <S.DropdownButton src={dropdwon} alt='dropdown icon' />
           </S.DropdownClass>
           {isDropdownOpen && (
@@ -198,13 +198,9 @@ function DateStatistics() {
           <S.ValueContainer>
             <S.Blank />
             {weekDates.map((date) => {
-              // weekDates: MM/DD(요일) 형태에서 MM/DD를 추출
               const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
-
-              // currentYear를 사용하여 ISO 형식 (YYYY-MM-DD)으로 변환
               const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-              // statisticsData에서 매칭
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 
               return (
