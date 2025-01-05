@@ -29,11 +29,11 @@ export default function Router() {
         <Route path='/password' element={<Password />} />
         <Route path='/certificate' element={<Certification />} />
         <Route path='/new-password' element={<NewPassword />} />
-        <Route path='/manage' element={<Attendance />} />
-        <Route path='/manage/attendance' element={<Attendance />} />
-        <Route path='/manage/attendance/all' element={<Attendance />} />
+        <Route path='/manage/*' element={<Attendance />} />
+        <Route path='/manage/attendance/*' element={<Attendance />} />
+        <Route path='/manage/attendance/all/*' element={<Attendance />} />
         <Route path='/manage/attendance/all/sms' element={<Sms />} />
-        <Route path='/manage/attendance/:grade' element={<Attendance />} />
+        <Route path='/manage/attendance/:grade/*' element={<Attendance />} />
         <Route
           path='/manage/attendance/:grade/:class'
           element={<Attendance />}

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import type { ClassDropDownProps } from './ClassDropDown.types';
+import type { MainClassDropDownProps } from './MainClassDropDown.types';
 import * as PS from '@/components/dropDown/DropDown.styles';
-import * as S from './ClassDropDown.styles';
+import * as S from './MainClassDropDown.styles';
 
-function ClassDropDown({
+function MainClassDropDown({
   options = [],
   placeholder = '선택',
   value = '',
   onChange,
   onChange2,
-}: ClassDropDownProps) {
+}: MainClassDropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number[]>([]);
 
@@ -22,9 +22,9 @@ function ClassDropDown({
 
   useEffect(() => {
     if (value && value.length > 0) {
-      const option = options.find((option) => option.subClassName === value);
+      const option = options.find((option) => option.mainClassName === value);
       if (!option) return;
-      setSelectedOption([option.subClassId]);
+      setSelectedOption([option.mainClassId]);
     }
   }, [value]);
 
@@ -43,20 +43,20 @@ function ClassDropDown({
         {options.length === 0
           ? placeholder
           : selectedOption.length > 0
-            ? options.find((option) => option.subClassId === selectedOption[0])
-                ?.subClassName || placeholder
+            ? options.find((option) => option.mainClassId === selectedOption[0])
+                ?.mainClassName || placeholder
             : placeholder}
       </S.SelectButton>
       {isOpen && (
         <PS.OptionsList>
           {options.map((option) => (
             <PS.OptionItem
-              key={option.subClassId}
+              key={option.mainClassId}
               onClick={() =>
-                handleOptionClick(option.subClassId, option.subClassName)
+                handleOptionClick(option.mainClassId, option.mainClassName)
               }
             >
-              {option.subClassName}
+              {option.mainClassName}
             </PS.OptionItem>
           ))}
         </PS.OptionsList>
@@ -65,4 +65,4 @@ function ClassDropDown({
   );
 }
 
-export default ClassDropDown;
+export default MainClassDropDown;

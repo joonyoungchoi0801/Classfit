@@ -1,130 +1,211 @@
-import { AchievementData } from '@/types/achievement.type';
 import * as S from './AchievementList.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DropDown from '@/components/dropDown';
+import ClassDropDown from '@/components/dropDown/classDropDown';
+import ImageIcon from '@/components/imageIcon';
+import useClassList from '@/hooks/useClassList';
+import { ExamData } from '@/types/exam.type';
+import { findExam } from '@/api/examAPI';
+const data = [
+  {
+    type: '데일리',
+    class: '중3-A',
+    test: '월말테스트',
+    teacher: '김나나',
+    date: '24.11.15',
+  },
+  {
+    type: '주간',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '김나나',
+    date: '24.11.15',
+  },
+  {
+    type: '월간',
+    class: '중3-A',
+    test: '월말테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+  {
+    type: '데일리',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+  // {
+  //   type: '기타',
+  //   class: '중3-A',
+  //   test: '월말테스트',
+  //   teacher: '김나나',
+  //   date: '24.11.15',
+  // },
+  {
+    type: '주간',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '김나나',
+    date: '24.11.15',
+  },
+  {
+    type: '월간',
+    class: '중3-A',
+    test: '월말테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+  {
+    type: '주간',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+  // {
+  //   type: '기타',
+  //   class: '중3-A',
+  //   test: '월말테스트',
+  //   teacher: '김나나',
+  //   date: '24.11.15',
+  // },
+  {
+    type: '주간',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '김나나',
+    date: '24.11.15',
+  },
+  {
+    type: '월간',
+    class: '중3-A',
+    test: '월말테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+  {
+    type: '주간',
+    class: '중1-C',
+    test: '영어퀴즈테스트',
+    teacher: '박선호',
+    date: '24.11.15',
+  },
+];
+
+export const filterData: Record<string, string> = {
+  전체: 'TOTAL',
+  월간: 'MONTHLY',
+  주간: 'WEEK',
+  데일리: 'DAILY',
+  기타: 'OTHER',
+};
+
+export const reverseFilterData: Record<string, string> = {
+  TOTAL: '전체',
+  MONTHLY: '월간',
+  WEEK: '주간',
+  DAILY: '데일리',
+  OTHER: '기타',
+};
 
 function AchievementList() {
-  const [filter, setFilter] = useState('전체'); // 타입 필터
-  const [classFilter, setClassFilter] = useState('전체 클래스'); // 클래스 필터
-  const [teacherFilter, setTeacherFilter] = useState('전체 강사'); // 강사 필터
-  const [searchText, setSearchText] = useState(''); // 검색어 상태 추가
-  const [previousFilteredData, setPreviousFilteredData] = useState<
-    AchievementData[]
-  >([]); // 이전 필터링된 데이터 저장
+  const [filter, setFilter] = useState('전체');
+  const [searchText, setSearchText] = useState('');
+  const [filteredData, setFilteredData] = useState<ExamData[]>([]);
+  const [previousFilteredData, setPreviousFilteredData] = useState<ExamData[]>(
+    []
+  );
+  const [displayData, setDisplayData] = useState<ExamData[]>([]);
+  const [searchFilter, setSearchFilter] = useState('강사명');
   const navigate = useNavigate();
+  const [mainClass, setMainClass] = useState('');
+  const [data, setData] = useState<ExamData[]>([]);
 
-  const data = [
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '김나나',
-      date: '24.11.15',
-    },
-    {
-      type: '월간',
-      class: '중3-A',
-      test: '월말테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-    {
-      type: '주간',
-      class: '중1-C',
-      test: '영어퀴즈테스트',
-      teacher: '박선호',
-      date: '24.11.15',
-    },
-  ];
+  const { classList } = useClassList();
+  const testSearchOptions: string[] = ['강사명', '시험명'];
 
-  // 필터 데이터
-  const filterData = ['전체', '월간', '주간', '데일리', '기타'];
-  const classOptions = ['전체 클래스', '중3-A', '중1-C'];
-  const teacherOptions = ['전체 강사', '김나나', '박선호'];
-
-  const filteredData = data.filter((item) => {
-    const matchesType = filter === '전체' || item.type === filter;
-    const matchesClass =
-      classFilter === '전체 클래스' || item.class === classFilter;
-    const matchesTeacher =
-      teacherFilter === '전체 강사' || item.teacher === teacherFilter;
-    const matchesSearch = searchText === '' || item.test.includes(searchText); // 검색 조건 추가
-    return matchesType && matchesClass && matchesTeacher && matchesSearch;
-  });
-
-  // `filteredData`가 비었을 때 이전 데이터를 유지
   useEffect(() => {
-    if (filteredData.length > 0) {
-      setPreviousFilteredData(filteredData); // 이전 필터링된 데이터 업데이트
-    }
-  }, [filteredData]);
+    const fetchData = async () => {
+      const res = await findExam();
+      if (res.status === 200) {
+        setData(res.data.data);
+      } else {
+        alert('성적 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+    fetchData();
+  }, []);
 
-  const displayData =
-    filteredData.length > 0 ? filteredData : previousFilteredData;
+  const handleOnChangeFilter = (newFilter: string) => {
+    setFilter(newFilter);
+
+    const _data = data.filter((item) => {
+      const matchesType =
+        newFilter === '전체' || item.standard === filterData[newFilter];
+      let matchesSearch;
+
+      if (searchFilter === '강사명') {
+        matchesSearch = searchText === '' || item.examName.includes(searchText);
+      } else {
+        matchesSearch = searchText === '' || item.examName.includes(searchText);
+      }
+
+      return matchesType && matchesSearch;
+    });
+
+    setFilteredData(_data);
+    setPreviousFilteredData(_data);
+    setDisplayData(_data);
+  };
+
+  const handleOnChangeSearchText = (text: string) => {
+    setSearchText(text);
+
+    const _data = data.filter((item) => {
+      const matchesType =
+        filter === '전체' || item.standard === filterData[filter];
+      let matchesSearch;
+
+      if (searchFilter === '강사명') {
+        matchesSearch = text === '' || item.examName.includes(text);
+      } else {
+        matchesSearch = text === '' || item.examName.includes(text);
+      }
+
+      return matchesType && matchesSearch;
+    });
+
+    setFilteredData(_data);
+    if (_data.length === 0) {
+      setDisplayData(previousFilteredData);
+    } else {
+      setPreviousFilteredData(_data);
+      setDisplayData(_data);
+    }
+  };
+
+  const handleOnClickSearch = () => {
+    const _data = data.filter((item) => {
+      const matchesType =
+        filter === '전체' || item.standard === filterData[filter];
+      let matchesSearch;
+
+      if (searchFilter === '강사명') {
+        matchesSearch = item.examName == searchText;
+      } else {
+        matchesSearch = item.examName == searchText;
+      }
+
+      return matchesType && matchesSearch;
+    });
+
+    setFilteredData(_data);
+    setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
+    setDisplayData(_data);
+  };
 
   return (
     <S.Container>
@@ -137,77 +218,91 @@ function AchievementList() {
           </PS.RegisterButton>
         </PS.RegisterWrapper>
 
+        <S.SearchWrapper>
+          <DropDown
+            options={Object.keys(classList) || []}
+            placeholder='메인 클래스'
+            onChange={(value) => {
+              setMainClass(value);
+            }}
+          />
+          <ClassDropDown
+            options={classList[mainClass]}
+            placeholder='서브 클래스'
+            onChange={() => {}}
+          />
+        </S.SearchWrapper>
+
         <S.FilterWrapper>
-          <S.SelectBox>
-            <select
-              value={classFilter}
-              onChange={(e) => setClassFilter(e.target.value)}
-            >
-              {classOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </S.SelectBox>
           <S.SearchWrapper>
             <S.SelectBox>
-              <select
-                value={teacherFilter}
-                onChange={(e) => setTeacherFilter(e.target.value)}
-              >
-                {teacherOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <DropDown
+                options={testSearchOptions}
+                value={searchFilter}
+                placeholder='검색 기준'
+                onChange={setSearchFilter}
+              />
             </S.SelectBox>
             <S.SearchBox>
               <S.Input
                 type='text'
-                placeholder='테스트명 검색'
+                placeholder='검색어 입력'
                 value={searchText}
-                onChange={(e) => setSearchText(e.target.value)} // 검색어 상태 업데이트
+                onChange={(e) => handleOnChangeSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleOnClickSearch();
+                  }
+                }}
               />
-              <S.Button>검색</S.Button>
+              <S.Button onClick={handleOnClickSearch}>검색</S.Button>
             </S.SearchBox>
           </S.SearchWrapper>
         </S.FilterWrapper>
       </S.Header>
 
       <S.FilterTabs>
-        {filterData.map((tab) => (
+        {Object.keys(filterData).map((tab) => (
           <S.FilterButton
             key={tab}
             isActive={filter === tab}
-            onClick={() => setFilter(tab)}
+            onClick={() => handleOnChangeFilter(tab)}
           >
             {tab}
           </S.FilterButton>
         ))}
       </S.FilterTabs>
-
-      <S.List>
-        {displayData.map((item, index) => (
-          <S.ListItem
-            key={index}
-            onClick={() =>
-              navigate(`/manage/achievement/management/detail/${index}`)
-            }
-          >
-            <S.TitleWrapper>
-              <PS.Tag $type={item.type}>{item.type}</PS.Tag>
-              <PS.Text>{item.class}</PS.Text>
-              <PS.Text>{item.test}</PS.Text>
-            </S.TitleWrapper>
-            <S.TeacherWrapper>
-              <PS.Text>{item.teacher}</PS.Text>
-              <PS.Text>{item.date}</PS.Text>
-            </S.TeacherWrapper>
-          </S.ListItem>
-        ))}
-      </S.List>
+      {displayData.length > 0 ? (
+        <S.List>
+          {displayData.map((item, index) => (
+            <S.ListItem
+              key={index}
+              onClick={() =>
+                navigate(`/manage/achievement/management/detail/${index}`)
+              }
+            >
+              <S.TitleWrapper>
+                <PS.Tag $type={item.standard}>
+                  {reverseFilterData[item.standard]}
+                </PS.Tag>
+                <PS.Text>
+                  {item.mainClassName}-{item.subClassName}
+                </PS.Text>
+                <PS.Text>{item.examName}</PS.Text>
+              </S.TitleWrapper>
+              <S.TeacherWrapper>
+                <PS.Text>{item.memberId}</PS.Text>
+                <PS.Text>{item.createdAt}</PS.Text>
+              </S.TeacherWrapper>
+            </S.ListItem>
+          ))}
+        </S.List>
+      ) : (
+        <S.EmptyListSection>
+          <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
+          <S.AchievementInfoText>검색된 결과가 없습니다.</S.AchievementInfoText>
+        </S.EmptyListSection>
+      )}
     </S.Container>
   );
 }

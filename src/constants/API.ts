@@ -51,3 +51,11 @@ export const API_EMAIL = Object.freeze({
   VERIFY: '/v1/mail/verify',
   SEND: '/v1/mail/send',
 });
+
+export const API_EXAM = Object.freeze({
+  REGISTER: '/v1/exam',
+  EXAM: (examId: number) => `/v1/exam/${examId}`,
+  EXAM_SCORE: (examId: number) => `/v1/exam/findexam/${examId}/score`,
+  EXAM_FIND: 'v1/exam/findexam',
+  EXAM_DETAIL: (examId: number) => `v1/exam/findexam/${examId}`,
+});

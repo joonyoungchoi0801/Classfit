@@ -4,6 +4,7 @@ import * as PS from '@/pages/schedule/Schedule.styles'
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
+import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal'; // test
 
 function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
@@ -16,6 +17,7 @@ function ScheduleRegister() {
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isAttendeeOpen, setIsAttendeeOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); //test
 
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
@@ -55,6 +57,9 @@ function ScheduleRegister() {
     setAttendees(attendees.filter(attendee => attendee !== name));
   };
 
+  const openModal = () => setIsModalOpen(true); //test
+  const closeModal = () => setIsModalOpen(false); //test
+
   return (
     <PS.Container>
       <S.Container>
@@ -90,6 +95,7 @@ function ScheduleRegister() {
               <S.SelectWrapper>
                 <S.Select onClick={() => setIsCategoryOpen(!isCategoryOpen)} hasValue={Boolean(categoryValue)} >
                   {categoryValue || '카테고리 선택'}
+                  <S.DropdownIcon src={dropdown} alt="dropdown icon" />
                 </S.Select>
                 {isCategoryOpen && (
                   <S.Options>
@@ -225,9 +231,11 @@ function ScheduleRegister() {
               isBorder={true}
               borderColor='#D7D7D7'
             />
-            <Button title='저장' />
+            <Button title='저장' onClick={openModal} />
           </S.ButtonWrapper>
         </PS.ButtonWrapper>
+
+        <ScheduleRegisterModal isOpen={isModalOpen} onClose={closeModal} />
       </S.Container>
     </PS.Container>
   );
