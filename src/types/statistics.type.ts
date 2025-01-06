@@ -37,3 +37,11 @@ export interface statisticsMemberResponse {
   error: { message: string };
   message: string;
 }
+
+export interface statisticsMemberDetail {
+  statusCode: number;
+  resultType: string;
+  data: string[];
+  error: { message: string };
+  message: string;
+}

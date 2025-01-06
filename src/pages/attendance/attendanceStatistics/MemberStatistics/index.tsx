@@ -6,7 +6,7 @@ import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import { statisticsMemberData } from '@/types/statistics.type';
 import { getStatisticsMember } from '@/api/statisticsAPI';
 import formatDateToISO from '@/utils/formatDate';
-
+import AttendanceModal from './AttendanceModal';
 
 const getLastSixMonths = (offset = 0) => {
   const currentDate = new Date();
@@ -49,7 +49,9 @@ function MemberStatistics() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [statisticsData, setStatisticsData] = useState<statisticsMemberData[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<string | boolean>(false);
-  console.log(statisticsData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [studentId, setStudentId] = useState<number | null>(null); // 학생 ID 상태 추가
+  const [status, setStatus] = useState<'PRESENT' | 'ABSENT' | 'LATE' | null>(null); // 출결 상태 상태 추가
 
   const handlePrevMonth = () => {
     if (monthOffset < 5) {
@@ -70,6 +72,17 @@ function MemberStatistics() {
   const handleSelectStudent = (student: statisticsMemberData) => {
     setSelectedStudent(student.name);
     setIsDropdownOpen(false);
+  };
+
+  const handleOpenModal = (student: statisticsMemberData, status: 'PRESENT' | 'ABSENT' | 'LATE') => {
+    setStatus(status); // 상태 설정
+    setStudentId(student.studentId);
+    setIsModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+    setStatus(null); // 상태 초기화
   };
 
   useEffect(() => {
@@ -139,9 +152,9 @@ function MemberStatistics() {
                 <S.Row key={item.name}>
                   <S.RowTitle>{item.name}</S.RowTitle>
                   <S.ValueContainer>
-                    <S.Value>{item.present}</S.Value>
-                    <S.Value>{item.absent}</S.Value>
-                    <S.Value>{item.late}</S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>{item.present}</S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>{item.absent}</S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'LATE')}>{item.late}</S.Value>
                   </S.ValueContainer>
                 </S.Row>
               ))
@@ -151,15 +164,22 @@ function MemberStatistics() {
               <S.Row key={item.name}>
                 <S.RowTitle>{item.name}</S.RowTitle>
                 <S.ValueContainer>
-                  <S.Value>{item.present}</S.Value>
-                  <S.Value>{item.absent}</S.Value>
-                  <S.Value>{item.late}</S.Value>
+                  <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>{item.present}</S.Value>
+                  <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>{item.absent}</S.Value>
+                  <S.Value onClick={() => handleOpenModal(item, 'LATE')}>{item.late}</S.Value>
                 </S.ValueContainer>
               </S.Row>
             ))
           )}
         </S.StatisticsContainer>
       </S.Table>
+
+      <AttendanceModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        studentId={studentId!}
+        status={status!}
+      />
     </S.Container>
   );
 }
