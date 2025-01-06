@@ -45,6 +45,7 @@ export const Table = styled.div`
   width: 100%;
   min-height: 38rem;
   margin-top: 3rem;
+  margin-bottom: 0;
 `;
 
 export const TableHeader = styled.div`

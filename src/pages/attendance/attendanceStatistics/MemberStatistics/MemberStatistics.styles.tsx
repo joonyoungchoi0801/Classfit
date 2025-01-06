@@ -128,8 +128,8 @@ export const StatisticsContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  height: 6rem;
+  max-height: 32rem;
+  overflow-y: auto;
   align-items: flex-start;
   gap: 1rem;
   margin-top: 3rem;
@@ -167,4 +167,8 @@ export const Value = styled.div`
   text-align: left;
   cursor: pointer;
   padding: 1rem;
+
+  &:hover {
+    color: var(--color-blue);
+  }
 `;
