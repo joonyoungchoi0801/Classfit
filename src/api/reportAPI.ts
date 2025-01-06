@@ -33,9 +33,9 @@ export const deleteReport = (reportId: number) => {
 };
 
 export const getFindReport = (
-  mainClassId: number,
-  subClassId: number,
-  memberName: string
+  mainClassId?: number,
+  subClassId?: number,
+  memberName?: string
 ) => {
   return instance({
     url: API_REPORT.FIND,

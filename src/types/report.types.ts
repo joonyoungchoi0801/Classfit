@@ -27,6 +27,19 @@ export interface ReportExamData {
   examName: string;
 }
 
+export interface ReportData {
+  studentReportId: number;
+  studentId: number;
+  studentName: string;
+  reportName: string;
+  memberName: string;
+  createAt: string;
+}
+
+export interface ReportDataWithChecked extends ReportData {
+  checked: boolean;
+}
+
 export interface ReportExamDataWithChecked extends ReportExamData {
   checked: boolean;
 }
