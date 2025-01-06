@@ -177,6 +177,7 @@ function MemberStatistics() {
       <AttendanceModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        month={currentMonth}
         studentId={studentId!}
         status={status!}
       />

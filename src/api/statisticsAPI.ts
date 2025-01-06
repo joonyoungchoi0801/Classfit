@@ -64,13 +64,14 @@ export const getStatisticsMember = async (
 // 출결 통계 구성원별 상세
 export const getStatisticsMemberDetail = async (
   studentId: number,
+  month: number,
   status: string
 ): Promise<AxiosResponse<statisticsMemberDetail>> => {
   try {
     return await instance({
       url: API_STATISTICS.MEMBER_DETAIL,
       method: 'GET',
-      params: { studentId, status },
+      params: { studentId, month, status },
     });
   } catch (error) {
     console.error('Failed to fetch statistics member detail:', error);

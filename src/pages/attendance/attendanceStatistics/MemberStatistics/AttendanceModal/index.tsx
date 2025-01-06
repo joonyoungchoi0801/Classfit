@@ -5,18 +5,19 @@ import { getStatisticsMemberDetail } from '@/api/statisticsAPI';
 interface AttendanceModalProps {
   isOpen: boolean;
   onClose: () => void;
+  month: number;
   studentId: number;
   status: 'PRESENT' | 'LATE' | 'ABSENT';
 }
 
-const AttendanceModal = ({ isOpen, onClose, studentId, status }: AttendanceModalProps) => {
+const AttendanceModal = ({ isOpen, onClose, month, studentId, status }: AttendanceModalProps) => {
   const [attendanceDates, setAttendanceDates] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
     const fetchAttendance = async () => {
       try {
-        const response = await getStatisticsMemberDetail(studentId, status);
+        const response = await getStatisticsMemberDetail(studentId, month, status);
         setAttendanceDates(response.data.data || []);
         console.log(response.data.data);
       } catch (error) {
