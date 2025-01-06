@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as S from './ScheduleRegister.styles';
-import * as PS from '@/pages/schedule/Schedule.styles'
+import * as PS from '@/pages/schedule/Schedule.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
@@ -18,7 +18,10 @@ function ScheduleRegister() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isAttendeeOpen, setIsAttendeeOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); //test
-
+  const [isAllDay, setIsAllDay] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const today = new Date().toISOString().split('T')[0];
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
     setIsCalendarOpen(false);
@@ -54,7 +57,7 @@ function ScheduleRegister() {
 
   // 참석자 삭제
   const handleRemoveAttendee = (name: string) => {
-    setAttendees(attendees.filter(attendee => attendee !== name));
+    setAttendees(attendees.filter((attendee) => attendee !== name));
   };
 
   const openModal = () => setIsModalOpen(true); //test
@@ -67,23 +70,28 @@ function ScheduleRegister() {
         <S.Form>
           <S.FormGroup>
             <S.Label>일정명</S.Label>
-            <S.Input type="text" placeholder="일정명 입력" />
+            <S.Input type='text' placeholder='일정명 입력' />
           </S.FormGroup>
 
           <S.Row>
             <S.FormGroup>
               <S.Label>캘린더</S.Label>
               <S.SelectWrapper>
-                <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} hasValue={Boolean(calendarValue)}>
+                <S.Select
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                  $hasValue={Boolean(calendarValue)}
+                >
                   {calendarValue || '캘린더 선택'}
-                  <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+                  <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 </S.Select>
                 {isCalendarOpen && (
                   <S.Options>
                     <S.Option onClick={() => handleCalendarChange('내 캘린더')}>
                       내 캘린더
                     </S.Option>
-                    <S.Option onClick={() => handleCalendarChange('공용 캘린더')}>
+                    <S.Option
+                      onClick={() => handleCalendarChange('공용 캘린더')}
+                    >
                       공용 캘린더
                     </S.Option>
                   </S.Options>
@@ -93,16 +101,21 @@ function ScheduleRegister() {
             <S.FormGroup>
               <S.Label>카테고리</S.Label>
               <S.SelectWrapper>
-                <S.Select onClick={() => setIsCategoryOpen(!isCategoryOpen)} hasValue={Boolean(categoryValue)} >
+                <S.Select
+                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                  $hasValue={Boolean(categoryValue)}
+                >
                   {categoryValue || '카테고리 선택'}
-                  <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+                  <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 </S.Select>
                 {isCategoryOpen && (
                   <S.Options>
                     <S.Option onClick={() => handleCategoryChange('카테고리1')}>
                       카테고리 1
                     </S.Option>
-                    <S.Option onClick={() => handleCategoryChange('카테고리 2')}>
+                    <S.Option
+                      onClick={() => handleCategoryChange('카테고리 2')}
+                    >
                       카테고리 2
                     </S.Option>
                   </S.Options>
@@ -115,14 +128,27 @@ function ScheduleRegister() {
             <S.Label>일시</S.Label>
             <S.DateWrapper>
               <S.DateInputWrapper>
-                <S.Input type="date" placeholder="날짜 선택" />
+                <S.Input
+                  type='date'
+                  placeholder='날짜 선택'
+                  value={isAllDay ? today : startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
               </S.DateInputWrapper>
               <span>—</span>
               <S.DateInputWrapper>
-                <S.Input type="date" placeholder="날짜 선택" />
+                <S.Input
+                  type='date'
+                  placeholder='날짜 선택'
+                  value={isAllDay ? today : endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
               </S.DateInputWrapper>
               <S.CheckboxGroup>
-                <S.Checkbox type="checkbox" />
+                <S.Checkbox
+                  type='checkbox'
+                  onChange={() => setIsAllDay(!isAllDay)}
+                />
                 <span>종일</span>
               </S.CheckboxGroup>
             </S.DateWrapper>
@@ -132,10 +158,13 @@ function ScheduleRegister() {
             <S.FormGroup>
               <S.Label>반복</S.Label>
               <S.SelectWrapper>
-                <S.Select onClick={() => setIsRepeatOpen(!isRepeatOpen)} hasValue={!!repeatValue}>
+                <S.Select
+                  onClick={() => setIsRepeatOpen(!isRepeatOpen)}
+                  $hasValue={!!repeatValue}
+                >
                   {repeatValue || '반복 선택'}
                 </S.Select>
-                <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+                <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 {isRepeatOpen && (
                   <S.Options>
                     <S.Option onClick={() => handleRepeatChange('반복 안함')}>
@@ -151,10 +180,13 @@ function ScheduleRegister() {
             <S.FormGroup>
               <S.Label>알림</S.Label>
               <S.SelectWrapper>
-                <S.Select onClick={() => setIsAlertOpen(!isAlertOpen)} hasValue={!!alertValue}>
+                <S.Select
+                  onClick={() => setIsAlertOpen(!isAlertOpen)}
+                  $hasValue={!!alertValue}
+                >
                   {alertValue || '알림 추가'}
                 </S.Select>
-                <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+                <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 {isAlertOpen && (
                   <S.Options>
                     <S.Option onClick={() => handleAlertChange('정시')}>
@@ -184,19 +216,36 @@ function ScheduleRegister() {
           <S.ColumnRow>
             <S.Label>참석자</S.Label>
             <S.SelectWrapper>
-              <S.Select onClick={() => setIsAttendeeOpen(!isAttendeeOpen)} hasValue={attendees.length > 0}>
+              <S.Select
+                onClick={() => setIsAttendeeOpen(!isAttendeeOpen)}
+                $hasValue={attendees.length > 0}
+              >
                 {attendees.length === 0 ? '참석자 선택' : '참석자 추가'}
               </S.Select>
-              <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+              <S.DropdownIcon src={dropdown} alt='dropdown icon' />
               {isAttendeeOpen && (
                 <S.Options>
-                  <S.Option onClick={() => handleAddAttendee('김예은')}>김예은</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('방예원')}>방예원</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('백재혁')}>백재혁</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('심유정')}>심유정</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('손화영')}>손화영</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('임소현')}>임소현</S.Option>
-                  <S.Option onClick={() => handleAddAttendee('최준영')}>최준영</S.Option>
+                  <S.Option onClick={() => handleAddAttendee('김예은')}>
+                    김예은
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('방예원')}>
+                    방예원
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('백재혁')}>
+                    백재혁
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('심유정')}>
+                    심유정
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('손화영')}>
+                    손화영
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('임소현')}>
+                    임소현
+                  </S.Option>
+                  <S.Option onClick={() => handleAddAttendee('최준영')}>
+                    최준영
+                  </S.Option>
                 </S.Options>
               )}
             </S.SelectWrapper>
@@ -205,20 +254,23 @@ function ScheduleRegister() {
             {attendees.map((attendee, index) => (
               <S.AttendeeButton key={index}>
                 {attendee}
-                <S.RemoveButton src={close} alt='close btn' onClick={() => handleRemoveAttendee(attendee)} />
+                <S.RemoveButton
+                  src={close}
+                  alt='close btn'
+                  onClick={() => handleRemoveAttendee(attendee)}
+                />
               </S.AttendeeButton>
             ))}
           </S.AttendeeButtonContainer>
 
-
           <S.FormGroup>
             <S.Label>장소</S.Label>
-            <S.Input type="text" placeholder="장소를 입력해주세요." />
+            <S.Input type='text' placeholder='장소를 입력해주세요.' />
           </S.FormGroup>
 
           <S.FormGroup>
             <S.Label>메모</S.Label>
-            <S.MemoInput placeholder="필요한 메모를 남겨주세요." />
+            <S.MemoInput placeholder='필요한 메모를 남겨주세요.' />
           </S.FormGroup>
         </S.Form>
 

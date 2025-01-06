@@ -41,7 +41,7 @@ export const Label = styled.label`
 export const Input = styled.input`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
@@ -49,7 +49,7 @@ export const Input = styled.input`
   width: 100%;
 
   &::placeholder {
-    color: #CACACA;
+    color: #cacaca;
     font-size: 1.8rem;
     font-style: normal;
     font-weight: 600;
@@ -72,13 +72,13 @@ export const SelectWrapper = styled.div`
   width: 100%;
 `;
 
-export const Select = styled.div<{ hasValue: boolean }>`
+export const Select = styled.div<{ $hasValue: boolean }>`
   width: 100%;
   padding: 1rem 2rem;
   font-size: 1.8rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
-  color: ${({ hasValue }) => (hasValue ? '#000' : '#CACACA')};
+  border: 1px solid #dedede;
+  color: ${({ $hasValue }) => ($hasValue ? '#000' : '#CACACA')};
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem;
@@ -102,7 +102,7 @@ export const Options = styled.div`
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 1rem;
   background-color: white;
   z-index: 1;
@@ -118,7 +118,7 @@ export const Option = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #DFEBFF;
+    background-color: #dfebff;
   }
 `;
 
@@ -184,7 +184,7 @@ export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
 export const MemoInput = styled.textarea`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
@@ -194,7 +194,7 @@ export const MemoInput = styled.textarea`
   resize: none;
 
   &::placeholder {
-    color: #CACACA;
+    color: #cacaca;
     font-size: 1.8rem;
     font-style: normal;
     font-weight: 600;

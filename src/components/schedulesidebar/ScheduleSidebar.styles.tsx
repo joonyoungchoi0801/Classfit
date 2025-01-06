@@ -23,7 +23,7 @@ export const ScheduleSidebarWrapper = styled.div`
     background-color: #fafafa;
   }
 `;
-export const ScheduleAddBtn = styled.button<{ isClicked: boolean }>`
+export const ScheduleAddBtn = styled.button<{ $isClicked: boolean }>`
   display: flex;
   width: 20rem;
   height: 5rem;
@@ -31,12 +31,14 @@ export const ScheduleAddBtn = styled.button<{ isClicked: boolean }>`
   margin-left: 2.1rem;
   justify-content: center;
   align-items: center;
-  color: ${({ isClicked }) => (isClicked ? 'var(--color-white)' : 'var(--color-black)')};
+  color: ${({ $isClicked }) =>
+    $isClicked ? 'var(--color-white)' : 'var(--color-black)'};
   font-size: 2rem;
   font-style: normal;
   font-weight: 500;
   line-height: 1.792rem;
-  background: ${({ isClicked }) => (isClicked ? 'var(--color-blue)' : 'var(--color-white)')};
+  background: ${({ $isClicked }) =>
+    $isClicked ? 'var(--color-blue)' : 'var(--color-white)'};
   border-radius: 1rem;
   cursor: pointer;
 `;
@@ -52,7 +54,7 @@ export const CalendarItem = styled.div`
   align-items: center;
   padding: 1rem 1.8rem;
   &:not(:last-child) {
-    border-bottom: 0.1rem solid #DEDEDE;
+    border-bottom: 0.1rem solid #dedede;
   }
   height: 5rem;
 `;
@@ -74,7 +76,7 @@ export const CalendarAddBtn = styled.button`
   background-color: transparent;
   border: none;
   font-size: 18px;
-  color: #5F6368;
+  color: #5f6368;
   cursor: pointer;
   padding: 0;
   margin-left: auto;

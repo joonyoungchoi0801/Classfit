@@ -16,7 +16,7 @@ function ScheduleSidebar() {
   return (
     <S.ScheduleSidebarWrapper>
       <S.ScheduleAddBtn
-        isClicked={url === '/schedule/register'}
+        $isClicked={url === '/schedule/register'}
         onClick={handleButtonClick}
       >
         일정등록

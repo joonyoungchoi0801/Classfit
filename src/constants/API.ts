@@ -59,3 +59,17 @@ export const API_EXAM = Object.freeze({
   EXAM_FIND: 'v1/exam/findexam',
   EXAM_DETAIL: (examId: number) => `v1/exam/findexam/${examId}`,
 });
+
+export const API_CALENDAR = Object.freeze({
+  MODAL: '/v1/calendar/modal',
+  EVENT: '/v1/calendar/event',
+  EVENT_DETAIL: (eventId: number) => `/v1/calendar/modal/${eventId}`,
+  MONTH: '/v1/calendar/monthly',
+  MEMBER: '/v1/calendar/academy-members',
+});
+
+export const API_CATEGORY = Object.freeze({
+  CATEGORY: '/v1/calendar/category',
+  CATEGORY_ID: (categoryId: number) => `/v1/calendar/${categoryId}`,
+  CATEGORY_LIST: '/v1/calendar/category-list',
+});
