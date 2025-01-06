@@ -157,9 +157,11 @@ function ReportRegister() {
       setIsModalVisible(true);
       return;
     }
+    setValue('examIdList', examIdList);
+    const updatedData = getValues();
 
     try {
-      const res = await postReportRegister(data);
+      const res = await postReportRegister(updatedData);
       if (res.status === 200) {
         const filteredStudentOpinion = reportStudentOpinion
           .filter((item) => item.checked)
