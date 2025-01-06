@@ -53,3 +53,30 @@ export interface ReportStudentOpinionDataWithChecked
   extends ReportStudentOpinionData {
   checked: boolean;
 }
+
+export interface AttendanceInfoData {
+  attendanceStatus: string;
+  attendanceCount: number;
+}
+
+export interface ExamHistoryData {
+  examId: number;
+  examName: string;
+  standard: string;
+  average: number;
+  score: number;
+}
+export interface ReportDetailData {
+  studentId: number;
+  studentName: string;
+  mainClassName: string;
+  subClassName: string;
+  reportName: string;
+  startDate: string;
+  endDate: string;
+  attendanceInfoList: AttendanceInfoData[];
+  totalAttendanceCount: number;
+  examHistoryList: ExamHistoryData[];
+  overallOpinion: string;
+  studentOpinion: string;
+}

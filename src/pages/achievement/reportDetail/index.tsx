@@ -1,9 +1,17 @@
 import { ApexOptions } from 'apexcharts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './ReportDetail.styles';
 import * as PS from '@/pages/achievement/Achievement.styles';
 import ReactApexChart from 'react-apexcharts';
 import { useParams } from 'react-router-dom';
+import { getReportDetail } from '@/api/reportAPI';
+import {
+  AttendanceInfoData,
+  ExamHistoryData,
+  ReportDetailData,
+} from '@/types/report.types';
+import { report } from 'process';
+import ImageIcon from '@/components/imageIcon';
 
 type ChartState = {
   series: {
@@ -20,12 +28,11 @@ type DonutChartState = {
 
 function ReportDetail() {
   const { id } = useParams();
-  console.log(id);
 
   const [state, setState] = useState<ChartState>({
     series: [
       {
-        name: '손화영',
+        name: '김나나',
         data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
       },
       {
@@ -127,7 +134,7 @@ function ReportDetail() {
           },
         },
       },
-      labels: ['출석', '결석'],
+      labels: ['출석', '지각', '결석'],
       chart: {
         type: 'donut',
       },
@@ -148,18 +155,107 @@ function ReportDetail() {
     },
   });
 
+  const [reportDetailData, setReportDetailData] = useState<ReportDetailData>();
+  const [attendanceInfoList, setAttendanceInfoList] = useState<
+    Record<string, number>
+  >({});
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  const updateDonutChart = (data: AttendanceInfoData[]) => {
+    data.forEach((item) => {
+      setAttendanceInfoList((prevState) => ({
+        ...prevState,
+        [item.attendanceStatus]: item.attendanceCount,
+      }));
+    });
+    const presentCount = data
+      .filter((item) => item.attendanceStatus === 'PRESENT')
+      .reduce((sum, item) => sum + item.attendanceCount, 0);
+
+    const absentCount = data
+      .filter((item) => item.attendanceStatus === 'LATE')
+      .reduce((sum, item) => sum + item.attendanceCount, 0);
+
+    setDonutState((prevState) => ({
+      ...prevState,
+      series: [presentCount, absentCount],
+    }));
+  };
+
+  const updateLineChart = (
+    studentName: string,
+    examHistoryData: ExamHistoryData[]
+  ) => {
+    const scoreData = examHistoryData.map((item) => item.score);
+    const averageData = examHistoryData.map((item) => item.average);
+
+    const categories = examHistoryData.map((item) => item.examName);
+
+    setState((prevState) => ({
+      ...prevState,
+      series: [
+        {
+          name: studentName || '',
+          data: scoreData,
+        },
+        {
+          name: '평균',
+          data: averageData,
+        },
+      ],
+      options: {
+        ...prevState.options,
+        xaxis: {
+          ...prevState.options.xaxis,
+          categories: categories,
+        },
+      },
+    }));
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        try {
+          const res = await getReportDetail(Number(id));
+          if (res.status == 200) {
+            setReportDetailData(res.data.data);
+            updateDonutChart(res.data.data.attendanceInfoList);
+            updateLineChart(
+              res.data.data.studentName,
+              res.data.data.examHistoryList
+            );
+          } else {
+            alert('정보를 불러오는 데 실패하였습니다.');
+          }
+        } catch (error) {
+          console.error(error);
+          alert('정보를 불러오는 데 실패하였습니다.');
+        }
+      } else {
+        alert('정보를 불러오는 데 실패하였습니다.');
+      }
+      setIsInitialized(true);
+    };
+    fetchData();
+  }, []);
+
   return (
     <S.Container>
       <S.Header>
         <PS.RowWrapper>
-          <PS.Name $size='1.8rem'>손화영</PS.Name>
+          <PS.Name $size='1.8rem'>{reportDetailData?.studentName}</PS.Name>
           <S.PaddingWrapper>
             <PS.Name $size='1.8rem'>|</PS.Name>
           </S.PaddingWrapper>
-          <PS.Name $size='1.8rem'>중3-A</PS.Name>
+          <PS.Name $size='1.8rem'>
+            {reportDetailData?.mainClassName}-{reportDetailData?.subClassName}
+          </PS.Name>
         </PS.RowWrapper>
-        <S.BoldText>11월 수학리포트</S.BoldText>
-        <PS.Name>평가기간 24.11.01 ~ 24.11.30</PS.Name>
+        <S.BoldText>{reportDetailData?.reportName}</S.BoldText>
+        <PS.Name>
+          평가기간 {reportDetailData?.startDate} ~ {reportDetailData?.endDate}
+        </PS.Name>
       </S.Header>
       <S.DonutSection>
         <S.LabelWrapper>
@@ -173,12 +269,36 @@ function ReportDetail() {
             width: '300px',
           }}
         >
-          <ReactApexChart
-            options={donutState.options}
-            series={donutState.series}
-            type='donut'
-          />
+          {isInitialized && (
+            <ReactApexChart
+              options={donutState.options}
+              series={donutState.series}
+              type='donut'
+            />
+          )}
         </div>
+        <S.DonutLabelWrapper>
+          <S._DonutLabelWrapper>
+            <S.DonutLabel>
+              <ImageIcon name='CircleBlue' size='2rem' />
+              출석 <S.Gap />
+              {attendanceInfoList['PRESENT'] || 0}
+            </S.DonutLabel>
+
+            <S.DonutLabel>
+              <ImageIcon name='CircleGray' size='2rem' />
+              결석
+              <S.Gap />
+              {attendanceInfoList['ABSENT'] || 0}
+            </S.DonutLabel>
+            <S.DonutLabel>
+              <ImageIcon name='CircleLightBlue' size='2rem' />
+              지각
+              <S.Gap />
+              {attendanceInfoList['LATE'] || 0}
+            </S.DonutLabel>
+          </S._DonutLabelWrapper>
+        </S.DonutLabelWrapper>
       </S.DonutSection>
       <S.BarSection>
         <S.LabelWrapper>
@@ -186,12 +306,14 @@ function ReportDetail() {
             성적
           </S.Label>
         </S.LabelWrapper>
-        <ReactApexChart
-          options={state.options}
-          series={state.series}
-          type='bar'
-          height={350}
-        />
+        {isInitialized && (
+          <ReactApexChart
+            options={state.options}
+            series={state.series}
+            type='bar'
+            height={350}
+          />
+        )}
       </S.BarSection>
       <S.LabelWrapper>
         <S.Label>종합의견</S.Label>
@@ -202,10 +324,10 @@ function ReportDetail() {
       <S.TextArea
         $height='20rem'
         id='textarea'
-        // value={text}
-        // onChange={handleChange}
+        value={reportDetailData?.overallOpinion}
+        readOnly
         rows={5}
-        placeholder='내용을 입력해주세요'
+        placeholder='작성된 의견이 없습니다'
       />
       <S.LabelWrapper>
         <S.Label>개별의견</S.Label>
@@ -214,10 +336,10 @@ function ReportDetail() {
       <S.TextArea
         $height='20rem'
         id='textarea'
-        // value={text}
-        // onChange={handleChange}
+        value={reportDetailData?.studentOpinion}
         rows={5}
-        placeholder='내용을 입력해주세요'
+        placeholder='작성된 의견이 없습니다'
+        readOnly
       />
     </S.Container>
   );
