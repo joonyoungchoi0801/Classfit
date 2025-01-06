@@ -7,6 +7,7 @@ import useClassList from '@/hooks/useClassList';
 import { useState, useEffect } from 'react';
 import { statisticsDateData, statisticsDateDetail } from '@/types/statistics.type';
 import formatDateToISO from '@/utils/formatDate';
+import AttendanceModal from './AttendanceModal';
 
 const getLastSixMonths = (offset = 0) => {
   const currentDate = new Date();
@@ -46,46 +47,6 @@ const getDatesInMonth = (year: number, month: number) => {
   }
 
   return daysInMonth;
-};
-
-// 모달 컴포넌트
-const AttendanceModal = ({
-  isOpen,
-  onClose,
-  studentNames,
-  type,
-  date,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  studentNames: string[];
-  type: 'PRESENT' | 'LATE' | 'ABSENT';
-  date: string;
-}) => {
-  if (!isOpen) return null;
-
-  return (
-    <S.ModalOverlay onClick={onClose}>
-      <S.ModalContent onClick={(e) => e.stopPropagation()}>
-        <S.ModalHeader>
-          <S.ModalTitle>
-            {type === 'PRESENT' ? '출석' : type === 'LATE' ? '지각' : '결석'}명단
-            <S.DateText>{date}</S.DateText>
-          </S.ModalTitle>
-        </S.ModalHeader>
-        <S.Divider />
-        <S.StudentList>
-          {studentNames.length === 0 ? (
-            <S.NoStudents>학생명단이 없습니다.</S.NoStudents>
-          ) : (
-            studentNames.map((name, index) => <S.StudentItem key={index}>{name}</S.StudentItem>)
-          )}
-        </S.StudentList>
-
-        <S.CloseButton onClick={onClose}>확인</S.CloseButton>
-      </S.ModalContent>
-    </S.ModalOverlay>
-  );
 };
 
 function DateStatistics() {
