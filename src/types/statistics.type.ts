@@ -20,3 +20,20 @@ export interface statisticsDateDetail {
   data: string[];
   message: string;
 }
+
+export interface statisticsMemberData {
+  studentId: number;
+  name: string;
+  present: number;
+  absent: number;
+  late: number;
+  extra: number;
+}
+
+export interface statisticsMemberResponse {
+  statusCode: number;
+  resultType: string;
+  data: statisticsMemberData[];
+  error: { message: string };
+  message: string;
+}

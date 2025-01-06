@@ -4,6 +4,7 @@ import { API_STATISTICS } from '@/constants/API';
 import type {
   statisticsDateResponse,
   statisticsDateDetail,
+  statisticsMemberResponse,
 } from '@/types/statistics.type';
 
 //출결 통계 날짜별
@@ -43,5 +44,20 @@ export const getStatisticsDateDetail = async (
 };
 
 // 출결 통계 구성원별
+export const getStatisticsMember = async (
+  startDate: string,
+  endDate: string
+): Promise<AxiosResponse<statisticsMemberResponse>> => {
+  try {
+    return await instance({
+      url: API_STATISTICS.MEMBER,
+      method: 'GET',
+      params: { startDate, endDate },
+    });
+  } catch (error) {
+    console.error('Failed to fetch statistics member:', error);
+    throw error;
+  }
+};
 
 // 출결 통계 구성원별 상세

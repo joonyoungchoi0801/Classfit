@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  background-color: #fafafa;
-  border: 1px solid #ddd;
+  background-color: var(--color-white);
+  border: 0.1rem solid var(--color-dddgray);
   width: 100%;
   padding: 2rem 5rem;
   display: flex;
@@ -56,7 +56,7 @@ export const TableHeader = styled.div`
 
 export const DropdownClass = styled.div`
   display: flex;
-  background: #EDEDED;
+  background: var(--color-gray);
   width: 24.5rem;
   height: 3rem;
   align-items: center;
@@ -72,7 +72,7 @@ export const Placeholder = styled.span`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  color: #CACACA;
+  color: var(--color-lightgray);
 `;
 
 export const DropdownButton = styled.img`
@@ -84,9 +84,9 @@ export const DropdownList = styled.ul`
   position: absolute;
   top: 100%;
   left: 0;
-  width: 20.1rem;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  width: 18.5rem;
+  background-color: var(--color-white);
+  border: 0.1rem solid var(--color-lightgray);
   border-radius: 0rem 0rem 1rem 1rem;
   list-style: none;
   padding: 0;
@@ -105,7 +105,7 @@ export const DropdownItem = styled.li`
 
   cursor: pointer;
   &:hover {
-    background-color: #DFEBFF;
+    background-color: var(--color-skyblue);
   }
 `;
 
@@ -126,13 +126,22 @@ export const ColumnTitle = styled.div`
 
 export const StatisticsContainer = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   height: 6rem;
-  border-bottom: 0.15rem solid #CACACA;
-  align-items: center ;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 3rem;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
   justify-content: space-between;
-  gap: 5.5rem;
+  border-bottom: 0.15rem solid var(--color-lightgray);
+  padding-bottom: 1.4rem;
 `;
 
 export const RowTitle = styled.div`
@@ -147,6 +156,7 @@ export const ValueContainer = styled.div`
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  margin-left: 5.3rem;
 `;
 
 export const Value = styled.div`
