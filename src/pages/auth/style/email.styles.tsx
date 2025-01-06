@@ -69,7 +69,7 @@ export const Input = styled.input`
   justify-content: center;
   align-items: flex-start;
   border-radius: 1rem;
-  border: 1px solid #dedede;
+  border: 0.1rem solid #dedede;
   background: var(--color-white);
   outline: none;
   font-size: 1.6rem;
