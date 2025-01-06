@@ -143,7 +143,7 @@ function DateStatistics() {
     };
 
     fetchStatisticsDates();
-  }, [selectedClass, currentMonth, datesInMonth]);
+  }, [selectedClass, currentMonth, datesInMonth, monthOffset]);
 
   useEffect(() => {
     const currentMonthData = new Date();
@@ -226,7 +226,7 @@ function DateStatistics() {
             <S.Blank />
             {weekDates.map((date) => {
               const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
-              const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+              const isoDate = formatDateToISO(date);
 
               const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
 

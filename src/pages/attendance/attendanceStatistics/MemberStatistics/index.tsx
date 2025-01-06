@@ -27,8 +27,9 @@ const getLastSixMonths = (offset = 0) => {
   return { months: months.reverse(), currentMonth };
 };
 
-const getCurrentMonthDates = () => {
+const getCurrentMonthDates = (offset = 0) => {
   const currentDate = new Date();
+  currentDate.setMonth(currentDate.getMonth() - offset);
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
@@ -86,7 +87,7 @@ function MemberStatistics() {
   };
 
   useEffect(() => {
-    const { startDate, endDate } = getCurrentMonthDates();
+    const { startDate, endDate } = getCurrentMonthDates(monthOffset);
 
     const fetchStatisticsMember = async () => {
       try {
@@ -97,7 +98,7 @@ function MemberStatistics() {
       }
     };
     fetchStatisticsMember();
-  }, [selectedStudent, currentMonth]);
+  }, [selectedStudent, currentMonth, monthOffset]);
 
   return (
     <S.Container>
