@@ -95,3 +95,34 @@ export const TextArea = styled.textarea<{
     box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
   }
 `;
+
+export const DonutLabelWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7rem;
+  border-radius: 2rem;
+  background-color: #fafafa;
+`;
+
+export const _DonutLabelWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5.5rem;
+`;
+
+export const DonutLabel = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const Gap = styled.div`
+  width: 0.5rem;
+`;

@@ -12,6 +12,9 @@ import Signup from './pages/auth/signup';
 import Email from './pages/auth/email';
 import Account from './pages/auth/account';
 import Class from './pages/auth/class';
+import Password from './pages/auth/password';
+import NewPassword from './pages/auth/newpassword';
+import Certification from './pages/auth/certification';
 export default function Router() {
   return (
     <BrowserRouter>
@@ -23,6 +26,9 @@ export default function Router() {
         <Route path='/email' element={<Email />} />
         <Route path='/class' element={<Class />} />
         <Route path='/account' element={<Account />} />
+        <Route path='/password' element={<Password />} />
+        <Route path='/certificate' element={<Certification />} />
+        <Route path='/new-password' element={<NewPassword />} />
         <Route path='/manage/*' element={<Attendance />} />
         <Route path='/manage/attendance/*' element={<Attendance />} />
         <Route path='/manage/attendance/all/*' element={<Attendance />} />
