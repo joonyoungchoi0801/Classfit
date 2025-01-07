@@ -44,23 +44,38 @@ export const ScheduleAddBtn = styled.button<{ isClicked: boolean }>`
 export const CalendarSection = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin-top: 1.8rem;
 `;
 
 export const CalendarItem = styled.div`
   display: flex;
+  width: 100%;
+  height: 5rem;
+  padding: 1rem 1.7rem;
   align-items: center;
-  padding: 1rem 1.8rem;
+  justify-content: space-between;
+  cursor: pointer;
+
   &:not(:last-child) {
     border-bottom: 0.1rem solid #DEDEDE;
   }
-  height: 5rem;
 `;
 
-export const CalendarItemIcon = styled.img`
+export const MyCalendar = styled.div`
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  color: var(--color-black);
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`
+
+export const Icon = styled.img`
   width: 2rem;
   height: 2rem;
-  flex-shrink: 0;
 `;
 
 export const CalendarItemText = styled.span`
@@ -70,18 +85,86 @@ export const CalendarItemText = styled.span`
   line-height: normal;
 `;
 
-export const CalendarAddBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  font-size: 18px;
-  color: #5F6368;
-  cursor: pointer;
-  padding: 0;
-  margin-left: auto;
-`;
-
 export const CalendarAddIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
+`;
+
+export const CategoryList = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+`;
+
+export const Category = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+`;
+
+export const CategoryItem = styled.div`
+  color: var(--color-black);
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+export const CategoryIcon = styled.img<{ color: string }>`
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  background-color: ${({ color }) => color};
+`;
+
+export const KebobIcon = styled.img`
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+`;
+
+export const SharedCalendar = styled.div`
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  color: var(--color-black);
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
+
+export const SharedList = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+`;
+
+export const SharedItem = styled.div`
+  color: var(--color-black);
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+export const Shared = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 `;
