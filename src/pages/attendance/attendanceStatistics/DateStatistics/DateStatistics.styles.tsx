@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   background-color: #fafafa;
-  border: 1px solid #ddd;
+  border: 0.1rem solid var(--color-dddgray);
   width: 100%;
   padding: 2rem 5rem;
   display: flex;
@@ -45,6 +45,7 @@ export const Table = styled.div`
   width: 100%;
   min-height: 38rem;
   margin-top: 3rem;
+  margin-bottom: 0;
 `;
 
 export const TableHeader = styled.div`
@@ -56,7 +57,7 @@ export const TableHeader = styled.div`
 
 export const DropdownClass = styled.div`
   display: flex;
-  background: #EDEDED;
+  background: var(--color-gray);
   width: 24.5rem;
   height: 3rem;
   align-items: center;
@@ -72,7 +73,7 @@ export const Placeholder = styled.span`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  color: #CACACA;
+  color: var(--color-lightgray);
 `;
 
 export const DropdownButton = styled.img`
@@ -85,8 +86,8 @@ export const DropdownList = styled.ul`
   top: 100%;
   left: 0;
   width: 20.1rem;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: var( --color-white);
+  border: 0.1rem solid var(--color-lightgray);
   border-radius: 0rem 0rem 1rem 1rem;
   list-style: none;
   padding: 0;
@@ -105,8 +106,12 @@ export const DropdownItem = styled.li`
 
   cursor: pointer;
   &:hover {
-    background-color: #DFEBFF;
+    background-color: var(--color-skyblue);
   }
+`;
+
+export const SubClass = styled.span`
+  margin-left: 1rem;
 `;
 
 export const PaginationContainer = styled.div`
@@ -122,7 +127,6 @@ export const DatePaginationItem = styled.div`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  width: 12rem;
 `;
 
 export const StatisticsContainer = styled.div`
@@ -130,7 +134,7 @@ export const StatisticsContainer = styled.div`
   width: 100%;
   height: 100%;
   height: 8rem;
-  border-bottom: 0.15rem solid #CACACA;
+  border-bottom: 0.15rem solid var(--color-lightgray);
   align-items: center ;
   justify-content: space-between;
   gap: 5rem;
@@ -146,15 +150,25 @@ export const RowTitle = styled.div`
 export const ValueContainer = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 0 5rem;
+  margin-left: 2.4rem;
+  margin-right: 2.4rem;
+`;
+
+export const Blank = styled.div`
+  width: 0.5rem;  
 `;
 
 export const Value = styled.div`
   font-size: 1.8rem;
   font-style: normal;
-  font-weight: 500;
-  width: 8rem;
+  font-weight: 600;
+  width: 5.3rem;
   text-align: center;
   cursor: pointer;
+
+  &:hover {
+    color: var(--color-blue);
+  }
 `;

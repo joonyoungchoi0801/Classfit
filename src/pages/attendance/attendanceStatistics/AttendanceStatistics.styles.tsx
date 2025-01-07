@@ -36,6 +36,6 @@ export const TabButton = styled.button<{ isActive: boolean }>`
 export const Content = styled.div`
   display: flex;
   width: 100%;
-  min-height: 100rem;
-  padding: 0rem 5rem 4.5rem;
+  /* max-height: 60rem; */
+  padding: 0rem 5rem;
 `;

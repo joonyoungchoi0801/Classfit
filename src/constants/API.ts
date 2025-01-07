@@ -68,3 +68,10 @@ export const API_REPORT = Object.freeze({
   EXAM_FIND: '/v1/report/exam-list',
   STUDENT_FIND: '/v1/report/class-student',
 });
+
+export const API_STATISTICS = Object.freeze({
+  DATE: '/v1/home/statistics/date',
+  MEMBER: '/v1/home/statistics/member',
+  DATE_DETAIL: '/v1/home/statistics/date/details',
+  MEMBER_DETAIL: '/v1/home/statistics/member/details',
+});
