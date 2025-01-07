@@ -10,21 +10,8 @@ import {
   ExamHistoryData,
   ReportDetailData,
 } from '@/types/report.types';
-import { report } from 'process';
 import ImageIcon from '@/components/imageIcon';
-
-type ChartState = {
-  series: {
-    name: string;
-    data: number[];
-  }[];
-  options: ApexOptions;
-};
-
-type DonutChartState = {
-  series: number[];
-  options: ApexOptions;
-};
+import type { ChartState, DonutChartState } from './report.types';
 
 function ReportDetail() {
   const { id } = useParams();
