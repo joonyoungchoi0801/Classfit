@@ -9,12 +9,12 @@ import type {
 } from '@/types/statistics.type';
 
 //출결 통계 날짜별
-export const getStatisticsDates = async (
+export const getStatisticsDates = (
   startDate: string,
   endDate: string,
   subClassId: number
 ): Promise<AxiosResponse<statisticsDateResponse>> => {
-  return await instance({
+  return instance({
     url: API_STATISTICS.DATE,
     method: 'GET',
     params: { startDate, endDate, subClassId },
@@ -22,12 +22,12 @@ export const getStatisticsDates = async (
 };
 
 // 출결 통계 날짜별 상세
-export const getStatisticsDateDetail = async (
+export const getStatisticsDateDetail = (
   date: string,
   subClassId: number,
   status: string
 ): Promise<AxiosResponse<statisticsDateDetail>> => {
-  return await instance({
+  return instance({
     url: API_STATISTICS.DATE_DETAIL,
     method: 'GET',
     params: { date, subClassId, status },
@@ -35,11 +35,11 @@ export const getStatisticsDateDetail = async (
 };
 
 // 출결 통계 구성원별
-export const getStatisticsMember = async (
+export const getStatisticsMember = (
   startDate: string,
   endDate: string
 ): Promise<AxiosResponse<statisticsMemberResponse>> => {
-  return await instance({
+  return instance({
     url: API_STATISTICS.MEMBER,
     method: 'GET',
     params: { startDate, endDate },
@@ -47,12 +47,12 @@ export const getStatisticsMember = async (
 };
 
 // 출결 통계 구성원별 상세
-export const getStatisticsMemberDetail = async (
+export const getStatisticsMemberDetail = (
   studentId: number,
   month: number,
   status: string
 ): Promise<AxiosResponse<statisticsMemberDetail>> => {
-  return await instance({
+  return instance({
     url: API_STATISTICS.MEMBER_DETAIL,
     method: 'GET',
     params: { studentId, month, status },
