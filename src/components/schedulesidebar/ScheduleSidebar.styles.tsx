@@ -23,7 +23,7 @@ export const ScheduleSidebarWrapper = styled.div`
     background-color: #fafafa;
   }
 `;
-export const ScheduleAddBtn = styled.button<{ isClicked: boolean }>`
+export const ScheduleAddBtn = styled.button<{ $isClicked: boolean }>`
   display: flex;
   width: 20rem;
   height: 5rem;
@@ -31,12 +31,12 @@ export const ScheduleAddBtn = styled.button<{ isClicked: boolean }>`
   margin-left: 2.1rem;
   justify-content: center;
   align-items: center;
-  color: ${({ isClicked }) => (isClicked ? 'var(--color-white)' : 'var(--color-black)')};
+  color: ${({ $isClicked }) => ($isClicked ? 'var(--color-white)' : 'var(--color-black)')};
   font-size: 2rem;
   font-style: normal;
   font-weight: 500;
   line-height: 1.792rem;
-  background: ${({ isClicked }) => (isClicked ? 'var(--color-blue)' : 'var(--color-white)')};
+  background: ${({ $isClicked }) => ($isClicked ? 'var(--color-blue)' : 'var(--color-white)')};
   border-radius: 1rem;
   cursor: pointer;
 `;
