@@ -14,16 +14,11 @@ export const getStatisticsDates = async (
   endDate: string,
   subClassId: number
 ): Promise<AxiosResponse<statisticsDateResponse>> => {
-  try {
-    return await instance({
-      url: API_STATISTICS.DATE,
-      method: 'GET',
-      params: { startDate, endDate, subClassId },
-    });
-  } catch (error) {
-    console.error('Failed to fetch statistics dates:', error);
-    throw error; // 필요 시 처리 후 재던짐
-  }
+  return await instance({
+    url: API_STATISTICS.DATE,
+    method: 'GET',
+    params: { startDate, endDate, subClassId },
+  });
 };
 
 // 출결 통계 날짜별 상세
@@ -32,16 +27,11 @@ export const getStatisticsDateDetail = async (
   subClassId: number,
   status: string
 ): Promise<AxiosResponse<statisticsDateDetail>> => {
-  try {
-    return await instance({
-      url: API_STATISTICS.DATE_DETAIL,
-      method: 'GET',
-      params: { date, subClassId, status },
-    });
-  } catch (error) {
-    console.error('Failed to fetch statistics date detail:', error);
-    throw error;
-  }
+  return await instance({
+    url: API_STATISTICS.DATE_DETAIL,
+    method: 'GET',
+    params: { date, subClassId, status },
+  });
 };
 
 // 출결 통계 구성원별
@@ -49,16 +39,11 @@ export const getStatisticsMember = async (
   startDate: string,
   endDate: string
 ): Promise<AxiosResponse<statisticsMemberResponse>> => {
-  try {
-    return await instance({
-      url: API_STATISTICS.MEMBER,
-      method: 'GET',
-      params: { startDate, endDate },
-    });
-  } catch (error) {
-    console.error('Failed to fetch statistics member:', error);
-    throw error;
-  }
+  return await instance({
+    url: API_STATISTICS.MEMBER,
+    method: 'GET',
+    params: { startDate, endDate },
+  });
 };
 
 // 출결 통계 구성원별 상세
@@ -67,14 +52,9 @@ export const getStatisticsMemberDetail = async (
   month: number,
   status: string
 ): Promise<AxiosResponse<statisticsMemberDetail>> => {
-  try {
-    return await instance({
-      url: API_STATISTICS.MEMBER_DETAIL,
-      method: 'GET',
-      params: { studentId, month, status },
-    });
-  } catch (error) {
-    console.error('Failed to fetch statistics member detail:', error);
-    throw error;
-  }
+  return await instance({
+    url: API_STATISTICS.MEMBER_DETAIL,
+    method: 'GET',
+    params: { studentId, month, status },
+  });
 };
