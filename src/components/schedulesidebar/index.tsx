@@ -8,6 +8,7 @@ import task from '@/assets/schedulesidebar/task.svg';
 import kebob from '@/assets/schedulesidebar/kebob.svg';
 import { getCategories } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
+import { colorMapping } from '@/utils/colorMapping';
 
 function ScheduleSidebar() {
   const location = useLocation();
@@ -27,7 +28,13 @@ function ScheduleSidebar() {
 
         switch (statusCode) {
           case 200:
-            setPersonalCategories(data.personalCategories);
+            // personalCategories에 색상 매핑
+            const mappedPersonalCategories = data.personalCategories.map((category: PersonalCategoryData) => ({
+              ...category,
+              color: colorMapping[category.color] || category.color,
+            }));
+
+            setPersonalCategories(mappedPersonalCategories);
             setSharedCategories(data.sharedCategories);
             break;
           case 404:
@@ -60,14 +67,6 @@ function ScheduleSidebar() {
     setIsSharedCalExpanded(!isSharedCalExpanded);
   };
 
-  // const calendarItems = [
-  //   { id: 1, name: '학부모 상담', color: '#FFB6C1' },
-  //   { id: 2, name: '시험지 등록', color: '#FFC0CB' },
-  //   { id: 3, name: '정기 회의', color: '#7FFFD4' },
-  //   { id: 4, name: '직보', color: '#1E90FF' },
-  //   { id: 5, name: 'Task', color: '#000000' },
-  // ];
-
   return (
     <S.ScheduleSidebarWrapper>
       <S.ScheduleAddBtn $isClicked={isClicked} onClick={handleButtonClick}>
@@ -93,6 +92,12 @@ function ScheduleSidebar() {
                 <S.KebobIcon src={kebob} alt="kebob icon" />
               </S.CategoryItem>
             ))}
+            <S.TaskItem>
+              <S.Category>
+                <S.TaskIcon src={task} alt="category icon" />
+                Task
+              </S.Category>
+            </S.TaskItem>
           </S.CategoryList>
         )}
 
@@ -109,7 +114,7 @@ function ScheduleSidebar() {
             {sharedCategories.map((item) => (
               <S.SharedItem key={item.id}>
                 <S.Shared>
-                  <S.CategoryIcon color={item.color} src={task} alt="shared category icon" />
+                  {/* <S.CategoryIcon color={item.color} src={task} alt="shared category icon" /> */}
                   {item.name}
                 </S.Shared>
                 <S.KebobIcon src={kebob} alt="kebob icon" />

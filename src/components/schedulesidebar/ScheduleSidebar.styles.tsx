@@ -118,7 +118,7 @@ export const CategoryItem = styled.div`
   cursor: pointer;
 `;
 
-export const CategoryIcon = styled.img<{ color: string }>`
+export const CategoryIcon = styled.img < { color: string }>`
   width: 1.6rem;
   height: 1.6rem;
   flex-shrink: 0;
@@ -129,6 +129,27 @@ export const KebobIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
+`;
+
+export const TaskItem = styled.div`
+  color: var(--color-black);
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+export const TaskIcon = styled.img`
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  background-color: var(--color-black);
+  border-radius: 10rem;
 `;
 
 export const SharedCalendar = styled.div`
