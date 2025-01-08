@@ -5,7 +5,7 @@ import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
 import { statisticsMemberData } from '@/types/statistics.type';
 import { getStatisticsMember } from '@/api/statisticsAPI';
-import formatDateToISO from '@/utils/formatDate';
+import { formatDateToISO } from '@/utils/formatDate';
 import AttendanceModal from './AttendanceModal';
 
 const getLastSixMonths = (offset = 0) => {
@@ -48,11 +48,17 @@ function MemberStatistics() {
   const [monthOffset, setMonthOffset] = useState(0);
   const { months, currentMonth } = getLastSixMonths(monthOffset);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [statisticsData, setStatisticsData] = useState<statisticsMemberData[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<string | boolean>(false);
+  const [statisticsData, setStatisticsData] = useState<statisticsMemberData[]>(
+    []
+  );
+  const [selectedStudent, setSelectedStudent] = useState<string | boolean>(
+    false
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [studentId, setStudentId] = useState<number | null>(null); // 학생 ID 상태 추가
-  const [status, setStatus] = useState<'PRESENT' | 'ABSENT' | 'LATE' | null>(null); // 출결 상태 상태 추가
+  const [status, setStatus] = useState<'PRESENT' | 'ABSENT' | 'LATE' | null>(
+    null
+  ); // 출결 상태 상태 추가
 
   const handlePrevMonth = () => {
     if (monthOffset < 5) {
@@ -75,7 +81,10 @@ function MemberStatistics() {
     setIsDropdownOpen(false);
   };
 
-  const handleOpenModal = (student: statisticsMemberData, status: 'PRESENT' | 'ABSENT' | 'LATE') => {
+  const handleOpenModal = (
+    student: statisticsMemberData,
+    status: 'PRESENT' | 'ABSENT' | 'LATE'
+  ) => {
     setStatus(status); // 상태 설정
     setStudentId(student.studentId);
     setIsModalOpen(true); // 모달 열기
@@ -94,7 +103,7 @@ function MemberStatistics() {
         const response = await getStatisticsMember(startDate, endDate);
         setStatisticsData(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch statistics data:", error);
+        console.error('Failed to fetch statistics data:', error);
       }
     };
     fetchStatisticsMember();
@@ -109,9 +118,7 @@ function MemberStatistics() {
           alt='Previous Month'
           onClick={handlePrevMonth}
         />
-        <S.PaginationItem>
-          {currentMonth}월
-        </S.PaginationItem>
+        <S.PaginationItem>{currentMonth}월</S.PaginationItem>
         <S.ArrowButton
           src={paginationRight}
           alt='Next Month'
@@ -145,33 +152,43 @@ function MemberStatistics() {
         </S.TableHeader>
 
         <S.StatisticsContainer>
-          {selectedStudent ? (
-            // 선택된 학생만 표시
-            statisticsData
-              .filter((item) => item.name === selectedStudent)
-              .map((item) => (
+          {selectedStudent
+            ? // 선택된 학생만 표시
+              statisticsData
+                .filter((item) => item.name === selectedStudent)
+                .map((item) => (
+                  <S.Row key={item.name}>
+                    <S.RowTitle>{item.name}</S.RowTitle>
+                    <S.ValueContainer>
+                      <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>
+                        {item.present}
+                      </S.Value>
+                      <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>
+                        {item.absent}
+                      </S.Value>
+                      <S.Value onClick={() => handleOpenModal(item, 'LATE')}>
+                        {item.late}
+                      </S.Value>
+                    </S.ValueContainer>
+                  </S.Row>
+                ))
+            : // 모든 학생의 데이터 표시
+              statisticsData.map((item) => (
                 <S.Row key={item.name}>
                   <S.RowTitle>{item.name}</S.RowTitle>
                   <S.ValueContainer>
-                    <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>{item.present}</S.Value>
-                    <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>{item.absent}</S.Value>
-                    <S.Value onClick={() => handleOpenModal(item, 'LATE')}>{item.late}</S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>
+                      {item.present}
+                    </S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>
+                      {item.absent}
+                    </S.Value>
+                    <S.Value onClick={() => handleOpenModal(item, 'LATE')}>
+                      {item.late}
+                    </S.Value>
                   </S.ValueContainer>
                 </S.Row>
-              ))
-          ) : (
-            // 모든 학생의 데이터 표시
-            statisticsData.map((item) => (
-              <S.Row key={item.name}>
-                <S.RowTitle>{item.name}</S.RowTitle>
-                <S.ValueContainer>
-                  <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>{item.present}</S.Value>
-                  <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>{item.absent}</S.Value>
-                  <S.Value onClick={() => handleOpenModal(item, 'LATE')}>{item.late}</S.Value>
-                </S.ValueContainer>
-              </S.Row>
-            ))
-          )}
+              ))}
         </S.StatisticsContainer>
       </S.Table>
 

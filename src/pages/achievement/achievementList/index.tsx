@@ -8,92 +8,7 @@ import ImageIcon from '@/components/imageIcon';
 import useClassList from '@/hooks/useClassList';
 import { ExamData } from '@/types/exam.type';
 import { findExam } from '@/api/examAPI';
-const data = [
-  {
-    type: '데일리',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
-  {
-    type: '주간',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
-  {
-    type: '월간',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-  {
-    type: '데일리',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-  // {
-  //   type: '기타',
-  //   class: '중3-A',
-  //   test: '월말테스트',
-  //   teacher: '김나나',
-  //   date: '24.11.15',
-  // },
-  {
-    type: '주간',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
-  {
-    type: '월간',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-  {
-    type: '주간',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-  // {
-  //   type: '기타',
-  //   class: '중3-A',
-  //   test: '월말테스트',
-  //   teacher: '김나나',
-  //   date: '24.11.15',
-  // },
-  {
-    type: '주간',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '김나나',
-    date: '24.11.15',
-  },
-  {
-    type: '월간',
-    class: '중3-A',
-    test: '월말테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-  {
-    type: '주간',
-    class: '중1-C',
-    test: '영어퀴즈테스트',
-    teacher: '박선호',
-    date: '24.11.15',
-  },
-];
+import { formatDateToYYMMDD } from '@/utils/formatDate';
 
 export const filterData: Record<string, string> = {
   전체: 'TOTAL',
@@ -114,7 +29,6 @@ export const reverseFilterData: Record<string, string> = {
 function AchievementList() {
   const [filter, setFilter] = useState('전체');
   const [searchText, setSearchText] = useState('');
-  const [filteredData, setFilteredData] = useState<ExamData[]>([]);
   const [previousFilteredData, setPreviousFilteredData] = useState<ExamData[]>(
     []
   );
@@ -122,9 +36,11 @@ function AchievementList() {
   const [searchFilter, setSearchFilter] = useState('강사명');
   const navigate = useNavigate();
   const [mainClass, setMainClass] = useState('');
+  const [subClass, setSubClass] = useState('');
   const [data, setData] = useState<ExamData[]>([]);
 
   const { classList } = useClassList();
+  const [isInitialized, setIsInitialized] = useState(false);
   const testSearchOptions: string[] = ['강사명', '시험명'];
 
   useEffect(() => {
@@ -132,6 +48,8 @@ function AchievementList() {
       const res = await findExam();
       if (res.status === 200) {
         setData(res.data.data);
+        setDisplayData(res.data.data);
+        setIsInitialized(true);
       } else {
         alert('성적 정보를 불러오는 데 실패했습니다.');
       }
@@ -156,9 +74,25 @@ function AchievementList() {
       return matchesType && matchesSearch;
     });
 
-    setFilteredData(_data);
     setPreviousFilteredData(_data);
     setDisplayData(_data);
+  };
+
+  const handleOnChangeClass = (newMainClass: string, newSubClass: string) => {
+    let newData = data;
+    if (newMainClass != '전체' && newMainClass.length > 0) {
+      newData = data.filter((item) => {
+        return item.mainClassName === newMainClass;
+      });
+    }
+
+    if (newSubClass != '전체' && newSubClass.length > 0) {
+      newData = newData.filter((item) => {
+        return item.subClassName === newSubClass;
+      });
+    }
+    setPreviousFilteredData(newData);
+    setDisplayData(newData);
   };
 
   const handleOnChangeSearchText = (text: string) => {
@@ -178,7 +112,6 @@ function AchievementList() {
       return matchesType && matchesSearch;
     });
 
-    setFilteredData(_data);
     if (_data.length === 0) {
       setDisplayData(previousFilteredData);
     } else {
@@ -202,7 +135,6 @@ function AchievementList() {
       return matchesType && matchesSearch;
     });
 
-    setFilteredData(_data);
     setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
     setDisplayData(_data);
   };
@@ -220,16 +152,23 @@ function AchievementList() {
 
         <S.SearchWrapper>
           <DropDown
-            options={Object.keys(classList) || []}
+            options={['전체', ...Object.keys(classList)]}
             placeholder='메인 클래스'
             onChange={(value) => {
               setMainClass(value);
+              handleOnChangeClass(value, subClass);
             }}
           />
           <ClassDropDown
-            options={classList[mainClass]}
+            options={[
+              { subClassId: 0, subClassName: '전체' },
+              ...(classList[mainClass] || []),
+            ]}
             placeholder='서브 클래스'
-            onChange={() => {}}
+            onChange2={(value1, value2) => {
+              setSubClass(value2);
+              handleOnChangeClass(mainClass, value2);
+            }}
           />
         </S.SearchWrapper>
 
@@ -272,36 +211,44 @@ function AchievementList() {
           </S.FilterButton>
         ))}
       </S.FilterTabs>
-      {displayData.length > 0 ? (
-        <S.List>
-          {displayData.map((item, index) => (
-            <S.ListItem
-              key={index}
-              onClick={() =>
-                navigate(`/manage/achievement/management/detail/${index}`)
-              }
-            >
-              <S.TitleWrapper>
-                <PS.Tag $type={item.standard}>
-                  {reverseFilterData[item.standard]}
-                </PS.Tag>
-                <PS.Text>
-                  {item.mainClassName}-{item.subClassName}
-                </PS.Text>
-                <PS.Text>{item.examName}</PS.Text>
-              </S.TitleWrapper>
-              <S.TeacherWrapper>
-                <PS.Text>{item.memberId}</PS.Text>
-                <PS.Text>{item.createdAt}</PS.Text>
-              </S.TeacherWrapper>
-            </S.ListItem>
-          ))}
-        </S.List>
+      {isInitialized ? (
+        displayData.length > 0 ? (
+          <S.List>
+            {displayData.map((item, index) => (
+              <S.ListItem
+                key={index}
+                onClick={() =>
+                  navigate(
+                    `/manage/achievement/management/detail/${item.examId}`
+                  )
+                }
+              >
+                <S.TitleWrapper>
+                  <PS.Tag $type={item.standard}>
+                    {reverseFilterData[item.standard]}
+                  </PS.Tag>
+                  <PS.Text>
+                    {item.mainClassName}-{item.subClassName}
+                  </PS.Text>
+                  <PS.Text>{item.examName}</PS.Text>
+                </S.TitleWrapper>
+                <S.TeacherWrapper>
+                  <PS.Text>{item.memberName}</PS.Text>
+                  <PS.Text>{formatDateToYYMMDD(item.createdAt)}</PS.Text>
+                </S.TeacherWrapper>
+              </S.ListItem>
+            ))}
+          </S.List>
+        ) : (
+          <S.EmptyListSection>
+            <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
+            <S.AchievementInfoText>
+              검색된 결과가 없습니다.
+            </S.AchievementInfoText>
+          </S.EmptyListSection>
+        )
       ) : (
-        <S.EmptyListSection>
-          <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
-          <S.AchievementInfoText>검색된 결과가 없습니다.</S.AchievementInfoText>
-        </S.EmptyListSection>
+        <div />
       )}
     </S.Container>
   );

@@ -46,6 +46,7 @@ export interface StudentScoreData {
 export interface ExamData {
   examId: number;
   memberId: number;
+  memberName: string;
   standard: string;
   mainClassName: string;
   subClassName: string;

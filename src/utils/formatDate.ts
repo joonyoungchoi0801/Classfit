@@ -1,4 +1,4 @@
-const formatDateToISO = (inputDate: string): string => {
+export const formatDateToISO = (inputDate: string): string => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
@@ -22,4 +22,7 @@ const formatDateToISO = (inputDate: string): string => {
   return `${finalYear}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 };
 
-export default formatDateToISO;
+export const formatDateToYYMMDD = (inputDate: string) => {
+  const [year, month, day] = inputDate.split('-');
+  return `${year.slice(2)}.${month}.${day}`;
+};
