@@ -6,7 +6,7 @@ import rightArrow from '@/assets/managesidebar/rightarrow.svg';
 import plusbtn from '@/assets/schedulesidebar/plusbtn.svg';
 import task from '@/assets/schedulesidebar/task.svg';
 import kebob from '@/assets/schedulesidebar/kebob.svg';
-import { getCategories, createCategory } from '@/api/categoryAPI';
+import { getCategories, createCategory, editCategory } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
@@ -41,9 +41,13 @@ function ScheduleSidebar() {
               ...category,
               color: colorMapping[category.color] || category.color,
             }));
+            const mappedSharedCategories = data.sharedCategories.map((category: SharedCategoryData) => ({
+              ...category,
+              color: colorMapping[category.color] || category.color,
+            }));
 
             setPersonalCategories(mappedPersonalCategories);
-            setSharedCategories(data.sharedCategories);
+            setSharedCategories(mappedSharedCategories);
             break;
           case 404:
             console.log('ACCESS_DENIED: 접근이 거부되었습니다.');
@@ -126,29 +130,35 @@ function ScheduleSidebar() {
     setCurrentCategoryData(null);
   };
 
-  // const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
-  //   // API 호출 및 상태 업데이트
-  //   console.log(`Saving edited category: ID=${id}, Name=${categoryName}, Color=${color}`);
-  //   try {
-  //     // Assume updateCategory is your API function
-  //     const response = await updateCategory(id, categoryName, color);
-  //     if (response.status === 200) {
-  //       const updatedCategory = response.data.data;
-  //       setPersonalCategories((prev) =>
-  //         prev.map((cat) =>
-  //           cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
-  //         )
-  //       );
-  //       setSharedCategories((prev) =>
-  //         prev.map((cat) =>
-  //           cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
-  //         )
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating category:', error);
-  //   }
-  // };
+  // HEX에서 CODE 값을 찾는 함수
+  const getColorCodeFromHex = (hex: string): string | undefined => {
+    return Object.keys(colorMapping).find(key => colorMapping[key] === hex);
+  };
+
+  const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
+    console.log(`Saving edited category: ID=${id}, Name=${categoryName}, Color=${color}`);
+    const mappedColor = getColorCodeFromHex(color) || color;
+    console.log(mappedColor);
+    try {
+      const response = await editCategory(id, categoryName, mappedColor);
+      if (response.status === 200) {
+        const updatedCategory = response.data.data;
+
+        setPersonalCategories((prev) =>
+          prev.map((cat) =>
+            cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+          )
+        );
+        setSharedCategories((prev) =>
+          prev.map((cat) =>
+            cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating category:', error);
+    }
+  };
 
   const handleDelete = (categoryId: number) => {
     console.log(`Delete category with ID: ${categoryId}`);
@@ -239,7 +249,7 @@ function ScheduleSidebar() {
         isOpen={isEditModalOpen}
         categoryData={currentCategoryData}
         onClose={handleCloseEditModal}
-      // onSave={handleSaveEditedCategory}
+        onSave={handleSaveEditedCategory}
       />
     </S.ScheduleSidebarWrapper>
   );

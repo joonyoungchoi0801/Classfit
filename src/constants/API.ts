@@ -79,4 +79,5 @@ export const API_STATISTICS = Object.freeze({
 export const API_CATEGORY = Object.freeze({
   CATEGORY_LIST: '/v1/calendar/category-list',
   CATEGORY: '/v1/calendar/category',
+  EDIT: (categoryId: number) => `/v1/calendar/${categoryId}`,
 });

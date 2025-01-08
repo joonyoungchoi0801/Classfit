@@ -4,6 +4,7 @@ import { API_CATEGORY } from '@/constants/API';
 import type {
   CategoryResponse,
   AddCategoryResponse,
+  EditCategoryResponse,
 } from '@/types/category.type';
 
 export const getCategories = (): Promise<AxiosResponse<CategoryResponse>> => {
@@ -25,6 +26,21 @@ export const createCategory = (
       name,
       color,
       type,
+    },
+  });
+};
+
+export const editCategory = (
+  categoryId: number,
+  newName: string,
+  newColor: string
+): Promise<AxiosResponse<EditCategoryResponse>> => {
+  return instance({
+    url: API_CATEGORY.EDIT(categoryId),
+    method: 'PATCH',
+    data: {
+      newName,
+      newColor,
     },
   });
 };

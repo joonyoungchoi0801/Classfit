@@ -3,7 +3,7 @@ import * as S from './CategoryEditModal.styles';
 import { colorMapping } from '@/utils/colorMapping';
 import { CategoryEditModalProps } from './CategoryEditModal.types';
 
-const CategoryEditModal = ({ isOpen, categoryData, onClose }: CategoryEditModalProps) => {
+const CategoryEditModal = ({ isOpen, categoryData, onClose, onSave }: CategoryEditModalProps) => {
   const [categoryName, setCategoryName] = useState('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
@@ -28,12 +28,12 @@ const CategoryEditModal = ({ isOpen, categoryData, onClose }: CategoryEditModalP
     setIsColorPaletteOpen(false);
   };
 
-  // const handleSave = () => {
-  //   if (categoryData && categoryName.trim() && selectedColor) {
-  //     onSave(categoryData.id, categoryName.trim(), selectedColor);
-  //     onClose();
-  //   }
-  // };
+  const handleSave = () => {
+    if (categoryData && categoryName.trim() && selectedColor) {
+      onSave(categoryData.id, categoryName.trim(), selectedColor);
+      onClose();
+    }
+  };
 
   const colorPalette = Object.values(colorMapping);
 
@@ -57,8 +57,7 @@ const CategoryEditModal = ({ isOpen, categoryData, onClose }: CategoryEditModalP
           </S.InputWrapper>
           <S.ButtonsContainer>
             <S.CancelButton onClick={onClose}>취소</S.CancelButton>
-            {/* <S.SaveButton onClick={handleSave}>저장</S.SaveButton> */}
-            <S.SaveButton>저장</S.SaveButton>
+            <S.SaveButton onClick={handleSave}>저장</S.SaveButton>
           </S.ButtonsContainer>
         </S.ModalContent>
       </S.ModalOverlay>

@@ -36,3 +36,16 @@ export interface AddCategoryResponse {
   data: AddCategoryData;
   message: string;
 }
+
+export interface EditCategoryData {
+  id: number;
+  name: string;
+  color: string;
+}
+
+export interface EditCategoryResponse {
+  statusCode: number;
+  resultType: string;
+  data: EditCategoryData;
+  message: string;
+}
