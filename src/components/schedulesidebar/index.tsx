@@ -9,6 +9,7 @@ import kebob from '@/assets/schedulesidebar/kebob.svg';
 import { getCategories } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
+import CategoryModal from '@/components/modal/categoryModal';
 
 function ScheduleSidebar() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function ScheduleSidebar() {
   const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(false);
   const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -67,6 +69,20 @@ function ScheduleSidebar() {
     setIsSharedCalExpanded(!isSharedCalExpanded);
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveCategory = (categoryName: string) => {
+    console.log('저장된 카테고리명:', categoryName);
+    // 여기에서 카테고리 저장 로직 추가
+    handleCloseModal(); // 저장 후 모달 닫기
+  };
+
   return (
     <S.ScheduleSidebarWrapper>
       <S.ScheduleAddBtn $isClicked={isClicked} onClick={handleButtonClick}>
@@ -79,7 +95,7 @@ function ScheduleSidebar() {
             <S.Icon src={isMyCalendarExpanded ? downArrow : rightArrow} alt="arrow" />
             <S.CalendarItemText>내 캘린더</S.CalendarItemText>
           </S.MyCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" />
+          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={handleOpenModal} />
         </S.CalendarItem>
         {isMyCalendarExpanded && (
           <S.CategoryList>
@@ -107,7 +123,7 @@ function ScheduleSidebar() {
             <S.Icon src={isSharedCalExpanded ? downArrow : rightArrow} alt="arrow" />
             <S.CalendarItemText>공용 캘린더</S.CalendarItemText>
           </S.SharedCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" />
+          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={handleOpenModal} />
         </S.CalendarItem>
         {isSharedCalExpanded && (
           <S.SharedList>
@@ -123,6 +139,12 @@ function ScheduleSidebar() {
           </S.SharedList>
         )}
       </S.CalendarSection>
+
+      <CategoryModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={handleSaveCategory}
+      />
     </S.ScheduleSidebarWrapper>
   );
 }
