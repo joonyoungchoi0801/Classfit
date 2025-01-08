@@ -15,9 +15,9 @@ export const ModalOverlay = styled.div`
 export const ModalContent = styled.div`
   background: var(--color-white);
   padding: 2rem 2.5rem;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   width: 50rem;
-  box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 0.4rem 1.5rem 0rem rgba(0, 0, 0, 0.15);
 `;
 
 export const ModalTitle = styled.h2`
@@ -50,18 +50,18 @@ export const InputWrapper = styled.div`
 export const CategoryInput = styled.input`
   width: 100%;
   padding: 1rem 2rem;
-  border: 1px solid var(--color-lightgray);
+  border: 0.1rem solid var(--color-lightgray);
   border-radius: 1rem;
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
 `;
 
-export const CategoryIcon = styled.div<{ selectedColor?: string }>`
+export const CategoryIcon = styled.div<{ $selectedColor?: string }>`
   width: 3.2rem;
   height: 3rem;
   border-radius: 2rem;
-  background-color: ${({ selectedColor }) => selectedColor || '#D9D9D9'};
+  background-color: ${({ $selectedColor }) => $selectedColor || '#D9D9D9'};
   cursor: pointer;
 `;
 
@@ -107,7 +107,7 @@ export const ColorPalette = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 0.4rem 1.5rem 0rem rgba(0, 0, 0, 0.15);
 `;
 
 export const ColorOption = styled.div<{ color: string }>`

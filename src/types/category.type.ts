@@ -22,3 +22,17 @@ export interface CategoryResponse {
   error: { message: string };
   message: string;
 }
+
+export interface AddCategoryData {
+  id: number;
+  name: string;
+  color: string;
+  type: 'PERSONAL' | 'SHARED';
+}
+
+export interface AddCategoryResponse {
+  statusCode: number;
+  resultType: string;
+  data: AddCategoryData;
+  message: string;
+}

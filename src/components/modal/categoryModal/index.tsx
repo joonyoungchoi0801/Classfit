@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './CategoryModal.styles';
 import { colorMapping } from '@/utils/colorMapping';
 
 interface CategoryModalProps {
   isOpen: boolean;
+  type: 'PERSONAL' | 'SHARED';
   onClose: () => void;
   onSave: (categoryName: string, color: string) => void;
 }
 
-const CategoryModal = ({ isOpen, onClose, onSave }: CategoryModalProps) => {
+const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) => {
   const [categoryName, setCategoryName] = useState('');
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setCategoryName('');
+      setSelectedColor('');
+    }
+  }, [isOpen]);
 
   const handleCategoryNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
@@ -28,8 +36,14 @@ const CategoryModal = ({ isOpen, onClose, onSave }: CategoryModalProps) => {
 
   const handleSave = () => {
     if (categoryName.trim() && selectedColor) {
-      onSave(categoryName, selectedColor);
-      onClose();
+      const mappedColor = Object.keys(colorMapping).find(key => colorMapping[key] === selectedColor);
+
+      if (mappedColor) {
+        onSave(categoryName, mappedColor);
+        onClose();
+      } else {
+        console.error("Color not found in the mapping.");
+      }
     }
   };
 
@@ -39,12 +53,12 @@ const CategoryModal = ({ isOpen, onClose, onSave }: CategoryModalProps) => {
     isOpen && (
       <S.ModalOverlay>
         <S.ModalContent>
-          <S.ModalTitle>새 카테고리 만들기</S.ModalTitle>
+          <S.ModalTitle>{type === 'PERSONAL' ? '새 카테고리 만들기(내 캘린더)' : '새 카테고리 만들기(공용 캘린더)'}</S.ModalTitle>
           <S.Divider />
           <S.CategoryLabel>카테고리명</S.CategoryLabel>
           <S.InputWrapper>
             <S.CategoryInput value={categoryName} onChange={handleCategoryNameChange} placeholder="카테고리명 입력" />
-            <S.CategoryIcon selectedColor={selectedColor} onClick={handleColorIconClick} />
+            <S.CategoryIcon $selectedColor={selectedColor} onClick={handleColorIconClick} />
             {isColorPaletteOpen && (
               <S.ColorPalette>
                 {colorPalette.map((color) => (

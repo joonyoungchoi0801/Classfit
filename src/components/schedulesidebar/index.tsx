@@ -6,7 +6,7 @@ import rightArrow from '@/assets/managesidebar/rightarrow.svg';
 import plusbtn from '@/assets/schedulesidebar/plusbtn.svg';
 import task from '@/assets/schedulesidebar/task.svg';
 import kebob from '@/assets/schedulesidebar/kebob.svg';
-import { getCategories } from '@/api/categoryAPI';
+import { getCategories, createCategory } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
@@ -21,6 +21,7 @@ function ScheduleSidebar() {
   const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentType, setCurrentType] = useState<'PERSONAL' | 'SHARED'>('PERSONAL');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -69,7 +70,8 @@ function ScheduleSidebar() {
     setIsSharedCalExpanded(!isSharedCalExpanded);
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (type: 'PERSONAL' | 'SHARED') => {
+    setCurrentType(type);
     setIsModalOpen(true);
   };
 
@@ -77,10 +79,21 @@ function ScheduleSidebar() {
     setIsModalOpen(false);
   };
 
-  const handleSaveCategory = (categoryName: string) => {
-    console.log('저장된 카테고리명:', categoryName);
-    // 여기에서 카테고리 저장 로직 추가
-    handleCloseModal(); // 저장 후 모달 닫기
+  const handleSaveCategory = async (categoryName: string, color: string) => {
+    try {
+      const response = await createCategory(categoryName, color, currentType);
+      if (response.status === 200) {
+        const newCategory = response.data.data;
+        if (currentType === 'PERSONAL') {
+          setPersonalCategories((prev) => [...prev, { ...newCategory, color: colorMapping[newCategory.color] || newCategory.color }]);
+        } else if (currentType === 'SHARED') {
+          setSharedCategories((prev) => [...prev, newCategory]);
+        }
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.error('Error saving category:', error);
+    }
   };
 
   return (
@@ -90,12 +103,12 @@ function ScheduleSidebar() {
       </S.ScheduleAddBtn>
 
       <S.CalendarSection>
-        <S.CalendarItem onClick={toggleMyCalendar}>
-          <S.MyCalendar>
+        <S.CalendarItem>
+          <S.MyCalendar onClick={toggleMyCalendar}>
             <S.Icon src={isMyCalendarExpanded ? downArrow : rightArrow} alt="arrow" />
             <S.CalendarItemText>내 캘린더</S.CalendarItemText>
           </S.MyCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={handleOpenModal} />
+          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={() => handleOpenModal('PERSONAL')} />
         </S.CalendarItem>
         {isMyCalendarExpanded && (
           <S.CategoryList>
@@ -118,12 +131,12 @@ function ScheduleSidebar() {
         )}
 
 
-        <S.CalendarItem onClick={toggleSharedCal}>
-          <S.SharedCalendar>
+        <S.CalendarItem >
+          <S.SharedCalendar onClick={toggleSharedCal}>
             <S.Icon src={isSharedCalExpanded ? downArrow : rightArrow} alt="arrow" />
             <S.CalendarItemText>공용 캘린더</S.CalendarItemText>
           </S.SharedCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={handleOpenModal} />
+          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={() => handleOpenModal('SHARED')} />
         </S.CalendarItem>
         {isSharedCalExpanded && (
           <S.SharedList>
@@ -142,6 +155,7 @@ function ScheduleSidebar() {
 
       <CategoryModal
         isOpen={isModalOpen}
+        type={currentType}
         onClose={handleCloseModal}
         onSave={handleSaveCategory}
       />

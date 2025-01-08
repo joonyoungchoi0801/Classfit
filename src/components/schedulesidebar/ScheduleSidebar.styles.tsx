@@ -55,7 +55,6 @@ export const CalendarItem = styled.div`
   padding: 1rem 1.7rem;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
 
   &:not(:last-child) {
     border-bottom: 0.1rem solid #DEDEDE;
@@ -83,12 +82,14 @@ export const CalendarItemText = styled.span`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: pointer;
 `;
 
 export const CalendarAddIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
+  cursor: pointer;
 `;
 
 export const CategoryList = styled.div`
@@ -115,7 +116,6 @@ export const CategoryItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
-  cursor: pointer;
 `;
 
 export const CategoryIcon = styled.img < { color: string }>`
@@ -141,7 +141,6 @@ export const TaskItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
-  cursor: pointer;
 `;
 
 export const TaskIcon = styled.img`
@@ -181,7 +180,6 @@ export const SharedItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
-  cursor: pointer;
 `;
 
 export const Shared = styled.div`
