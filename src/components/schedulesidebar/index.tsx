@@ -10,6 +10,8 @@ import { getCategories, createCategory } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
+import Popup from '@/components/popup';
+import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
 
 function ScheduleSidebar() {
   const location = useLocation();
@@ -22,6 +24,9 @@ function ScheduleSidebar() {
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentType, setCurrentType] = useState<'PERSONAL' | 'SHARED'>('PERSONAL');
+  const [popupState, setPopupState] = useState<{ [key: number]: boolean }>({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentCategoryData, setCurrentCategoryData] = useState<{ id: number; name: string; color: string } | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -87,13 +92,70 @@ function ScheduleSidebar() {
         if (currentType === 'PERSONAL') {
           setPersonalCategories((prev) => [...prev, { ...newCategory, color: colorMapping[newCategory.color] || newCategory.color }]);
         } else if (currentType === 'SHARED') {
-          setSharedCategories((prev) => [...prev, newCategory]);
+          setSharedCategories((prev) => [...prev, { ...newCategory, color: colorMapping[newCategory.color] || newCategory.color }]);
         }
         handleCloseModal();
       }
     } catch (error) {
       console.error('Error saving category:', error);
     }
+  };
+
+  // 케밥 버튼
+  const togglePopup = (categoryId: number) => {
+    setPopupState((prev) => ({
+      ...prev,
+      [categoryId]: !prev[categoryId],
+    }));
+  };
+
+  const handleEdit = (categoryId: number) => {
+    const category = [...personalCategories, ...sharedCategories].find((cat) => cat.id === categoryId);
+    if (category) {
+      setCurrentCategoryData(category);
+      setIsEditModalOpen(true);
+    }
+    setPopupState((prev) => ({
+      ...prev,
+      [categoryId]: false,
+    }));
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentCategoryData(null);
+  };
+
+  // const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
+  //   // API 호출 및 상태 업데이트
+  //   console.log(`Saving edited category: ID=${id}, Name=${categoryName}, Color=${color}`);
+  //   try {
+  //     // Assume updateCategory is your API function
+  //     const response = await updateCategory(id, categoryName, color);
+  //     if (response.status === 200) {
+  //       const updatedCategory = response.data.data;
+  //       setPersonalCategories((prev) =>
+  //         prev.map((cat) =>
+  //           cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+  //         )
+  //       );
+  //       setSharedCategories((prev) =>
+  //         prev.map((cat) =>
+  //           cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+  //         )
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating category:', error);
+  //   }
+  // };
+
+  const handleDelete = (categoryId: number) => {
+    console.log(`Delete category with ID: ${categoryId}`);
+    setPopupState((prev) => ({
+      ...prev,
+      [categoryId]: false,
+    }));
   };
 
   return (
@@ -118,7 +180,14 @@ function ScheduleSidebar() {
                   <S.CategoryIcon color={item.color} src={task} alt="category icon" />
                   {item.name}
                 </S.Category>
-                <S.KebobIcon src={kebob} alt="kebob icon" />
+                <S.KebobIcon src={kebob} alt="kebob icon" onClick={() => togglePopup(item.id)} />
+                {popupState[item.id] && (
+                  <Popup
+                    isOpen={popupState[item.id]}
+                    onEdit={() => handleEdit(item.id)}
+                    onDelete={() => handleDelete(item.id)}
+                  />
+                )}
               </S.CategoryItem>
             ))}
             <S.TaskItem>
@@ -141,12 +210,19 @@ function ScheduleSidebar() {
         {isSharedCalExpanded && (
           <S.SharedList>
             {sharedCategories.map((item) => (
-              <S.SharedItem key={item.id}>
+              <S.SharedItem key={item.id} color={item.color}>
                 <S.Shared>
-                  {/* <S.CategoryIcon color={item.color} src={task} alt="shared category icon" /> */}
+                  <S.CategoryIcon color={item.color} src={task} alt="shared category icon" />
                   {item.name}
                 </S.Shared>
-                <S.KebobIcon src={kebob} alt="kebob icon" />
+                <S.KebobIcon src={kebob} alt="kebob icon" onClick={() => togglePopup(item.id)} />
+                {popupState[item.id] && (
+                  <Popup
+                    isOpen={popupState[item.id]}
+                    onEdit={() => handleEdit(item.id)}
+                    onDelete={() => handleDelete(item.id)}
+                  />
+                )}
               </S.SharedItem>
             ))}
           </S.SharedList>
@@ -158,6 +234,12 @@ function ScheduleSidebar() {
         type={currentType}
         onClose={handleCloseModal}
         onSave={handleSaveCategory}
+      />
+      <CategoryEditModal
+        isOpen={isEditModalOpen}
+        categoryData={currentCategoryData}
+        onClose={handleCloseEditModal}
+      // onSave={handleSaveEditedCategory}
       />
     </S.ScheduleSidebarWrapper>
   );
