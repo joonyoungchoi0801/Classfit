@@ -53,7 +53,7 @@ const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) =>
     isOpen && (
       <S.ModalOverlay>
         <S.ModalContent>
-          <S.ModalTitle>{type === 'PERSONAL' ? '새 카테고리 만들기(내 캘린더)' : '새 카테고리 만들기(공용 캘린더)'}</S.ModalTitle>
+          <S.ModalTitle>새 카테고리 만들기</S.ModalTitle>
           <S.Divider />
           <S.CategoryLabel>카테고리명</S.CategoryLabel>
           <S.InputWrapper>
