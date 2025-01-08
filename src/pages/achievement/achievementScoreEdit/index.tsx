@@ -7,10 +7,10 @@ import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import SelectedToggleIcon from '@/assets/buttonIcon/toggleFilled.svg';
 import ToggleIcon from '@/assets/buttonIcon/toggle.svg';
 import Button from '@/components/button';
-import { getExamStudent, scoreRegisterExam } from '@/api/examAPI';
-import { ExamStudentData, ExamStudentDataWithChecked } from '@/types/exam.type';
+import { scoreRegisterExam } from '@/api/examAPI';
 import Modal from '@/components/modal';
 import useExamStudentStore from '@/store/examStudentStore';
+import { ExamStudentDataWithEdited } from '@/types/exam.type';
 
 function AchievementScoreEdit() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function AchievementScoreEdit() {
   const location = useLocation();
   const { standard, highestScore } = location.state || {};
 
-  const [data, setData] = useState<ExamStudentDataWithChecked[]>([]);
+  const [data, setData] = useState<ExamStudentDataWithEdited[]>([]);
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
@@ -38,7 +38,14 @@ function AchievementScoreEdit() {
   const toggleChecked = (id: number) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.studentId === id ? { ...item, checked: !item.checked } : item
+        item.studentId === id
+          ? {
+              ...item,
+              checkedStudent: !item.checkedStudent,
+              isEdited: true,
+              score: item.checkedStudent ? '0' : item.score,
+            }
+          : item
       )
     );
   };
@@ -46,11 +53,20 @@ function AchievementScoreEdit() {
   const toggleCheckedAll = () => {
     if (isCheckedAll) {
       setData((prevData) =>
-        prevData.map((item) => ({ ...item, checked: false }))
+        prevData.map((item) => ({
+          ...item,
+          checkedStudent: false,
+          isEdited: true,
+          score: '0',
+        }))
       );
     } else {
       setData((prevData) =>
-        prevData.map((item) => ({ ...item, checked: true }))
+        prevData.map((item) => ({
+          ...item,
+          checkedStudent: true,
+          isEdited: true,
+        }))
       );
     }
     setIsCheckedAll(!isCheckedAll);
@@ -59,17 +75,18 @@ function AchievementScoreEdit() {
   const handleOnChangeScoreValue = (id: number, value: string) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.studentId === id ? { ...item, score: value } : item
+        item.studentId === id ? { ...item, score: value, isEdited: true } : item
       )
     );
   };
 
   const handleOnSubmit = async () => {
     const scoreData = data
-      .filter((item) => item.checked)
+      .filter((item) => item.isEdited)
       .map((item) => ({
         studentId: item.studentId,
         score: Number(item.score),
+        checkedStudent: item.checkedStudent,
       }));
     if (id) {
       const data = await scoreRegisterExam(Number(id), scoreData);
@@ -95,12 +112,13 @@ function AchievementScoreEdit() {
     if (examStudentData) {
       const updatedData = examStudentData.map((item) => ({
         ...item,
-        checked: false,
+        isEdited: false,
       }));
 
       setData(updatedData);
     }
   }, [examStudentData]);
+
   return (
     <S.Container>
       <PS.ButtonWrapper>
@@ -132,13 +150,13 @@ function AchievementScoreEdit() {
                     toggleChecked(item.studentId);
                   }}
                 >
-                  {item.checked ? (
+                  {item.checkedStudent ? (
                     <S.BtnIcon src={SelectedCheckBoxIcon} />
                   ) : (
                     <S.BtnIcon src={CheckBoxIcon} />
                   )}
                 </S.IconWrapper>
-                <S.Name $isChecked={item.checked}>{item.name}</S.Name>
+                <S.Name $isChecked={item.checkedStudent}>{item.name}</S.Name>
               </S.RowWrapper>
               {standard == 'PF' ? (
                 <S.ToggleWrapper>
@@ -157,7 +175,7 @@ function AchievementScoreEdit() {
                 </S.ToggleWrapper>
               ) : (
                 <S.ScoreWrapper>
-                  {item.checked ? (
+                  {item.checkedStudent && (
                     <S.ScoreInput
                       placeholder=''
                       value={item.score}
@@ -165,11 +183,9 @@ function AchievementScoreEdit() {
                         handleOnChangeScoreValue(item.studentId, e.target.value)
                       }
                     />
-                  ) : (
-                    <S.Score>{item.score}</S.Score>
                   )}
 
-                  <S.TotalScore $isChecked={item.checked}>
+                  <S.TotalScore $isChecked={item.checkedStudent}>
                     {totalScore}
                   </S.TotalScore>
                 </S.ScoreWrapper>

@@ -186,10 +186,13 @@ export const Score = styled.div`
   color: var(--color-blue);
 `;
 
-export const TotalScore = styled.div`
+export const TotalScore = styled.div<{
+  $isChecked: boolean;
+}>`
   font-size: 1.6rem;
   font-weight: 500;
-  color: var(--color-black);
+  color: ${({ $isChecked }) =>
+    $isChecked ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const ScoreWrapper = styled.div`
