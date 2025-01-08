@@ -62,11 +62,12 @@ function AchievementList() {
 
     const _data = data.filter((item) => {
       const matchesType =
-        newFilter === '전체' || item.standard === filterData[newFilter];
+        newFilter === '전체' || item.examPeriod === filterData[newFilter];
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = searchText === '' || item.examName.includes(searchText);
+        matchesSearch =
+          searchText === '' || item.memberName.includes(searchText);
       } else {
         matchesSearch = searchText === '' || item.examName.includes(searchText);
       }
