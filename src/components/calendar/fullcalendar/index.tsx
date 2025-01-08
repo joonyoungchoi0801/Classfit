@@ -26,15 +26,15 @@ const CalendarComponent = () => {
         events={[
           {
             id: '1',
-            title: 'Event 1',
-            start: '2024-12-16T08:00:00',
-            end: '2024-12-16T15:00:00',
+            title: 'ita 수학 보강',
+            start: '2025-01-01T08:00:00',
+            end: '2025-01-04T15:00:00',
           },
           {
             id: '2',
-            title: 'Event 2',
-            start: '2024-12-16T09:00:00',
-            end: '2024-12-19T10:00:00',
+            title: 'ita 국어 보강',
+            start: '2025-01-16T09:00:00',
+            end: '2025-01-22T10:00:00',
           },
         ]}
         editable={true}

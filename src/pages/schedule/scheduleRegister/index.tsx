@@ -69,13 +69,17 @@ function ScheduleRegister() {
         <S.Title>일정등록</S.Title>
         <S.Form>
           <S.FormGroup>
-            <S.Label>일정명</S.Label>
+            <S.Label>
+              일정명 <S.Essential>(필수)</S.Essential>
+            </S.Label>
             <S.Input type='text' placeholder='일정명 입력' />
           </S.FormGroup>
 
           <S.Row>
             <S.FormGroup>
-              <S.Label>캘린더</S.Label>
+              <S.Label>
+                캘린더 <S.Essential>(필수)</S.Essential>
+              </S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsCalendarOpen(!isCalendarOpen)}
@@ -99,7 +103,9 @@ function ScheduleRegister() {
               </S.SelectWrapper>
             </S.FormGroup>
             <S.FormGroup>
-              <S.Label>카테고리</S.Label>
+              <S.Label>
+                카테고리 <S.Essential>(필수)</S.Essential>
+              </S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsCategoryOpen(!isCategoryOpen)}
@@ -125,7 +131,9 @@ function ScheduleRegister() {
           </S.Row>
 
           <S.ColumnRow>
-            <S.Label>일시</S.Label>
+            <S.Label>
+              일시 <S.Essential>(필수)</S.Essential>
+            </S.Label>
             <S.DateWrapper>
               <S.DateInputWrapper>
                 <S.Input
@@ -178,7 +186,7 @@ function ScheduleRegister() {
               </S.SelectWrapper>
             </S.FormGroup>
             <S.FormGroup>
-              <S.Label>알림</S.Label>
+              <S.Label>반복 종료 일자</S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsAlertOpen(!isAlertOpen)}

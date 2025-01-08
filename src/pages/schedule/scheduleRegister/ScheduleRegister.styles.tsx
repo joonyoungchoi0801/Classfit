@@ -31,11 +31,10 @@ export const FormGroup = styled.div`
 `;
 
 export const Label = styled.label`
-  font-size: 2rem;
+  font-family: Pretendard;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 2.4rem;
-  margin-bottom: 1rem;
 `;
 
 export const Input = styled.input`
@@ -209,4 +208,14 @@ export const ButtonWrapper = styled.div`
   gap: 1rem;
   padding: 2rem;
   margin-bottom: 10rem;
+`;
+
+export const Essential = styled.span`
+  color: var(--color-blue);
+  font-family: Pretendard;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  margin: 0 !important;
 `;
