@@ -57,6 +57,7 @@ export interface ExamData {
   mainClassName: string;
   subClassName: string;
   examName: string;
+  examPeriod: string;
   createdAt: string;
 }
 

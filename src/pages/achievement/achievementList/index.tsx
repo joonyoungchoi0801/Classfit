@@ -224,8 +224,8 @@ function AchievementList() {
                 }
               >
                 <S.TitleWrapper>
-                  <PS.Tag $type={item.standard}>
-                    {reverseFilterData[item.standard]}
+                  <PS.Tag $type={reverseFilterData[item.examPeriod]}>
+                    {reverseFilterData[item.examPeriod]}
                   </PS.Tag>
                   <PS.Text>
                     {item.mainClassName}-{item.subClassName}
