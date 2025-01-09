@@ -6,6 +6,15 @@ import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
 import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal'; // test
 
+const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
+const RepeatOptionsAPI: Record<string, string | null> = {
+  '반복 안함': null,
+  매일: 'DAILY',
+  매주: 'WEEKLY',
+  매월: 'MONTHLY',
+  매년: 'YEARLY',
+}; // 추후 API전송시 맞춰서 전송
+
 function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
@@ -21,6 +30,12 @@ function ScheduleRegister() {
   const [isAllDay, setIsAllDay] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [eventTitle, setEventTitle] = useState('');
+  const [repeatStopValue, setRepeatStopValue] = useState('');
+  const [repeatStopDate, setRepeatStopDate] = useState('');
+  const [place, setPlace] = useState('');
+  const [memo, setMemo] = useState('');
+
   const today = new Date().toISOString().split('T')[0];
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
@@ -34,6 +49,7 @@ function ScheduleRegister() {
 
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
+    console.log(RepeatOptionsAPI[value]); // 추후 api 전송 시 삭제
     setIsRepeatOpen(false);
   };
 
@@ -45,6 +61,10 @@ function ScheduleRegister() {
   const handleAttendeeChange = (value: string[]) => {
     setAttendees(value);
     setIsAttendeeOpen(false);
+  };
+
+  const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRepeatStopValue(e.target.value);
   };
 
   // 참석자 추가
@@ -72,7 +92,11 @@ function ScheduleRegister() {
             <S.Label>
               일정명 <S.Essential>(필수)</S.Essential>
             </S.Label>
-            <S.Input type='text' placeholder='일정명 입력' />
+            <S.Input
+              type='text'
+              placeholder='일정명 입력'
+              onChange={(e) => setEventTitle(e.target.value)}
+            />
           </S.FormGroup>
 
           <S.Row>
@@ -175,49 +199,51 @@ function ScheduleRegister() {
                 <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 {isRepeatOpen && (
                   <S.Options>
-                    <S.Option onClick={() => handleRepeatChange('반복 안함')}>
-                      반복 안함
-                    </S.Option>
-                    <S.Option onClick={() => handleRepeatChange('매일')}>
-                      매일
-                    </S.Option>
+                    {RepeatOptions.map((option) => (
+                      <S.Option
+                        key={option}
+                        onClick={() => handleRepeatChange(option)}
+                      >
+                        {option}
+                      </S.Option>
+                    ))}
                   </S.Options>
                 )}
               </S.SelectWrapper>
             </S.FormGroup>
             <S.FormGroup>
               <S.Label>반복 종료 일자</S.Label>
-              <S.SelectWrapper>
-                <S.Select
-                  onClick={() => setIsAlertOpen(!isAlertOpen)}
-                  $hasValue={!!alertValue}
-                >
-                  {alertValue || '알림 추가'}
-                </S.Select>
-                <S.DropdownIcon src={dropdown} alt='dropdown icon' />
-                {isAlertOpen && (
-                  <S.Options>
-                    <S.Option onClick={() => handleAlertChange('정시')}>
-                      정시
-                    </S.Option>
-                    <S.Option onClick={() => handleAlertChange('10분 전')}>
-                      10분 전
-                    </S.Option>
-                    <S.Option onClick={() => handleAlertChange('30분 전')}>
-                      30분 전
-                    </S.Option>
-                    <S.Option onClick={() => handleAlertChange('1시간 전')}>
-                      1시간 전
-                    </S.Option>
-                    <S.Option onClick={() => handleAlertChange('2시간 전')}>
-                      2시간 전
-                    </S.Option>
-                    <S.Option onClick={() => handleAlertChange('1일 전')}>
-                      1일 전
-                    </S.Option>
-                  </S.Options>
-                )}
-              </S.SelectWrapper>
+              <S.RepeatWrapper>
+                <S.RadioWrapper>
+                  <S.RepeatLabel>
+                    없음&nbsp;
+                    <S.RepeatInput
+                      type='radio'
+                      name='repeat'
+                      value='none'
+                      checked={repeatStopValue === 'none'}
+                      onChange={handleRepeatStopChange}
+                    />
+                  </S.RepeatLabel>
+                  <S.RepeatLabel>
+                    날짜 지정&nbsp;
+                    <S.RepeatInput
+                      type='radio'
+                      name='repeat'
+                      value='date'
+                      checked={repeatStopValue === 'date'}
+                      onChange={handleRepeatStopChange}
+                    />
+                  </S.RepeatLabel>
+                </S.RadioWrapper>
+                <S.RepeatInputWrapper>
+                  <S.Input
+                    type='date'
+                    placeholder='날짜 선택'
+                    onChange={(e) => setRepeatStopDate(e.target.value)}
+                  />
+                </S.RepeatInputWrapper>
+              </S.RepeatWrapper>
             </S.FormGroup>
           </S.Row>
 
@@ -273,12 +299,19 @@ function ScheduleRegister() {
 
           <S.FormGroup>
             <S.Label>장소</S.Label>
-            <S.Input type='text' placeholder='장소를 입력해주세요.' />
+            <S.Input
+              type='text'
+              placeholder='장소를 입력해주세요.'
+              onChange={(e) => setPlace(e.target.value)}
+            />
           </S.FormGroup>
 
           <S.FormGroup>
             <S.Label>메모</S.Label>
-            <S.MemoInput placeholder='필요한 메모를 남겨주세요.' />
+            <S.MemoInput
+              placeholder='필요한 메모를 남겨주세요.'
+              onChange={(e) => setMemo(e.target.value)}
+            />
           </S.FormGroup>
         </S.Form>
 

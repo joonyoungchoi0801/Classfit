@@ -59,7 +59,7 @@ export const Input = styled.input`
 export const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4rem;
 
   span {
     margin: 0 8px;
@@ -218,4 +218,38 @@ export const Essential = styled.span`
   font-weight: 600;
   line-height: 2.4rem;
   margin: 0 !important;
+`;
+
+export const RepeatWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1.4rem;
+`;
+
+export const RadioWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+`;
+export const RepeatLabel = styled.label`
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const RepeatInput = styled.input`
+  width: 2rem;
+  height: 2rem;
+`;
+
+export const RepeatInputWrapper = styled.div`
+  position: relative;
+  flex-grow: 13;
 `;
