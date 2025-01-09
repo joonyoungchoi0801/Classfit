@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './CategoryModal.styles';
 import { colorMapping } from '@/utils/colorMapping';
-
-interface CategoryModalProps {
-  isOpen: boolean;
-  type: 'PERSONAL' | 'SHARED';
-  onClose: () => void;
-  onSave: (categoryName: string, color: string) => void;
-}
+import { CategoryModalProps } from './CategoryModal.types';
 
 const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) => {
   const [categoryName, setCategoryName] = useState('');
