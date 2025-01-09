@@ -21,10 +21,10 @@ export const Menu = styled.div`
   flex-direction: column;
 `;
 
-export const MenuItem = styled.button<{ isDelete?: boolean }>`
+export const MenuItem = styled.button<{ $isDelete?: boolean }>`
   padding: 1.5rem 2rem;
-  color: '#000';
-  background-color: ${(props) => (props.isDelete ? '#f5faff' : '#fff')};
+  background-color: var(--color-white);
+  color: ${(props) => (props.$isDelete ? 'var(--color-red)' : 'var(--color-black)')};
   border: none;
   cursor: pointer;
   text-align: left;
@@ -40,6 +40,5 @@ export const MenuItem = styled.button<{ isDelete?: boolean }>`
 
   &:hover {
     background-color: #f2f5fc;
-    color: var(--color-blue);
   }
 `;

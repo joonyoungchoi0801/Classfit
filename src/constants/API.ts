@@ -75,3 +75,9 @@ export const API_STATISTICS = Object.freeze({
   DATE_DETAIL: '/v1/home/statistics/date/details',
   MEMBER_DETAIL: '/v1/home/statistics/member/details',
 });
+
+export const API_CATEGORY = Object.freeze({
+  CATEGORY_LIST: '/v1/calendar/category-list',
+  CATEGORY: '/v1/calendar/category',
+  EDIT: (categoryId: number) => `/v1/calendar/${categoryId}`,
+});
