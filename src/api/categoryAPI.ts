@@ -44,3 +44,12 @@ export const editCategory = (
     },
   });
 };
+
+export const deleteCategory = (
+  categoryId: number
+): Promise<AxiosResponse<EditCategoryResponse>> => {
+  return instance({
+    url: API_CATEGORY.EDIT(categoryId),
+    method: 'DELETE',
+  });
+};

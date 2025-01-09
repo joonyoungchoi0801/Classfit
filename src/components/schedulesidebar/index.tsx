@@ -6,7 +6,7 @@ import rightArrow from '@/assets/managesidebar/rightarrow.svg';
 import plusbtn from '@/assets/schedulesidebar/plusbtn.svg';
 import task from '@/assets/schedulesidebar/task.svg';
 import kebob from '@/assets/schedulesidebar/kebob.svg';
-import { getCategories, createCategory, editCategory } from '@/api/categoryAPI';
+import { getCategories, createCategory, editCategory, deleteCategory } from '@/api/categoryAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
@@ -141,7 +141,6 @@ function ScheduleSidebar() {
 
   const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
     const mappedColor = getColorCodeFromHex(color) || color;
-    console.log(mappedColor);
     try {
       const response = await editCategory(id, categoryName, mappedColor);
       if (response.status === 200) {
@@ -175,6 +174,21 @@ function ScheduleSidebar() {
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setDeleteCategoryData(null);
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
+      if (deleteCategoryData?.id !== undefined) {
+        const response = await deleteCategory(deleteCategoryData.id);
+        if (response.status === 200) {
+          setPersonalCategories((prev) => prev.filter((cat) => cat.id !== deleteCategoryData.id));
+          setSharedCategories((prev) => prev.filter((cat) => cat.id !== deleteCategoryData.id));
+          setIsDeleteModalOpen(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
   };
 
   return (
@@ -264,7 +278,7 @@ function ScheduleSidebar() {
         isOpen={isDeleteModalOpen}
         categoryName={deleteCategoryData?.name || ''}
         onClose={handleCloseDeleteModal}
-      // onConfirm={ }
+        onConfirm={handleDeleteCategory}
       />
     </S.ScheduleSidebarWrapper>
   );
