@@ -12,6 +12,7 @@ import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
 import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
+import CategoryDeleteModal from '@/components/modal/categoryModal/categoryDeleteModal';
 
 function ScheduleSidebar() {
   const location = useLocation();
@@ -26,7 +27,10 @@ function ScheduleSidebar() {
   const [currentType, setCurrentType] = useState<'PERSONAL' | 'SHARED'>('PERSONAL');
   const [popupState, setPopupState] = useState<{ [key: number]: boolean }>({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentCategoryData, setCurrentCategoryData] = useState<{ id: number; name: string; color: string } | null>(null);
+  const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: number; name: string } | null>(null);
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -136,7 +140,6 @@ function ScheduleSidebar() {
   };
 
   const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
-    console.log(`Saving edited category: ID=${id}, Name=${categoryName}, Color=${color}`);
     const mappedColor = getColorCodeFromHex(color) || color;
     console.log(mappedColor);
     try {
@@ -160,12 +163,18 @@ function ScheduleSidebar() {
     }
   };
 
-  const handleDelete = (categoryId: number) => {
-    console.log(`Delete category with ID: ${categoryId}`);
+  const handleDelete = (categoryId: number, categoryName: string) => {
+    setDeleteCategoryData({ id: categoryId, name: categoryName });
+    setIsDeleteModalOpen(true);
     setPopupState((prev) => ({
       ...prev,
       [categoryId]: false,
     }));
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setDeleteCategoryData(null);
   };
 
   return (
@@ -195,7 +204,7 @@ function ScheduleSidebar() {
                   <Popup
                     isOpen={popupState[item.id]}
                     onEdit={() => handleEdit(item.id)}
-                    onDelete={() => handleDelete(item.id)}
+                    onDelete={() => handleDelete(item.id, item.name)}
                   />
                 )}
               </S.CategoryItem>
@@ -230,7 +239,7 @@ function ScheduleSidebar() {
                   <Popup
                     isOpen={popupState[item.id]}
                     onEdit={() => handleEdit(item.id)}
-                    onDelete={() => handleDelete(item.id)}
+                    onDelete={() => handleDelete(item.id, item.name)}
                   />
                 )}
               </S.SharedItem>
@@ -250,6 +259,12 @@ function ScheduleSidebar() {
         categoryData={currentCategoryData}
         onClose={handleCloseEditModal}
         onSave={handleSaveEditedCategory}
+      />
+      <CategoryDeleteModal
+        isOpen={isDeleteModalOpen}
+        categoryName={deleteCategoryData?.name || ''}
+        onClose={handleCloseDeleteModal}
+      // onConfirm={ }
       />
     </S.ScheduleSidebarWrapper>
   );
