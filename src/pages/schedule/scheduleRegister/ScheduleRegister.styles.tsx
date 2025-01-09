@@ -253,3 +253,26 @@ export const RepeatInputWrapper = styled.div`
   position: relative;
   flex-grow: 13;
 `;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+`;
+
+export const Button = styled.button<{ $isSelected?: boolean }>`
+  display: inline-flex;
+  padding: 0.6rem 1.4rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  background: ${({ $isSelected }) =>
+    $isSelected ? 'var(--color-blue)' : '#E5E5E5'};
+  color: var(--color-white);
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
+`;

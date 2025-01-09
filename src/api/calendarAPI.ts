@@ -1,6 +1,11 @@
 import { API_CALENDAR, API_CATEGORY } from '@/constants/API';
 import instance from './instance';
-import { CalendarModal, Category, NewCategory } from '@/types/calendar.type';
+import {
+  CalendarEvent,
+  CalendarModal,
+  Category,
+  NewCategory,
+} from '@/types/calendar.type';
 
 export const postCalendarCategory = async (data: Category) => {
   return instance({
@@ -44,10 +49,17 @@ export const postCalendarModal = async (data: CalendarModal) => {
   });
 };
 
-export const postCalendarEvent = async (data: CalendarModal) => {
+export const postCalendarEvent = async (data: CalendarEvent) => {
   return instance({
     method: 'post',
     url: API_CALENDAR.EVENT,
     data,
+  });
+};
+
+export const getAttendeeList = async () => {
+  return instance({
+    method: 'get',
+    url: API_CALENDAR.MEMBER,
   });
 };

@@ -1,15 +1,16 @@
 export interface Category {
+  id: number;
   name: string;
   color: string;
-  type: string;
 }
 
-export interface NewCategory {
-  newName: string;
-  newColor: string;
+export interface Attendee {
+  id: number;
+  name: string;
+  email: string;
 }
 
-export interface CalendarModal {
+export interface RegisterData {
   name: string;
   eventType: EventType;
   categoryId: number;
@@ -18,9 +19,6 @@ export interface CalendarModal {
   isAllDay: boolean;
   eventRepeatType?: EventRepeatType;
   repeatEndDate?: string;
-}
-
-export interface CalendarEvent extends CalendarModal {
   memberIds: number[];
   location: string;
   memo: string;

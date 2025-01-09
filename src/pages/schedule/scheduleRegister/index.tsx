@@ -1,49 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as S from './ScheduleRegister.styles';
 import * as PS from '@/pages/schedule/Schedule.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
 import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal'; // test
+import { Attendee, Category, RegisterData } from './ScheduleRegister.type';
+import {
+  getAttendeeList,
+  getCalendarCategoryList,
+  postCalendarEvent,
+} from '@/api/calendarAPI';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
 const RepeatOptionsAPI: Record<string, string | null> = {
-  '반복 안함': null,
+  '반복 안함': 'NONE',
   매일: 'DAILY',
   매주: 'WEEKLY',
   매월: 'MONTHLY',
   매년: 'YEARLY',
 }; // 추후 API전송시 맞춰서 전송
+enum EventRepeatType {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+}
+enum EventType {
+  TASK = 'TASK',
+  SCHEDULE = 'SCHEDULE',
+}
 
 function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
-  const [alertValue, setAlertValue] = useState('');
-  const [attendees, setAttendees] = useState<string[]>([]);
+
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isAttendeeOpen, setIsAttendeeOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); //test
   const [isAllDay, setIsAllDay] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [eventTitle, setEventTitle] = useState('');
-  const [repeatStopValue, setRepeatStopValue] = useState('');
-  const [repeatStopDate, setRepeatStopDate] = useState('');
-  const [place, setPlace] = useState('');
-  const [memo, setMemo] = useState('');
+  const [eventTitle, setEventTitle] = useState(''); //일정명
+  const [repeatStopValue, setRepeatStopValue] = useState(''); // 반복 종료 (날짜 지정, 없음)
+  const [repeatStopDate, setRepeatStopDate] = useState(''); //반복종료일자
+  const [place, setPlace] = useState(''); // 장소
+  const [memo, setMemo] = useState(''); // 메모
+  const [personalCategory, setPersonalCategory] = useState<Category[]>(); //내 달력 카테고리
+  const [sharedCategory, setSharedCategory] = useState<Category[]>(); // 공용 달력 카테고리
+  const [calendarId, setCalendarId] = useState<number | null>(); // api 보낼시 calendarId
+  const [attendeeList, setAttendeeList] = useState<Attendee[]>(); // 참석자 목록
+  const [attendees, setAttendees] = useState<Attendee[]>([]); // 참석자 목록 (선택된)
+  const { eventType } = useParams();
 
-  const today = new Date().toISOString().split('T')[0];
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const res = await getCalendarCategoryList();
+      setPersonalCategory(res.data.data.personalCategories);
+      setSharedCategory(res.data.data.sharedCategories);
+    };
+    const getAttendees = async () => {
+      const res = await getAttendeeList();
+      setAttendeeList(res.data.data);
+    };
+
+    getCategories();
+    getAttendees();
+  }, []);
+
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
     setIsCalendarOpen(false);
   };
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = (value: string, calendarId: number) => {
     setCategoryValue(value);
+    setCalendarId(calendarId);
     setIsCategoryOpen(false);
   };
 
@@ -53,40 +91,70 @@ function ScheduleRegister() {
     setIsRepeatOpen(false);
   };
 
-  const handleAlertChange = (value: string) => {
-    setAlertValue(value);
-    setIsAlertOpen(false);
-  };
-
-  const handleAttendeeChange = (value: string[]) => {
-    setAttendees(value);
-    setIsAttendeeOpen(false);
-  };
-
   const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRepeatStopValue(e.target.value);
   };
 
   // 참석자 추가
-  const handleAddAttendee = (name: string) => {
-    if (!attendees.includes(name)) {
-      setAttendees([...attendees, name]);
+  const handleAddAttendee = (attendee: Attendee) => {
+    if (attendees.includes(attendee)) {
+      setAttendees(attendees.filter((attend) => attend !== attendee));
     }
+
     setIsAttendeeOpen(false);
   };
 
   // 참석자 삭제
-  const handleRemoveAttendee = (name: string) => {
-    setAttendees(attendees.filter((attendee) => attendee !== name));
+  const handleRemoveAttendee = (attendee: Attendee) => {
+    setAttendees(attendees.filter((attend) => attend !== attendee));
   };
 
-  const openModal = () => setIsModalOpen(true); //test
-  const closeModal = () => setIsModalOpen(false); //test
+  const handleRegisterEvent = async () => {
+    try {
+      const data: RegisterData = {
+        name: eventTitle,
+        eventType: eventType?.toUpperCase() as EventType,
+        categoryId: calendarId!,
+        startDate: new Date(startDate).toISOString(),
+        endDate: isAllDay
+          ? new Date(startDate).toISOString()
+          : new Date(endDate).toISOString(),
+        isAllDay,
+        eventRepeatType: RepeatOptionsAPI[repeatValue] as EventRepeatType,
+        repeatEndDate:
+          repeatStopValue === 'date'
+            ? new Date(repeatStopDate).toISOString()
+            : undefined,
+        memberIds: attendees.map((attendee) => attendee.id),
+        location: place,
+        memo,
+      };
+      console.log(data);
+      // await postCalendarEvent(data);
+      // alert('일정이 등록되었습니다.');
+    } catch (e) {
+      alert('일정 등록에 실패했습니다.');
+    }
+  };
 
   return (
     <PS.Container>
       <S.Container>
         <S.Title>일정등록</S.Title>
+        <S.ButtonContainer>
+          <S.Button
+            $isSelected={eventType === 'schedule'}
+            onClick={() => navigate('/schedule/register/schedule')}
+          >
+            스케쥴
+          </S.Button>
+          <S.Button
+            $isSelected={eventType === 'task'}
+            onClick={() => navigate('/schedule/register/task')}
+          >
+            할 일
+          </S.Button>
+        </S.ButtonContainer>
         <S.Form>
           <S.FormGroup>
             <S.Label>
@@ -138,18 +206,30 @@ function ScheduleRegister() {
                   {categoryValue || '카테고리 선택'}
                   <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 </S.Select>
-                {isCategoryOpen && (
-                  <S.Options>
-                    <S.Option onClick={() => handleCategoryChange('카테고리1')}>
-                      카테고리 1
-                    </S.Option>
-                    <S.Option
-                      onClick={() => handleCategoryChange('카테고리 2')}
-                    >
-                      카테고리 2
-                    </S.Option>
-                  </S.Options>
-                )}
+                {isCategoryOpen &&
+                  (calendarValue === '내 캘린더'
+                    ? personalCategory?.map((category) => (
+                        <S.Options key={category.id}>
+                          <S.Option
+                            onClick={() =>
+                              handleCategoryChange(category.name, category.id)
+                            }
+                          >
+                            {category.name}
+                          </S.Option>
+                        </S.Options>
+                      ))
+                    : sharedCategory?.map((category) => (
+                        <S.Options key={category.id}>
+                          <S.Option
+                            onClick={() =>
+                              handleCategoryChange(category.name, category.id)
+                            }
+                          >
+                            {category.name}
+                          </S.Option>
+                        </S.Options>
+                      )))}
               </S.SelectWrapper>
             </S.FormGroup>
           </S.Row>
@@ -158,32 +238,63 @@ function ScheduleRegister() {
             <S.Label>
               일시 <S.Essential>(필수)</S.Essential>
             </S.Label>
-            <S.DateWrapper>
+            {eventType === 'schedule' ? (
+              <S.DateWrapper>
+                <S.DateInputWrapper>
+                  <S.Input
+                    type='datetime-local'
+                    placeholder='날짜 선택'
+                    value={
+                      isAllDay
+                        ? new Date(new Date(startDate).setHours(0, 0, 0, 0))
+                            .toLocaleString('sv-SE')
+                            .slice(0, 16)
+                        : startDate
+                    }
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </S.DateInputWrapper>
+                <span>—</span>
+                <S.DateInputWrapper>
+                  <S.Input
+                    type='datetime-local'
+                    placeholder='날짜 선택'
+                    value={
+                      isAllDay
+                        ? new Date(new Date(startDate).setHours(23, 59, 0, 0))
+                            .toLocaleString('sv-SE')
+                            .slice(0, 16)
+                        : endDate
+                    }
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </S.DateInputWrapper>
+                <S.CheckboxGroup>
+                  <S.Checkbox
+                    type='checkbox'
+                    onChange={() => {
+                      if (!startDate) {
+                        setStartDate(new Date().toISOString());
+                      }
+                      setIsAllDay(!isAllDay);
+                    }}
+                  />
+                  <span>종일</span>
+                </S.CheckboxGroup>
+              </S.DateWrapper>
+            ) : (
               <S.DateInputWrapper>
                 <S.Input
                   type='date'
                   placeholder='날짜 선택'
-                  value={isAllDay ? today : startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setEndDate(e.target.value);
+                  }}
                 />
               </S.DateInputWrapper>
-              <span>—</span>
-              <S.DateInputWrapper>
-                <S.Input
-                  type='date'
-                  placeholder='날짜 선택'
-                  value={isAllDay ? today : endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </S.DateInputWrapper>
-              <S.CheckboxGroup>
-                <S.Checkbox
-                  type='checkbox'
-                  onChange={() => setIsAllDay(!isAllDay)}
-                />
-                <span>종일</span>
-              </S.CheckboxGroup>
-            </S.DateWrapper>
+            )}
           </S.ColumnRow>
 
           <S.Row>
@@ -238,7 +349,7 @@ function ScheduleRegister() {
                 </S.RadioWrapper>
                 <S.RepeatInputWrapper>
                   <S.Input
-                    type='date'
+                    type={eventType === 'schedule' ? 'datetime-local' : 'date'}
                     placeholder='날짜 선택'
                     onChange={(e) => setRepeatStopDate(e.target.value)}
                   />
@@ -259,35 +370,22 @@ function ScheduleRegister() {
               <S.DropdownIcon src={dropdown} alt='dropdown icon' />
               {isAttendeeOpen && (
                 <S.Options>
-                  <S.Option onClick={() => handleAddAttendee('김예은')}>
-                    김예은
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('방예원')}>
-                    방예원
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('백재혁')}>
-                    백재혁
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('심유정')}>
-                    심유정
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('손화영')}>
-                    손화영
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('임소현')}>
-                    임소현
-                  </S.Option>
-                  <S.Option onClick={() => handleAddAttendee('최준영')}>
-                    최준영
-                  </S.Option>
+                  {attendeeList?.map((attendee) => (
+                    <S.Option
+                      key={attendee.id}
+                      onClick={() => handleAddAttendee(attendee)}
+                    >
+                      {attendee.name}
+                    </S.Option>
+                  ))}
                 </S.Options>
               )}
             </S.SelectWrapper>
           </S.ColumnRow>
           <S.AttendeeButtonContainer>
-            {attendees.map((attendee, index) => (
-              <S.AttendeeButton key={index}>
-                {attendee}
+            {attendees.map((attendee) => (
+              <S.AttendeeButton key={attendee.id}>
+                {attendee.name}
                 <S.RemoveButton
                   src={close}
                   alt='close btn'
@@ -323,12 +421,11 @@ function ScheduleRegister() {
               backgroundColor='var(--color-white)'
               isBorder={true}
               borderColor='#D7D7D7'
+              onClick={() => navigate(-1)}
             />
-            <Button title='저장' onClick={openModal} />
+            <Button title='저장' onClick={() => handleRegisterEvent()} />
           </S.ButtonWrapper>
         </PS.ButtonWrapper>
-
-        <ScheduleRegisterModal isOpen={isModalOpen} onClose={closeModal} />
       </S.Container>
     </PS.Container>
   );

@@ -10,13 +10,13 @@ function ScheduleSidebar() {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate('/schedule/register');
+    navigate('/schedule/register/schedule');
   };
 
   return (
     <S.ScheduleSidebarWrapper>
       <S.ScheduleAddBtn
-        $isClicked={url === '/schedule/register'}
+        $isClicked={url.startsWith('/schedule/register')}
         onClick={handleButtonClick}
       >
         일정등록

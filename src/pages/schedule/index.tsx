@@ -11,7 +11,7 @@ function Schedule() {
   return (
     <ScheduleLayout>
       <Routes>
-        <Route path='/register' element={<ScheduleRegister />} />
+        <Route path='/register/:eventType' element={<ScheduleRegister />} />
         <Route path='/' element={<CalendarComponent />} />
       </Routes>
     </ScheduleLayout>
