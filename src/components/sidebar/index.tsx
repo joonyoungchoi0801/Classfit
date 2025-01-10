@@ -42,7 +42,7 @@ function Sidebar() {
           게시판
         </S.SidebarText>
       </S.SidebarItem>
-      <S.SidebarItem onClick={() => navigate('/drive')}>
+      <S.SidebarItem onClick={() => navigate('/drive/my')}>
         <S.Icon src={drive} alt='drive' />
         <S.SidebarText $isSelected={url.startsWith('/drive')}>
           드라이브

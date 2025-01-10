@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import StudentInfo from './pages/studentInfo';
 import GlobalStyles from './styles/GlobalStyles';
 import Home from './pages/home';
@@ -6,7 +6,7 @@ import Sms from './pages/sms';
 import Attendance from './pages/attendance';
 import Achievement from './pages/achievement';
 import Schedule from './pages/schedule';
-
+import Drive from './pages/drive';
 import Signin from './pages/auth/signin';
 import Signup from './pages/auth/signup';
 import Email from './pages/auth/email';
@@ -43,7 +43,9 @@ export default function Router() {
         <Route path='/manage/studentinfo/:type' element={<StudentInfo />} />
         <Route path='/schedule/*' element={<Schedule />} />
         <Route path='/board' element={<Home />} />
-        <Route path='/drive' element={<Home />} />
+        <Route path='/drive' element={<Navigate to='/drive/my' />} />
+        <Route path='/drive/:type' element={<Drive />} />
+        <Route path="/drive/:type/:subtype?" element={<Drive />} />
       </Routes>
     </BrowserRouter>
   );
