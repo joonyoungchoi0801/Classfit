@@ -22,5 +22,12 @@ export interface AcademyCreateData extends AcademyInviteData {
 export interface EmailVerifyData {
   email: string;
   code: string;
-  purpose: 'SIGN_UP';
+  purpose: 'SIGN_UP' | 'PASSWORD_RESET';
+}
+
+export interface PasswordData {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  emailToken: string;
 }

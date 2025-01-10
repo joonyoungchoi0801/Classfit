@@ -7,7 +7,7 @@ function Popup({ isOpen, onEdit, onDelete }: PopupProps) {
       {isOpen && (
         <S.Menu>
           <S.MenuItem onClick={onEdit}>수정</S.MenuItem>
-          <S.MenuItem onClick={onDelete}>삭제</S.MenuItem>
+          <S.MenuItem onClick={onDelete} $isDelete>삭제</S.MenuItem>
         </S.Menu>
       )}
     </S.PopupContainer>

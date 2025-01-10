@@ -97,7 +97,9 @@ function Signin() {
               회원가입
             </S.AdditionLabel>
             <S.Bar />
-            <S.AdditionLabel>비밀번호 찾기</S.AdditionLabel>
+            <S.AdditionLabel onClick={() => navigate('/password')}>
+              비밀번호 찾기
+            </S.AdditionLabel>
           </S.AdditionWrapper>
         </S.SigninForm>
       </S.SigninWrapper>
