@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import * as S from './Todo.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
+import { RegisterModal } from '@/types/schedule.type';
 
+interface TodoProps {
+  formData: RegisterModal;
+  setFormData: React.Dispatch<React.SetStateAction<RegisterModal>>;
+}
 
-const Todo = () => {
+const Todo = ({ formData, setFormData }: TodoProps) => {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');

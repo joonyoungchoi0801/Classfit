@@ -212,27 +212,27 @@ function ScheduleRegister() {
                 {isCategoryOpen &&
                   (calendarValue === '내 캘린더'
                     ? personalCategory?.map((category) => (
-                        <S.Options key={category.id}>
-                          <S.Option
-                            onClick={() =>
-                              handleCategoryChange(category.name, category.id)
-                            }
-                          >
-                            {category.name}
-                          </S.Option>
-                        </S.Options>
-                      ))
+                      <S.Options key={category.id}>
+                        <S.Option
+                          onClick={() =>
+                            handleCategoryChange(category.name, category.id)
+                          }
+                        >
+                          {category.name}
+                        </S.Option>
+                      </S.Options>
+                    ))
                     : sharedCategory?.map((category) => (
-                        <S.Options key={category.id}>
-                          <S.Option
-                            onClick={() =>
-                              handleCategoryChange(category.name, category.id)
-                            }
-                          >
-                            {category.name}
-                          </S.Option>
-                        </S.Options>
-                      )))}
+                      <S.Options key={category.id}>
+                        <S.Option
+                          onClick={() =>
+                            handleCategoryChange(category.name, category.id)
+                          }
+                        >
+                          {category.name}
+                        </S.Option>
+                      </S.Options>
+                    )))}
               </S.SelectWrapper>
             </S.FormGroup>
           </S.Row>
@@ -250,8 +250,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(0, 0, 0, 0))
-                            .toLocaleString('sv-SE')
-                            .slice(0, 16)
+                          .toLocaleString('sv-SE')
+                          .slice(0, 16)
                         : startDate
                     }
                     onChange={(e) => setStartDate(e.target.value)}
@@ -265,8 +265,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(23, 59, 0, 0))
-                            .toLocaleString('sv-SE')
-                            .slice(0, 16)
+                          .toLocaleString('sv-SE')
+                          .slice(0, 16)
                         : endDate
                     }
                     onChange={(e) => setEndDate(e.target.value)}

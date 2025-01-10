@@ -89,3 +89,7 @@ export const API_CALENDAR = Object.freeze({
   MONTH: '/v1/calendar/monthly',
   MEMBER: '/v1/calendar/academy-members',
 });
+
+export const API_MODAL = Object.freeze({
+  REGISTER: '/v1/calendar/modal',
+});
