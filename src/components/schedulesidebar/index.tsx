@@ -94,7 +94,7 @@ function ScheduleSidebar() {
     fetchCategories();
   }, []);
 
-  const handleButtonClick = () => {const handleButtonClick = () => {
+  const handleButtonClick = () => {
     navigate('/schedule/register/schedule');
   };
 
@@ -254,7 +254,10 @@ function ScheduleSidebar() {
 
   return (
     <S.ScheduleSidebarWrapper>
-      <S.ScheduleAddBtn $isClicked={isClicked} onClick={handleButtonClick}>
+      <S.ScheduleAddBtn
+        $isClicked={url.startsWith('/schedule/register')}
+        onClick={handleButtonClick}
+      >
         일정등록
       </S.ScheduleAddBtn>
 
