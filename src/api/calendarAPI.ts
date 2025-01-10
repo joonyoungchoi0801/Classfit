@@ -7,7 +7,7 @@ import {
   NewCategory,
 } from '@/types/calendar.type';
 
-export const postCalendarCategory = async (data: Category) => {
+export const postCalendarCategory = (data: Category) => {
   return instance({
     method: 'post',
     url: API_CATEGORY.CATEGORY,
@@ -15,14 +15,14 @@ export const postCalendarCategory = async (data: Category) => {
   });
 };
 
-export const deleteCalendarCategory = async (categoryId: number) => {
+export const deleteCalendarCategory = (categoryId: number) => {
   return instance({
     method: 'delete',
     url: API_CATEGORY.CATEGORY_ID(categoryId),
   });
 };
 
-export const patchCalendarCategory = async (
+export const patchCalendarCategory = (
   categoryId: number,
   data: NewCategory
 ) => {
@@ -33,7 +33,7 @@ export const patchCalendarCategory = async (
   });
 };
 
-export const getCalendarCategoryList = async () => {
+export const getCalendarCategoryList = () => {
   return instance({
     method: 'get',
     url: API_CATEGORY.CATEGORY_LIST,
@@ -41,7 +41,7 @@ export const getCalendarCategoryList = async () => {
 };
 // calendar category related API
 
-export const postCalendarModal = async (data: CalendarModal) => {
+export const postCalendarModal = (data: CalendarModal) => {
   return instance({
     method: 'post',
     url: API_CALENDAR.MODAL,
@@ -49,7 +49,7 @@ export const postCalendarModal = async (data: CalendarModal) => {
   });
 };
 
-export const postCalendarEvent = async (data: CalendarEvent) => {
+export const postCalendarEvent = (data: CalendarEvent) => {
   return instance({
     method: 'post',
     url: API_CALENDAR.EVENT,
@@ -57,9 +57,25 @@ export const postCalendarEvent = async (data: CalendarEvent) => {
   });
 };
 
-export const getAttendeeList = async () => {
+export const getAttendeeList = () => {
   return instance({
     method: 'get',
     url: API_CALENDAR.MEMBER,
+  });
+};
+
+export const getCalendarEvent = (
+  categoryId: number,
+  year: number,
+  month: number
+) => {
+  return instance({
+    method: 'get',
+    url: API_CALENDAR.MONTH,
+    params: {
+      categoryId,
+      year,
+      month,
+    },
   });
 };

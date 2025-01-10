@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,7 +7,33 @@ import './customcalendar.css';
 
 import * as S from '../Calendar.styles';
 
+import { CalendarEvent, CalendarEventData } from './calendar.type';
+import { getCalendarEvent } from '@/api/calendarAPI';
+
 const CalendarComponent = () => {
+  const [eventData, setEventData] = useState<CalendarEvent[]>();
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth() + 1
+  );
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  );
+
+  useEffect(() => {
+    const getCalendarData = async () => {
+      const response = await getCalendarEvent(1, currentYear, currentMonth);
+      response.data.data.map((event: CalendarEventData) => {
+        const { id, name, startDate, endDate } = event;
+        setEventData((prev) =>
+          prev
+            ? [...prev, { id, title: name, start: startDate, end: endDate }]
+            : [{ id, title: name, start: startDate, end: endDate }]
+        );
+      });
+    };
+    getCalendarData();
+  }, []);
+
   const handleEventDrop = (info: any) => {
     const event = info.event;
     const start = event.start;
@@ -16,6 +43,14 @@ const CalendarComponent = () => {
     console.log(info.event);
   };
 
+  const handleDatesSet = (dateInfo: any) => {
+    const start = dateInfo.start;
+    const end = dateInfo.end;
+    const midDate = new Date((start.getTime() + end.getTime()) / 2);
+    setCurrentMonth(midDate.getMonth() + 1);
+    setCurrentYear(midDate.getFullYear());
+  };
+
   return (
     <S.CalendarContainer>
       <FullCalendar
@@ -23,24 +58,12 @@ const CalendarComponent = () => {
         initialView='dayGridMonth'
         locale='ko'
         locales={[koLocale]}
-        events={[
-          {
-            id: '1',
-            title: 'ita 수학 보강',
-            start: '2025-01-01T08:00:00',
-            end: '2025-01-04T15:00:00',
-          },
-          {
-            id: '2',
-            title: 'ita 국어 보강',
-            start: '2025-01-16T09:00:00',
-            end: '2025-01-22T10:00:00',
-          },
-        ]}
+        events={eventData}
         editable={true}
         droppable={true}
         eventDrop={handleEventDrop}
         eventClick={handleEventClick}
+        datesSet={handleDatesSet}
         eventTimeFormat={{
           hour: '2-digit',
           minute: '2-digit',
