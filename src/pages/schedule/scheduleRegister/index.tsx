@@ -77,6 +77,7 @@ function ScheduleRegister() {
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
     setIsCalendarOpen(false);
+    setCategoryValue('');
   };
 
   const handleCategoryChange = (value: string, calendarId: number) => {
@@ -98,9 +99,10 @@ function ScheduleRegister() {
   // 참석자 추가
   const handleAddAttendee = (attendee: Attendee) => {
     if (attendees.includes(attendee)) {
-      setAttendees(attendees.filter((attend) => attend !== attendee));
+      alert('이미 추가된 참석자입니다.');
+    } else {
+      setAttendees((prevAttendees) => [...prevAttendees, attendee]);
     }
-
     setIsAttendeeOpen(false);
   };
 
@@ -130,8 +132,9 @@ function ScheduleRegister() {
         memo,
       };
       console.log(data);
-      // await postCalendarEvent(data);
-      // alert('일정이 등록되었습니다.');
+      await postCalendarEvent(data);
+      alert('일정이 등록되었습니다.');
+      navigate('/schedule');
     } catch (e) {
       alert('일정 등록에 실패했습니다.');
     }

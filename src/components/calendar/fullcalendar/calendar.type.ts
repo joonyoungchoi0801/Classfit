@@ -12,3 +12,14 @@ export interface CalendarEvent {
   start: string;
   end: string;
 }
+
+export interface EventPatchData {
+  name: string;
+  eventType: string;
+  categoryId: number;
+  startDate: string;
+  endDate: string;
+  isAllDay: boolean;
+  eventRepeatType: string;
+  repeatEndDate: string;
+}

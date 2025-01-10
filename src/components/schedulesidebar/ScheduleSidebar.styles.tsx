@@ -124,6 +124,7 @@ export const CategoryItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
+  cursor: pointer;
 `;
 
 export const CategoryIcon = styled.img<{ color: string }>`

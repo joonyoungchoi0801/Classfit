@@ -79,3 +79,11 @@ export const getCalendarEvent = (
     },
   });
 };
+
+export const patchCalendarEvent = (eventId: number, data: CalendarModal) => {
+  return instance({
+    method: 'patch',
+    url: API_CALENDAR.EVENT_DETAIL(eventId),
+    data,
+  });
+};

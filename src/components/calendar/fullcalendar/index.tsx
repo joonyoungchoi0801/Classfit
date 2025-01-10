@@ -9,8 +9,10 @@ import * as S from '../Calendar.styles';
 
 import { CalendarEvent, CalendarEventData } from './calendar.type';
 import { getCalendarEvent } from '@/api/calendarAPI';
+import { useParams } from 'react-router-dom';
 
 const CalendarComponent = () => {
+  const { categoryid } = useParams();
   const [eventData, setEventData] = useState<CalendarEvent[]>();
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth() + 1
@@ -21,7 +23,11 @@ const CalendarComponent = () => {
 
   useEffect(() => {
     const getCalendarData = async () => {
-      const response = await getCalendarEvent(1, currentYear, currentMonth);
+      const response = await getCalendarEvent(
+        Number(categoryid),
+        currentYear,
+        currentMonth
+      );
       response.data.data.map((event: CalendarEventData) => {
         const { id, name, startDate, endDate } = event;
         setEventData((prev) =>
@@ -38,7 +44,10 @@ const CalendarComponent = () => {
     const event = info.event;
     const start = event.start;
     const end = event.end;
-  };
+    console.log(event);
+    console.log(start);
+    console.log(end);
+  }; // 이벤트가 드래그되었을 때 발생하는 이벤트 api생성되면 추후 연결
   const handleEventClick = (info: any) => {
     console.log(info.event);
   };

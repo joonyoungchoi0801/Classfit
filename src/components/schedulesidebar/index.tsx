@@ -279,7 +279,11 @@ function ScheduleSidebar() {
         {isMyCalendarExpanded && (
           <S.CategoryList>
             {personalCategories.map((item) => (
-              <S.CategoryItem key={item.id} color={item.color}>
+              <S.CategoryItem
+                key={item.id}
+                color={item.color}
+                onClick={() => navigate(`/schedule/${item.id}`)}
+              >
                 <S.Category>
                   <S.CategoryIcon
                     color={item.color}
@@ -328,7 +332,11 @@ function ScheduleSidebar() {
         {isSharedCalExpanded && (
           <S.SharedList>
             {sharedCategories.map((item) => (
-              <S.SharedItem key={item.id} color={item.color}>
+              <S.SharedItem
+                key={item.id}
+                color={item.color}
+                onClick={() => navigate(`/schedule/${item.id}`)}
+              >
                 <S.Shared>
                   <S.CategoryIcon
                     color={item.color}
