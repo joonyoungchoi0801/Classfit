@@ -36,7 +36,7 @@ export const editCategory = (
   newColor: string
 ): Promise<AxiosResponse<EditCategoryResponse>> => {
   return instance({
-    url: API_CATEGORY.EDIT(categoryId),
+    url: API_CATEGORY.CATEGORY_ID(categoryId),
     method: 'PATCH',
     data: {
       newName,
@@ -49,7 +49,7 @@ export const deleteCategory = (
   categoryId: number
 ): Promise<AxiosResponse<EditCategoryResponse>> => {
   return instance({
-    url: API_CATEGORY.EDIT(categoryId),
+    url: API_CATEGORY.CATEGORY_ID(categoryId),
     method: 'DELETE',
   });
 };

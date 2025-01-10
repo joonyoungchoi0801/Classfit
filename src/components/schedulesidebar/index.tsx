@@ -6,8 +6,16 @@ import rightArrow from '@/assets/managesidebar/rightarrow.svg';
 import plusbtn from '@/assets/schedulesidebar/plusbtn.svg';
 import task from '@/assets/schedulesidebar/task.svg';
 import kebob from '@/assets/schedulesidebar/kebob.svg';
-import { getCategories, createCategory, editCategory, deleteCategory } from '@/api/categoryAPI';
-import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
+import {
+  getCategories,
+  createCategory,
+  editCategory,
+  deleteCategory,
+} from '@/api/categoryAPI';
+import {
+  PersonalCategoryData,
+  SharedCategoryData,
+} from '@/types/category.type';
 import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
 import Popup from '@/components/popup';
@@ -21,16 +29,28 @@ function ScheduleSidebar() {
   const [isClicked, setIsClicked] = useState(false);
   const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(false);
   const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(false);
-  const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
-  const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
+  const [personalCategories, setPersonalCategories] = useState<
+    PersonalCategoryData[]
+  >([]);
+  const [sharedCategories, setSharedCategories] = useState<
+    SharedCategoryData[]
+  >([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentType, setCurrentType] = useState<'PERSONAL' | 'SHARED'>('PERSONAL');
+  const [currentType, setCurrentType] = useState<'PERSONAL' | 'SHARED'>(
+    'PERSONAL'
+  );
   const [popupState, setPopupState] = useState<{ [key: number]: boolean }>({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentCategoryData, setCurrentCategoryData] = useState<{ id: number; name: string; color: string } | null>(null);
-  const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: number; name: string } | null>(null);
-
+  const [currentCategoryData, setCurrentCategoryData] = useState<{
+    id: number;
+    name: string;
+    color: string;
+  } | null>(null);
+  const [deleteCategoryData, setDeleteCategoryData] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -41,14 +61,18 @@ function ScheduleSidebar() {
         switch (statusCode) {
           case 200:
             // personalCategories에 색상 매핑
-            const mappedPersonalCategories = data.personalCategories.map((category: PersonalCategoryData) => ({
-              ...category,
-              color: colorMapping[category.color] || category.color,
-            }));
-            const mappedSharedCategories = data.sharedCategories.map((category: SharedCategoryData) => ({
-              ...category,
-              color: colorMapping[category.color] || category.color,
-            }));
+            const mappedPersonalCategories = data.personalCategories.map(
+              (category: PersonalCategoryData) => ({
+                ...category,
+                color: colorMapping[category.color] || category.color,
+              })
+            );
+            const mappedSharedCategories = data.sharedCategories.map(
+              (category: SharedCategoryData) => ({
+                ...category,
+                color: colorMapping[category.color] || category.color,
+              })
+            );
 
             setPersonalCategories(mappedPersonalCategories);
             setSharedCategories(mappedSharedCategories);
@@ -71,8 +95,7 @@ function ScheduleSidebar() {
   }, []);
 
   const handleButtonClick = () => {
-    setIsClicked(!isClicked);
-    navigate('/schedule/register');
+    navigate('/schedule/register/schedule');
   };
 
   const toggleMyCalendar = () => {
@@ -98,9 +121,21 @@ function ScheduleSidebar() {
       if (response.status === 200) {
         const newCategory = response.data.data;
         if (currentType === 'PERSONAL') {
-          setPersonalCategories((prev) => [...prev, { ...newCategory, color: colorMapping[newCategory.color] || newCategory.color }]);
+          setPersonalCategories((prev) => [
+            ...prev,
+            {
+              ...newCategory,
+              color: colorMapping[newCategory.color] || newCategory.color,
+            },
+          ]);
         } else if (currentType === 'SHARED') {
-          setSharedCategories((prev) => [...prev, { ...newCategory, color: colorMapping[newCategory.color] || newCategory.color }]);
+          setSharedCategories((prev) => [
+            ...prev,
+            {
+              ...newCategory,
+              color: colorMapping[newCategory.color] || newCategory.color,
+            },
+          ]);
         }
         handleCloseModal();
       }
@@ -118,7 +153,9 @@ function ScheduleSidebar() {
   };
 
   const handleEdit = (categoryId: number) => {
-    const category = [...personalCategories, ...sharedCategories].find((cat) => cat.id === categoryId);
+    const category = [...personalCategories, ...sharedCategories].find(
+      (cat) => cat.id === categoryId
+    );
     if (category) {
       setCurrentCategoryData(category);
       setIsEditModalOpen(true);
@@ -136,10 +173,14 @@ function ScheduleSidebar() {
 
   // HEX에서 CODE 값을 찾는 함수
   const getColorCodeFromHex = (hex: string): string | undefined => {
-    return Object.keys(colorMapping).find(key => colorMapping[key] === hex);
+    return Object.keys(colorMapping).find((key) => colorMapping[key] === hex);
   };
 
-  const handleSaveEditedCategory = async (id: number, categoryName: string, color: string) => {
+  const handleSaveEditedCategory = async (
+    id: number,
+    categoryName: string,
+    color: string
+  ) => {
     const mappedColor = getColorCodeFromHex(color) || color;
     try {
       const response = await editCategory(id, categoryName, mappedColor);
@@ -148,12 +189,28 @@ function ScheduleSidebar() {
 
         setPersonalCategories((prev) =>
           prev.map((cat) =>
-            cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+            cat.id === id
+              ? {
+                  ...cat,
+                  name: updatedCategory.name,
+                  color:
+                    colorMapping[updatedCategory.color] ||
+                    updatedCategory.color,
+                }
+              : cat
           )
         );
         setSharedCategories((prev) =>
           prev.map((cat) =>
-            cat.id === id ? { ...cat, name: updatedCategory.name, color: colorMapping[updatedCategory.color] || updatedCategory.color } : cat
+            cat.id === id
+              ? {
+                  ...cat,
+                  name: updatedCategory.name,
+                  color:
+                    colorMapping[updatedCategory.color] ||
+                    updatedCategory.color,
+                }
+              : cat
           )
         );
       }
@@ -181,8 +238,12 @@ function ScheduleSidebar() {
       if (deleteCategoryData?.id !== undefined) {
         const response = await deleteCategory(deleteCategoryData.id);
         if (response.status === 200) {
-          setPersonalCategories((prev) => prev.filter((cat) => cat.id !== deleteCategoryData.id));
-          setSharedCategories((prev) => prev.filter((cat) => cat.id !== deleteCategoryData.id));
+          setPersonalCategories((prev) =>
+            prev.filter((cat) => cat.id !== deleteCategoryData.id)
+          );
+          setSharedCategories((prev) =>
+            prev.filter((cat) => cat.id !== deleteCategoryData.id)
+          );
           setIsDeleteModalOpen(false);
         }
       }
@@ -193,27 +254,49 @@ function ScheduleSidebar() {
 
   return (
     <S.ScheduleSidebarWrapper>
-      <S.ScheduleAddBtn $isClicked={isClicked} onClick={handleButtonClick}>
+      <S.ScheduleAddBtn
+        $isClicked={url.startsWith('/schedule/register')}
+        onClick={handleButtonClick}
+      >
         일정등록
       </S.ScheduleAddBtn>
 
       <S.CalendarSection>
         <S.CalendarItem>
           <S.MyCalendar onClick={toggleMyCalendar}>
-            <S.Icon src={isMyCalendarExpanded ? downArrow : rightArrow} alt="arrow" />
+            <S.Icon
+              src={isMyCalendarExpanded ? downArrow : rightArrow}
+              alt='arrow'
+            />
             <S.CalendarItemText>내 캘린더</S.CalendarItemText>
           </S.MyCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={() => handleOpenModal('PERSONAL')} />
+          <S.CalendarAddIcon
+            src={plusbtn}
+            alt='plus'
+            onClick={() => handleOpenModal('PERSONAL')}
+          />
         </S.CalendarItem>
         {isMyCalendarExpanded && (
           <S.CategoryList>
             {personalCategories.map((item) => (
-              <S.CategoryItem key={item.id} color={item.color}>
+              <S.CategoryItem
+                key={item.id}
+                color={item.color}
+                onClick={() => navigate(`/schedule/${item.id}`)}
+              >
                 <S.Category>
-                  <S.CategoryIcon color={item.color} src={task} alt="category icon" />
+                  <S.CategoryIcon
+                    color={item.color}
+                    src={task}
+                    alt='category icon'
+                  />
                   {item.name}
                 </S.Category>
-                <S.KebobIcon src={kebob} alt="kebob icon" onClick={() => togglePopup(item.id)} />
+                <S.KebobIcon
+                  src={kebob}
+                  alt='kebob icon'
+                  onClick={() => togglePopup(item.id)}
+                />
                 {popupState[item.id] && (
                   <Popup
                     isOpen={popupState[item.id]}
@@ -225,30 +308,48 @@ function ScheduleSidebar() {
             ))}
             <S.TaskItem>
               <S.Category>
-                <S.TaskIcon src={task} alt="category icon" />
+                <S.TaskIcon src={task} alt='category icon' />
                 Task
               </S.Category>
             </S.TaskItem>
           </S.CategoryList>
         )}
 
-
-        <S.CalendarItem >
+        <S.CalendarItem>
           <S.SharedCalendar onClick={toggleSharedCal}>
-            <S.Icon src={isSharedCalExpanded ? downArrow : rightArrow} alt="arrow" />
+            <S.Icon
+              src={isSharedCalExpanded ? downArrow : rightArrow}
+              alt='arrow'
+            />
             <S.CalendarItemText>공용 캘린더</S.CalendarItemText>
           </S.SharedCalendar>
-          <S.CalendarAddIcon src={plusbtn} alt="plus" onClick={() => handleOpenModal('SHARED')} />
+          <S.CalendarAddIcon
+            src={plusbtn}
+            alt='plus'
+            onClick={() => handleOpenModal('SHARED')}
+          />
         </S.CalendarItem>
         {isSharedCalExpanded && (
           <S.SharedList>
             {sharedCategories.map((item) => (
-              <S.SharedItem key={item.id} color={item.color}>
+              <S.SharedItem
+                key={item.id}
+                color={item.color}
+                onClick={() => navigate(`/schedule/${item.id}`)}
+              >
                 <S.Shared>
-                  <S.CategoryIcon color={item.color} src={task} alt="shared category icon" />
+                  <S.CategoryIcon
+                    color={item.color}
+                    src={task}
+                    alt='shared category icon'
+                  />
                   {item.name}
                 </S.Shared>
-                <S.KebobIcon src={kebob} alt="kebob icon" onClick={() => togglePopup(item.id)} />
+                <S.KebobIcon
+                  src={kebob}
+                  alt='kebob icon'
+                  onClick={() => togglePopup(item.id)}
+                />
                 {popupState[item.id] && (
                   <Popup
                     isOpen={popupState[item.id]}

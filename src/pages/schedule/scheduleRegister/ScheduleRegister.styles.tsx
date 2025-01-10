@@ -31,17 +31,16 @@ export const FormGroup = styled.div`
 `;
 
 export const Label = styled.label`
-  font-size: 2rem;
+  font-family: Pretendard;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 2.4rem;
-  margin-bottom: 1rem;
 `;
 
 export const Input = styled.input`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
@@ -49,7 +48,7 @@ export const Input = styled.input`
   width: 100%;
 
   &::placeholder {
-    color: #CACACA;
+    color: #cacaca;
     font-size: 1.8rem;
     font-style: normal;
     font-weight: 600;
@@ -60,7 +59,7 @@ export const Input = styled.input`
 export const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4rem;
 
   span {
     margin: 0 8px;
@@ -72,13 +71,13 @@ export const SelectWrapper = styled.div`
   width: 100%;
 `;
 
-export const Select = styled.div<{ hasValue: boolean }>`
+export const Select = styled.div<{ $hasValue: boolean }>`
   width: 100%;
   padding: 1rem 2rem;
   font-size: 1.8rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
-  color: ${({ hasValue }) => (hasValue ? '#000' : '#CACACA')};
+  border: 1px solid #dedede;
+  color: ${({ $hasValue }) => ($hasValue ? '#000' : '#CACACA')};
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem;
@@ -102,7 +101,7 @@ export const Options = styled.div`
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 1rem;
   background-color: white;
   z-index: 1;
@@ -118,7 +117,7 @@ export const Option = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #DFEBFF;
+    background-color: #dfebff;
   }
 `;
 
@@ -184,7 +183,7 @@ export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
 export const MemoInput = styled.textarea`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
@@ -194,7 +193,7 @@ export const MemoInput = styled.textarea`
   resize: none;
 
   &::placeholder {
-    color: #CACACA;
+    color: #cacaca;
     font-size: 1.8rem;
     font-style: normal;
     font-weight: 600;
@@ -209,4 +208,71 @@ export const ButtonWrapper = styled.div`
   gap: 1rem;
   padding: 2rem;
   margin-bottom: 10rem;
+`;
+
+export const Essential = styled.span`
+  color: var(--color-blue);
+  font-family: Pretendard;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  margin: 0 !important;
+`;
+
+export const RepeatWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1.4rem;
+`;
+
+export const RadioWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+`;
+export const RepeatLabel = styled.label`
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const RepeatInput = styled.input`
+  width: 2rem;
+  height: 2rem;
+`;
+
+export const RepeatInputWrapper = styled.div`
+  position: relative;
+  flex-grow: 13;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+`;
+
+export const Button = styled.button<{ $isSelected?: boolean }>`
+  display: inline-flex;
+  padding: 0.6rem 1.4rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  background: ${({ $isSelected }) =>
+    $isSelected ? 'var(--color-blue)' : '#E5E5E5'};
+  color: var(--color-white);
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.792rem;
 `;

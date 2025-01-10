@@ -118,3 +118,7 @@
 .fc-daygrid-event-dot {
   border-color: var(--color-black) !important;
 }
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #dfebff;
+}

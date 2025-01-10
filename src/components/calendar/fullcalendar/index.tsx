@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,18 +7,57 @@ import './customcalendar.css';
 
 import * as S from '../Calendar.styles';
 
+import { CalendarEvent, CalendarEventData } from './calendar.type';
+import { getCalendarEvent } from '@/api/calendarAPI';
+import { useParams } from 'react-router-dom';
+
 const CalendarComponent = () => {
+  const { categoryid } = useParams();
+  const [eventData, setEventData] = useState<CalendarEvent[]>();
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth() + 1
+  );
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  );
+
+  useEffect(() => {
+    const getCalendarData = async () => {
+      const response = await getCalendarEvent(
+        Number(categoryid),
+        currentYear,
+        currentMonth
+      );
+      response.data.data.map((event: CalendarEventData) => {
+        const { id, name, startDate, endDate } = event;
+        setEventData((prev) =>
+          prev
+            ? [...prev, { id, title: name, start: startDate, end: endDate }]
+            : [{ id, title: name, start: startDate, end: endDate }]
+        );
+      });
+    };
+    getCalendarData();
+  }, []);
+
   const handleEventDrop = (info: any) => {
     const event = info.event;
     const start = event.start;
     const end = event.end;
-
-    console.log('Event Title:', event.title);
-    console.log('New Start Time:', start.toISOString());
-    console.log('New End Time:', end ? end.toISOString() : 'No end time');
-  };
+    console.log(event);
+    console.log(start);
+    console.log(end);
+  }; // 이벤트가 드래그되었을 때 발생하는 이벤트 api생성되면 추후 연결
   const handleEventClick = (info: any) => {
     console.log(info.event);
+  };
+
+  const handleDatesSet = (dateInfo: any) => {
+    const start = dateInfo.start;
+    const end = dateInfo.end;
+    const midDate = new Date((start.getTime() + end.getTime()) / 2);
+    setCurrentMonth(midDate.getMonth() + 1);
+    setCurrentYear(midDate.getFullYear());
   };
 
   return (
@@ -27,24 +67,12 @@ const CalendarComponent = () => {
         initialView='dayGridMonth'
         locale='ko'
         locales={[koLocale]}
-        events={[
-          {
-            id: '1',
-            title: 'Event 1',
-            start: '2024-12-16T08:00:00',
-            end: '2024-12-16T15:00:00',
-          },
-          {
-            id: '2',
-            title: 'Event 2',
-            start: '2024-12-16T09:00:00',
-            end: '2024-12-19T10:00:00',
-          },
-        ]}
+        events={eventData}
         editable={true}
         droppable={true}
         eventDrop={handleEventDrop}
         eventClick={handleEventClick}
+        datesSet={handleDatesSet}
         eventTimeFormat={{
           hour: '2-digit',
           minute: '2-digit',

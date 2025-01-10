@@ -31,12 +31,14 @@ export const ScheduleAddBtn = styled.button<{ $isClicked: boolean }>`
   margin-left: 2.1rem;
   justify-content: center;
   align-items: center;
-  color: ${({ $isClicked }) => ($isClicked ? 'var(--color-white)' : 'var(--color-black)')};
+  color: ${({ $isClicked }) =>
+    $isClicked ? 'var(--color-white)' : 'var(--color-black)'};
   font-size: 2rem;
   font-style: normal;
   font-weight: 500;
   line-height: 1.792rem;
-  background: ${({ $isClicked }) => ($isClicked ? 'var(--color-blue)' : 'var(--color-white)')};
+  background: ${({ $isClicked }) =>
+    $isClicked ? 'var(--color-blue)' : 'var(--color-white)'};
   border-radius: 1rem;
   cursor: pointer;
 `;
@@ -57,7 +59,7 @@ export const CalendarItem = styled.div`
   justify-content: space-between;
 
   &:not(:last-child) {
-    border-bottom: 0.1rem solid #DEDEDE;
+    border-bottom: 0.1rem solid #dedede;
   }
 `;
 
@@ -70,7 +72,7 @@ export const MyCalendar = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-`
+`;
 
 export const Icon = styled.img`
   width: 2rem;
@@ -82,6 +84,13 @@ export const CalendarItemText = styled.span`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+`;
+
+export const CalendarAddBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  color: #5f6368;
   cursor: pointer;
 `;
 
@@ -89,7 +98,6 @@ export const CalendarAddIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
-  cursor: pointer;
 `;
 
 export const CategoryList = styled.div`
@@ -116,9 +124,10 @@ export const CategoryItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
+  cursor: pointer;
 `;
 
-export const CategoryIcon = styled.img < { color: string }>`
+export const CategoryIcon = styled.img<{ color: string }>`
   width: 1.6rem;
   height: 1.6rem;
   flex-shrink: 0;

@@ -79,5 +79,13 @@ export const API_STATISTICS = Object.freeze({
 export const API_CATEGORY = Object.freeze({
   CATEGORY_LIST: '/v1/calendar/category-list',
   CATEGORY: '/v1/calendar/category',
-  EDIT: (categoryId: number) => `/v1/calendar/${categoryId}`,
+  CATEGORY_ID: (categoryId: number) => `/v1/calendar/${categoryId}`,
+});
+
+export const API_CALENDAR = Object.freeze({
+  MODAL: '/v1/calendar/modal',
+  EVENT: '/v1/calendar/event',
+  EVENT_DETAIL: (eventId: number) => `/v1/calendar/modal/${eventId}`,
+  MONTH: '/v1/calendar/monthly',
+  MEMBER: '/v1/calendar/academy-members',
 });

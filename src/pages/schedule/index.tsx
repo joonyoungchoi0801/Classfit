@@ -1,13 +1,8 @@
-import ScheduleLayout from "@/components/layout/schedulelayout";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import ScheduleLayout from '@/components/layout/schedulelayout';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import * as S from './Schedule.styles';
 import ScheduleRegister from './scheduleRegister';
+import CalendarComponent from '@/components/calendar/fullcalendar';
 
 function Schedule() {
   const navigate = useNavigate();
@@ -16,7 +11,8 @@ function Schedule() {
   return (
     <ScheduleLayout>
       <Routes>
-        <Route path='/register' element={<ScheduleRegister />} />
+        <Route path='/register/:eventType' element={<ScheduleRegister />} />
+        <Route path='/:categoryid' element={<CalendarComponent />} />
       </Routes>
     </ScheduleLayout>
   );
