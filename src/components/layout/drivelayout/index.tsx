@@ -8,7 +8,7 @@ function DriveLayout({ children }: DriveLayoutProps) {
     <Layout>
       <S.LayoutContainer>
         <DriveSidebar />
-        {children}
+        <S.DriveWrapper>{children}</S.DriveWrapper>
       </S.LayoutContainer>
     </Layout>
   );
