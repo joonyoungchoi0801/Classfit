@@ -15,7 +15,7 @@ import Class from './pages/auth/class';
 import Password from './pages/auth/password';
 import NewPassword from './pages/auth/newpassword';
 import Certification from './pages/auth/certification';
-import Drive from './pages/drive';
+
 export default function Router() {
   return (
     <BrowserRouter>

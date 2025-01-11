@@ -63,7 +63,7 @@ export const Input = styled.input`
   width: 100%;
   height: 100%;
   padding: 0rem 1.2rem;
-
+  outline: none;
   font-family: Pretendard;
   font-size: 1.4rem;
   font-style: normal;
@@ -94,4 +94,182 @@ export const SearchIcon = styled.img`
   right: 1.2rem;
   top: 50%;
   transform: translateY(-50%);
+`;
+
+export const DriveWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: calc(100vh- 21rem);
+  padding: 2rem 2.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+export const DriveHeader = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 0.7613rem 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 0.08rem solid #e7e7e7;
+  border-bottom: 0.08rem solid #e7e7e7;
+`;
+
+export const DriveHeaderFront = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+`;
+
+export const CheckBox = styled.img`
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+`;
+
+export const HeaderText = styled.span`
+  display: flex;
+  align-items: center;
+  color: #999;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  cursor: pointer;
+`;
+
+export const SortIcon = styled.img`
+  width: 2.4rem;
+  height: 2.4rem;
+`;
+
+export const DriveHeaderBack = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
+  margin-right: 5rem;
+`;
+
+export const DriveList = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 1.5226rem 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.08rem solid #e7e7e7;
+`;
+
+export const DriveListFront = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+`;
+
+export const FileFormatWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+`;
+
+export const FileFormatIcon = styled.img`
+  width: 2rem;
+  height: 2rem;
+  margin-right: 2rem;
+`;
+
+export const FileName = styled.span`
+  color: var(--color-black);
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const DriveListBack = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4.3rem;
+`;
+
+export const ListText = styled.span`
+  color: var(--color-black);
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const KebabIconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  position: relative;
+`;
+export const KebabIcon = styled.img`
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+`;
+
+export const PopUpWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 10.67rem;
+  position: absolute;
+  top: 3rem;
+  right: 0rem;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--color-white);
+  border-radius: 0.67rem;
+  box-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+`;
+export const PopUpOption = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 1rem 1.3rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-bottom: 0.05rem solid #dedede;
+  color: var(--color-black);
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  z-index: 1000;
+  overflow: visible;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f5fc;
+  }
+`;
+export const PopUpDeleteOption = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 1rem 1.3rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: #ff2600;
+  font-family: Pretendard;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f5fc;
+  }
 `;
