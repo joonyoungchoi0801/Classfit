@@ -26,3 +26,15 @@ export const formatDateToYYMMDD = (inputDate: string) => {
   const [year, month, day] = inputDate.split('-');
   return `${year.slice(2)}.${month}.${day}`;
 };
+
+export const formatDateToYYMMDD2 = (dateString: string) => {
+  const date = new Date(dateString);
+
+  // 년, 월, 일 추출
+  const year = date.getFullYear().toString().slice(2); // 2025 -> 25
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, '0'); // 1자리일 경우 0을 추가
+
+  // 원하는 형식으로 조합
+  return `${year}.${month}.${day}`;
+};

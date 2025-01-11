@@ -175,29 +175,40 @@ function ReportDetail() {
   ) => {
     const scoreData = examHistoryData.map((item) => item.score);
     const averageData = examHistoryData.map((item) => item.average);
-
     const categories = examHistoryData.map((item) => item.examName);
+    const includeAverage = reportDetailData?.includeAverage;
 
-    setState((prevState) => ({
-      ...prevState,
-      series: [
-        {
-          name: studentName || '',
-          data: scoreData,
+    setState((prevState) => {
+      const updatedSeries = includeAverage
+        ? [
+            {
+              name: studentName || '',
+              data: scoreData,
+            },
+          ]
+        : [
+            {
+              name: studentName || '',
+              data: scoreData,
+            },
+            {
+              name: '평균',
+              data: averageData,
+            },
+          ];
+
+      return {
+        ...prevState,
+        series: updatedSeries,
+        options: {
+          ...prevState.options,
+          xaxis: {
+            ...prevState.options.xaxis,
+            categories: categories,
+          },
         },
-        {
-          name: '평균',
-          data: averageData,
-        },
-      ],
-      options: {
-        ...prevState.options,
-        xaxis: {
-          ...prevState.options.xaxis,
-          categories: categories,
-        },
-      },
-    }));
+      };
+    });
   };
 
   useEffect(() => {

@@ -3,3 +3,4 @@ export { default as AchievementEmptyMain } from '@/assets/achievement/emptyMain.
 export { default as CircleBlue } from '@/assets/label/circleBlue.svg';
 export { default as CircleGray } from '@/assets/label/circleGray.svg';
 export { default as CircleLightBlue } from '@/assets/label/circleLightBlue.svg';
+export { default as WarningGray } from '@/assets/info/warningGray.svg';

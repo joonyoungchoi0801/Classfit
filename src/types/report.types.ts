@@ -2,6 +2,7 @@ export interface RegisterReportData {
   mainClassId: number;
   subClassId: number;
   reportName: string;
+  includeAverage: boolean;
   startDate: string;
   endDate: string;
   examIdList: number[];
@@ -25,6 +26,7 @@ export interface ReportExamData {
   mainClassName: string;
   subClassName: string;
   examName: string;
+  createAt: string;
 }
 
 export interface ReportData {
@@ -74,6 +76,7 @@ export interface ReportDetailData {
   reportName: string;
   startDate: string;
   endDate: string;
+  includeAverage: boolean;
   attendanceInfoList: AttendanceInfoData[];
   totalAttendanceCount: number;
   examHistoryList: ExamHistoryData[];
