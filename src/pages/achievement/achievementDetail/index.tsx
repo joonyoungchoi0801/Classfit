@@ -104,20 +104,27 @@ function AchievementDetail() {
               </S.TagWrapper>
             </S.TestInfo>
           </S.HeaderSection>
-          <S.StatisticsSection>
-            <S.StatisticBox>
-              <S.StatisticLabel>최고점수</S.StatisticLabel>
-              <S.StatisticValue>{examInfoData.perfectScore}</S.StatisticValue>
-            </S.StatisticBox>
-            <S.StatisticBox>
-              <S.StatisticLabel>최저점수</S.StatisticLabel>
-              <S.StatisticValue>{examInfoData.lowestScore}</S.StatisticValue>
-            </S.StatisticBox>
-            <S.StatisticBox>
-              <S.StatisticLabel>평균</S.StatisticLabel>
-              <S.StatisticValue>{examInfoData.average}</S.StatisticValue>
-            </S.StatisticBox>
-          </S.StatisticsSection>
+          {examInfoData.standard !== 'PF' &&
+            examInfoData.standard !== 'EVALUATION' && (
+              <S.StatisticsSection>
+                <S.StatisticBox>
+                  <S.StatisticLabel>최고점수</S.StatisticLabel>
+                  <S.StatisticValue>
+                    {examInfoData.perfectScore}
+                  </S.StatisticValue>
+                </S.StatisticBox>
+                <S.StatisticBox>
+                  <S.StatisticLabel>최저점수</S.StatisticLabel>
+                  <S.StatisticValue>
+                    {examInfoData.lowestScore}
+                  </S.StatisticValue>
+                </S.StatisticBox>
+                <S.StatisticBox>
+                  <S.StatisticLabel>평균</S.StatisticLabel>
+                  <S.StatisticValue>{examInfoData.average}</S.StatisticValue>
+                </S.StatisticBox>
+              </S.StatisticsSection>
+            )}
 
           <S.ScoreListSection>
             <S.ScoreListHeader>
@@ -131,23 +138,42 @@ function AchievementDetail() {
             </S.ScoreListHeader>
             <S.ScoreList>
               {studentData.map((item) => (
-                <S.ScoreItem key={item.studentId}>
-                  <S.Name>{item.name}</S.Name>
+                <S.ScoreItem
+                  key={item.studentId}
+                  $isEvaluated={examInfoData.standard === 'EVALUATION'}
+                >
+                  <S.Name $isChecked={item.checkedStudent}>{item.name}</S.Name>
                   {examInfoData.standard == 'PF' ? (
                     <S.ToggleWrapper>
                       <S.Toggle>
                         <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                          <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                          {item.evaluationDetail === 'P' ? (
+                            <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                          ) : (
+                            <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                          )}
                         </S.IconWrapper>
-                        <S.Label>T</S.Label>
+                        <S.Label>P</S.Label>
                       </S.Toggle>
                       <S.Toggle>
                         <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                          <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                          {item.evaluationDetail === 'F' ? (
+                            <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                          ) : (
+                            <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                          )}
                         </S.IconWrapper>
                         <S.Label>F</S.Label>
                       </S.Toggle>
                     </S.ToggleWrapper>
+                  ) : examInfoData.standard == 'EVALUATION' ? (
+                    <S.EvaluateWrapper>
+                      <S.EvaluationInput
+                        placeholder='내용을 입력해주세요'
+                        value={item.evaluationDetail}
+                        disabled={true}
+                      />
+                    </S.EvaluateWrapper>
                   ) : (
                     <S.ScoreWrapper>
                       {item.checkedStudent && <S.Score>{item.score}</S.Score>}

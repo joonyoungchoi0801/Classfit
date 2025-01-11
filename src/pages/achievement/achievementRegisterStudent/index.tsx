@@ -86,6 +86,7 @@ function AchievementRegisterStudent() {
       studentId: item.studentId,
       score: Number(item.score),
       checkedStudent: item.checkedStudent,
+      evaluationDetail: item.evaluationDetail,
     }));
     if (examId) {
       const data = await scoreRegisterExam(Number(examId), scoreData);
