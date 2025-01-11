@@ -26,7 +26,6 @@ function ScheduleSidebar() {
   const location = useLocation();
   const url = location.pathname;
   const navigate = useNavigate();
-  const [isClicked, setIsClicked] = useState(false);
   const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(false);
   const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(false);
   const [personalCategories, setPersonalCategories] = useState<
@@ -191,12 +190,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
@@ -204,12 +203,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
@@ -263,12 +262,18 @@ function ScheduleSidebar() {
 
       <S.CalendarSection>
         <S.CalendarItem>
-          <S.MyCalendar onClick={toggleMyCalendar}>
+          <S.MyCalendar>
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
               alt='arrow'
+              onClick={toggleMyCalendar}
             />
-            <S.CalendarItemText>내 캘린더</S.CalendarItemText>
+            <S.CalendarItemText
+              onClick={() => navigate('/schedule/my')}
+              $isActive={url === '/schedule/my'}
+            >
+              내 캘린더
+            </S.CalendarItemText>
           </S.MyCalendar>
           <S.CalendarAddIcon
             src={plusbtn}
@@ -316,12 +321,18 @@ function ScheduleSidebar() {
         )}
 
         <S.CalendarItem>
-          <S.SharedCalendar onClick={toggleSharedCal}>
+          <S.SharedCalendar>
             <S.Icon
               src={isSharedCalExpanded ? downArrow : rightArrow}
               alt='arrow'
+              onClick={toggleSharedCal}
             />
-            <S.CalendarItemText>공용 캘린더</S.CalendarItemText>
+            <S.CalendarItemText
+              onClick={() => navigate('/schedule/shared')}
+              $isActive={url === '/schedule/shared'}
+            >
+              공용 캘린더
+            </S.CalendarItemText>
           </S.SharedCalendar>
           <S.CalendarAddIcon
             src={plusbtn}

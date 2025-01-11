@@ -17,7 +17,7 @@ export interface CalendarModal {
   endDate: string;
   isAllDay: boolean;
   eventRepeatType?: EventRepeatType;
-  repeatEndDate?: string;
+  repeatEndDate?: string | null;
 }
 
 export interface CalendarEvent extends CalendarModal {
@@ -35,4 +35,5 @@ enum EventRepeatType {
   WEEKLY = 'WEEKLY',
   MONTHLY = 'MONTHLY',
   YEARLY = 'YEARLY',
+  NONE = 'NONE',
 }

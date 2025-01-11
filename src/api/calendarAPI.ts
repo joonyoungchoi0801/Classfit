@@ -65,7 +65,7 @@ export const getAttendeeList = () => {
 };
 
 export const getCalendarEvent = (
-  categoryId: number,
+  calendarType: string,
   year: number,
   month: number
 ) => {
@@ -73,7 +73,7 @@ export const getCalendarEvent = (
     method: 'get',
     url: API_CALENDAR.MONTH,
     params: {
-      categoryId,
+      calendarType,
       year,
       month,
     },

@@ -8,16 +8,17 @@ import { getCategories } from '@/api/categoryAPI';
 interface ScheduleProps {
   formData: RegisterModal;
   setFormData: React.Dispatch<React.SetStateAction<RegisterModal>>;
+  selectedDate: string;
 }
 
-const Schedule = ({ formData, setFormData }: ScheduleProps) => {
+const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   const [calendarValue, setCalendarValue] = useState('');
-  const [categoryValue, setCategoryValue] = useState<number>(0);
+  const [categoryName, setCategoryName] = useState<string>('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAllDay, setIsAllDay] = useState(formData.isAllDay);;
-  const [startTime, setStartTime] = useState(formData.startDate);
-  const [endTime, setEndTime] = useState(formData.endDate)
+  const [startTime, setStartTime] = useState(formData.startDate || '');
+  const [endTime, setEndTime] = useState(formData.endDate || '');
   const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
 
@@ -44,37 +45,48 @@ const Schedule = ({ formData, setFormData }: ScheduleProps) => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    // selectedDate가 있을 경우 시작 날짜를 그 값으로 설정
+    if (selectedDate) {
+      setFormData((prev) => ({
+        ...prev,
+        startDate: selectedDate,
+        endDate: selectedDate,
+      }));
+    }
+  }, [selectedDate, setFormData]);
+
   const updateFormData = (key: keyof RegisterModal, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
-    setCategoryValue(0); // 카테고리 초기화
-    if (value === '내 캘린더') {
-      updateFormData('startDate', '');
-    }
+    setCategoryName(''); // 카테고리 초기화
     setIsCalendarOpen(false);
+    //updateFormData('eventType', eventType); 해야 함
   };
 
-  const handleCategoryChange = (value: number) => {
-    setCategoryValue(value);
-    updateFormData('categoryId', value);
+  const handleCategoryChange = (name: string, id: number) => {
+    setCategoryName(name);
+    updateFormData('categoryId', id);
     setIsCategoryOpen(false);
   };
 
   const handleTimeChange = (value: string, isStart: boolean) => {
+    const date = selectedDate || value.split('T')[0];  // selectedDate가 있으면 이를 사용, 없으면 기존 value에서 날짜 추출
+
     if (isAllDay) {
-      // 종일일 경우, 날짜만 사용하고 시간을 고정 설정
-      const datePart = value.split('T')[0];
+      // 종일 모드에서는 시간을 00:00과 23:59로 설정
       if (isStart) {
-        updateFormData('startDate', `${datePart}T00:00`);
-        setStartTime(`${datePart}T00:00`);
-        updateFormData('endDate', `${datePart}T23:59`);
-        setEndTime(`${datePart}T23:59`);
+        updateFormData('startDate', `${date}T00:00`);
+        setStartTime(`${date}T00:00`);
+      } else {
+        updateFormData('endDate', `${date}T23:59`);
+        setEndTime(`${date}T23:59`);
       }
     } else {
-      // 일반 모드에서는 사용자가 선택한 값을 그대로 사용
+      // 일반 모드에서는 사용자가 선택한 값 그대로 사용
       if (isStart) {
         updateFormData('startDate', value);
         setStartTime(value);
@@ -87,15 +99,23 @@ const Schedule = ({ formData, setFormData }: ScheduleProps) => {
 
   const handleAllDayChange = (checked: boolean) => {
     setIsAllDay(checked);
+
     if (checked) {
-      // 종일 모드로 전환: 시간을 고정하지만, 날짜는 유지
-      if (startTime) {
-        const startDate = startTime.split('T')[0];
-        updateFormData('startDate', `${startDate}T00:00`);
-        updateFormData('endDate', `${startDate}T23:59`); // 종료 날짜를 시작 날짜로 맞춤
+      const fullDate = selectedDate || startTime.split('T')[0]; // selectedDate가 있으면 해당 날짜 사용, 없으면 startTime에서 날짜만 추출
+      const startOfDay = `${fullDate}T00:00`;
+      const endOfDay = `${fullDate}T23:59`;
+
+      // startTime과 endTime이 기존 값과 다를 때만 갱신
+      if (startTime !== startOfDay) {
+        updateFormData('startDate', startOfDay); // 시작을 00:00으로 설정
+        setStartTime(startOfDay);
+      }
+      if (endTime !== endOfDay) {
+        updateFormData('endDate', endOfDay); // 종료를 23:59으로 설정
+        setEndTime(endOfDay);
       }
     } else {
-      // 종일 모드 해제: 선택된 날짜 초기화
+      // 종일 모드 해제 시, 시간 초기화
       setStartTime('');
       setEndTime('');
       updateFormData('startDate', '');
@@ -139,8 +159,8 @@ const Schedule = ({ formData, setFormData }: ScheduleProps) => {
         <S.FormGroup>
           <S.Label>카테고리</S.Label>
           <S.SelectWrapper onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
-            <S.Select $hasValue={!!categoryValue}>
-              {categoryValue || '카테고리 선택'}
+            <S.Select $hasValue={!!categoryName}>
+              {categoryName || '카테고리 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
             {isCategoryOpen && (
@@ -149,8 +169,8 @@ const Schedule = ({ formData, setFormData }: ScheduleProps) => {
                   // 내 캘린더 선택 시 personalCategories에서 이름을 뿌림
                   personalCategories.map((category) => (
                     <S.Option
-                      key={category.id}
-                      onClick={() => handleCategoryChange(category.id)}
+                      key={category.name}
+                      onClick={() => handleCategoryChange(category.name, category.id)}
                     >
                       {category.name}
                     </S.Option>
@@ -159,8 +179,8 @@ const Schedule = ({ formData, setFormData }: ScheduleProps) => {
                   // 공용 캘린더 선택 시 sharedCategories의 카테고리 리스트 표시
                   sharedCategories.map((category) => (
                     <S.Option
-                      key={category.id}
-                      onClick={() => handleCategoryChange(category.id)}
+                      key={category.name}
+                      onClick={() => handleCategoryChange(category.name, category.id)}
                     >
                       {category.name}
                     </S.Option>

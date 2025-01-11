@@ -10,9 +10,10 @@ import * as S from '../Calendar.styles';
 import { CalendarEvent, CalendarEventData } from './calendar.type';
 import { getCalendarEvent } from '@/api/calendarAPI';
 import { useParams } from 'react-router-dom';
+import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal';
 
 const CalendarComponent = () => {
-  const { categoryid } = useParams();
+  const { calendarType } = useParams();
   const [eventData, setEventData] = useState<CalendarEvent[]>();
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth() + 1
@@ -20,11 +21,13 @@ const CalendarComponent = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<string>(''); // 클릭한 날짜
 
   useEffect(() => {
     const getCalendarData = async () => {
       const response = await getCalendarEvent(
-        Number(categoryid),
+        calendarType || '',
         currentYear,
         currentMonth
       );
@@ -60,6 +63,17 @@ const CalendarComponent = () => {
     setCurrentYear(midDate.getFullYear());
   };
 
+  const handleDateClick = (info: any) => {
+    const clickedDate = info.dateStr; // 클릭된 날짜를 받아옴
+    console.log("클릭한 날짜: ", clickedDate);
+    setSelectedDate(clickedDate);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
+
   return (
     <S.CalendarContainer>
       <FullCalendar
@@ -73,11 +87,17 @@ const CalendarComponent = () => {
         eventDrop={handleEventDrop}
         eventClick={handleEventClick}
         datesSet={handleDatesSet}
+        dateClick={handleDateClick}
         eventTimeFormat={{
           hour: '2-digit',
           minute: '2-digit',
           hour12: false,
         }}
+      />
+      <ScheduleRegisterModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        selectedDate={selectedDate} // 선택된 날짜를 모달에 전달
       />
     </S.CalendarContainer>
   );

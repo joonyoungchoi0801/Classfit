@@ -18,7 +18,7 @@ export interface RegisterData {
   endDate: string;
   isAllDay: boolean;
   eventRepeatType?: EventRepeatType;
-  repeatEndDate?: string;
+  repeatEndDate?: string | null;
   memberIds: number[];
   location: string;
   memo: string;

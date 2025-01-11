@@ -126,7 +126,7 @@ function ScheduleRegister() {
         repeatEndDate:
           repeatStopValue === 'date'
             ? new Date(repeatStopDate).toISOString()
-            : undefined,
+            : null,
         memberIds: attendees.map((attendee) => attendee.id),
         location: place,
         memo,

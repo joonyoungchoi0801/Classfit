@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './ScheduleRegisterModal.styles';
 import type { ScheduleRegisterModalProps } from './ScheduleRegisterModal.types';
@@ -8,13 +8,14 @@ import Todo from './todo';
 import { RegisterModal, EventType, EventRepeatType } from '@/types/schedule.type';
 import { postRegisterModal } from '@/api/scheduleAPI';
 
-const ScheduleRegisterModal = ({ isOpen, onClose }: ScheduleRegisterModalProps) => {
+const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegisterModalProps) => {
   const [isSchedule, setIsSchedule] = useState(true);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState<RegisterModal>({
     name: '',
     eventType: isSchedule ? EventType.SCHEDULE : EventType.TASK,
-    categoryId: 0,  // 사이드바에서 카테고리 id 연결해야 함
+    categoryId: 0,
     startDate: '',
     endDate: '',
     isAllDay: false,
@@ -61,9 +62,9 @@ const ScheduleRegisterModal = ({ isOpen, onClose }: ScheduleRegisterModalProps) 
           </S.Button>
         </S.OptionGroup>
         {isSchedule ? (
-          <Schedule formData={formData} setFormData={setFormData} />
+          <Schedule formData={formData} setFormData={setFormData} selectedDate={selectedDate} />
         ) : (
-          <Todo formData={formData} setFormData={setFormData} />
+          <Todo formData={formData} setFormData={setFormData} selectedDate={selectedDate} />
         )}
         <S.ButtonGroup>
           <S.TextLink onClick={handleNavigateToDetails}>

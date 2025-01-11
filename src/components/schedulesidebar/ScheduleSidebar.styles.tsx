@@ -77,13 +77,16 @@ export const MyCalendar = styled.div`
 export const Icon = styled.img`
   width: 2rem;
   height: 2rem;
+  cursor: pointer;
 `;
 
-export const CalendarItemText = styled.span`
+export const CalendarItemText = styled.span<{ $isActive?: boolean }>`
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: pointer;
+  color: ${({ $isActive }) => ($isActive ? 'var(--color-blue)' : 'var(--color-black)')};
 `;
 
 export const CalendarAddBtn = styled.button`
