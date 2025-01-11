@@ -32,6 +32,7 @@ export interface ExamStudentData {
   studentId: number;
   name: string;
   score: string;
+  evaluationDetail: string;
 }
 
 export interface ExamStudentDataWithChecked extends ExamStudentData {

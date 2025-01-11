@@ -12,7 +12,7 @@ import { formatDateToYYMMDD } from '@/utils/formatDate';
 
 export const filterData: Record<string, string> = {
   전체: 'TOTAL',
-  월간: 'MONTHLY',
+  월간: 'MONTH',
   주간: 'WEEK',
   데일리: 'DAILY',
   기타: 'OTHER',
@@ -20,7 +20,7 @@ export const filterData: Record<string, string> = {
 
 export const reverseFilterData: Record<string, string> = {
   TOTAL: '전체',
-  MONTHLY: '월간',
+  MONTH: '월간',
   WEEK: '주간',
   DAILY: '데일리',
   OTHER: '기타',

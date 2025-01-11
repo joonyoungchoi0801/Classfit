@@ -3,9 +3,8 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
-  overflow: hidden;
+  padding-bottom: 10rem;
 `;
 export const ButtonWrapper = styled.div`
   display: flex;
@@ -55,10 +54,12 @@ export const ScoreList = styled.div`
   padding: 1rem 0;
 `;
 
-export const ScoreItem = styled.div`
+export const ScoreItem = styled.div<{ $isEvaluated: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  flex-direction: ${(props) => (props.$isEvaluated ? 'column' : 'row')};
+  justify-content: ${(props) =>
+    props.$isEvaluated ? 'center' : 'space-between'};
   padding: 1.5rem 0;
   border-bottom: 0.1rem solid var(--color-gray);
   &:last-child {
@@ -135,6 +136,15 @@ export const RowWrapper = styled.div`
   align-items: center;
 `;
 
+export const EvaluateWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem 0;
+`;
+
 export const IconWrapper = styled.div<{
   $alignLeft?: boolean;
 }>`
@@ -161,4 +171,25 @@ export const Toggle = styled.div`
   flex-direction: row;
   /* gap: 0.5rem; */
   align-items: center;
+`;
+
+export const EvaluationInput = styled.textarea<{
+  $height?: string;
+  $marginTop?: string;
+}>`
+  width: 100%;
+  height: ${({ $height }) => $height || '8rem'};
+  margin-top: ${({ $marginTop }) => $marginTop || '0'};
+  padding: 2rem;
+  border: 0.1rem solid var(--color-gray);
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  resize: vertical;
+  outline: none;
+  box-shadow: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+  }
 `;
