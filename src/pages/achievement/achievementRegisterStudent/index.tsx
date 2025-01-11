@@ -46,13 +46,13 @@ function AchievementRegisterStudent() {
     );
   };
 
-  const handleTF = (id: number) => {
+  const handlePF = (id: number, value: string) => {
     setData((prevData) =>
       prevData.map((item) =>
         item.studentId === id
           ? {
               ...item,
-              evaluationDetail: item.evaluationDetail == 'P' ? 'F' : 'P',
+              evaluationDetail: value,
             }
           : item
       )
@@ -73,7 +73,6 @@ function AchievementRegisterStudent() {
   };
 
   const handleOnChangeScoreValue = (id: number, value: string) => {
-    console.log('value', value);
     setData((prevData) =>
       prevData.map((item) =>
         item.studentId === id ? { ...item, score: value } : item
@@ -219,7 +218,7 @@ function AchievementRegisterStudent() {
                     <S.IconWrapper
                       $alignLeft={true}
                       onClick={() => {
-                        handleTF(item.studentId);
+                        handlePF(item.studentId, 'P');
                       }}
                     >
                       {item.evaluationDetail === 'P' ? (
@@ -236,7 +235,7 @@ function AchievementRegisterStudent() {
                     <S.IconWrapper
                       $alignLeft={true}
                       onClick={() => {
-                        handleTF(item.studentId);
+                        handlePF(item.studentId, 'F');
                       }}
                     >
                       {/* <S.BtnIcon src={ToggleIcon} $size='2rem' /> */}

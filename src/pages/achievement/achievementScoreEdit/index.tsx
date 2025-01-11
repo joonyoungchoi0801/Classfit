@@ -30,7 +30,7 @@ function AchievementScoreEdit() {
   useEffect(() => {
     if (standard === 'SCORE') {
       setTotalScore('/' + highestScore + ' 점');
-    } else if (standard === 'QEUSTION') {
+    } else if (standard === 'QUESTION') {
       setTotalScore('/' + highestScore + ' 개');
     }
   }, [standard, highestScore]);
@@ -87,7 +87,9 @@ function AchievementScoreEdit() {
         studentId: item.studentId,
         score: Number(item.score),
         checkedStudent: item.checkedStudent,
+        evaluationDetail: item.evaluationDetail,
       }));
+
     if (id) {
       const data = await scoreRegisterExam(Number(id), scoreData);
       if (data.status === 200) {
@@ -105,7 +107,21 @@ function AchievementScoreEdit() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
-    navigate(`/manage/achievement/management/detail/${id}`);
+    navigate(-1);
+  };
+
+  const handlePF = (id: number, value: string) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.studentId === id
+          ? {
+              ...item,
+              evaluationDetail: value,
+              isEdited: true,
+            }
+          : item
+      )
+    );
   };
 
   useEffect(() => {
@@ -142,7 +158,10 @@ function AchievementScoreEdit() {
         </S.TotalChooseWrapper>
         <S.ScoreList>
           {data.map((item) => (
-            <S.ScoreItem key={item.studentId}>
+            <S.ScoreItem
+              key={item.studentId}
+              $isEvaluated={standard === 'EVALUATION'}
+            >
               <S.RowWrapper>
                 <S.IconWrapper
                   $alignLeft={true}
@@ -161,18 +180,55 @@ function AchievementScoreEdit() {
               {standard == 'PF' ? (
                 <S.ToggleWrapper>
                   <S.Toggle>
-                    <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                      <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                    <S.IconWrapper
+                      $alignLeft={true}
+                      onClick={() => {
+                        handlePF(item.studentId, 'P');
+                      }}
+                    >
+                      {item.evaluationDetail === 'P' ? (
+                        <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                      ) : (
+                        <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                      )}
                     </S.IconWrapper>
-                    <S.Label>T</S.Label>
+                    <S.Label>P</S.Label>
                   </S.Toggle>
                   <S.Toggle>
-                    <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                      <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                    <S.IconWrapper
+                      $alignLeft={true}
+                      onClick={() => {
+                        handlePF(item.studentId, 'F');
+                      }}
+                    >
+                      {item.evaluationDetail === 'F' ? (
+                        <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                      ) : (
+                        <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                      )}
                     </S.IconWrapper>
                     <S.Label>F</S.Label>
                   </S.Toggle>
                 </S.ToggleWrapper>
+              ) : standard == 'EVALUATION' ? (
+                <S.EvaluationInput
+                  placeholder='내용을 입력해주세요'
+                  value={item.evaluationDetail}
+                  onChange={(e) =>
+                    setData((prevData) =>
+                      prevData.map((prevItem) =>
+                        prevItem.studentId === item.studentId
+                          ? {
+                              ...prevItem,
+                              evaluationDetail: e.target.value,
+                              isEdited: true,
+                            }
+                          : prevItem
+                      )
+                    )
+                  }
+                  disabled={!item.checkedStudent}
+                />
               ) : (
                 <S.ScoreWrapper>
                   {item.checkedStudent && (
