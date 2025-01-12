@@ -1,13 +1,16 @@
 import * as S from './Header.styles';
 import ImageIcon from '../imageIcon';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
+  const navigate = useNavigate();
+
   const handleQuestion = () => {
     console.log('Question');
   };
 
   const handleProfile = () => {
-    console.log('Profile');
+    navigate('/profile/my');
   };
 
   return (
