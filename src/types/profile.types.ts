@@ -5,3 +5,10 @@ export interface ProfileData {
   birth: string;
   subject: string;
 }
+
+export interface StaffData {
+  staffName: string;
+  email: string;
+  academyName: string;
+  status: string;
+}

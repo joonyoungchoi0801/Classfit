@@ -1,13 +1,13 @@
 import * as PS from '@/pages/profile/Profile.styles';
 import * as S from './MyProfile.styles';
 import ImageIcon from '@/components/imageIcon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ProfileData } from '@/types/profile.types';
 import { Calendar } from 'react-date-range';
 import { formatDateToYYYYMMDD } from '@/utils/formatDate';
 import Button from '@/components/button';
 import Modal from '@/components/modal';
-import { useNavigate } from 'react-router-dom';
+import { getProfile, postProfile } from '@/api/profileAPI';
 
 function MyProfile() {
   const [profile, setProfile] = useState<ProfileData>({
@@ -19,11 +19,26 @@ function MyProfile() {
   });
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  // const [date, setDate] = useState<Date>(fomatStringToDate(profile.birth));
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
-  const navigate = useNavigate();
+
+  const [updateBirth, setUpdateBirth] = useState<string>('');
+  const [updateSubject, setUpdateSubject] = useState<string>('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getProfile();
+      if (res.status === 200) {
+        setProfile(res.data.data);
+        setDate(new Date(res.data.data.birth));
+
+        setUpdateBirth(res.data.data.birth);
+        setUpdateSubject(res.data.data.subject);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleChange = (field: string, value: string) => {
     setProfile((prevProfile) => ({
@@ -41,26 +56,35 @@ function MyProfile() {
 
   const handleSelectDate = (selectedDate: Date) => {
     setDate(selectedDate);
-    handleChange('birth', formatDateToYYYYMMDD(selectedDate));
+    setUpdateBirth(formatDateToYYYYMMDD(selectedDate));
   };
 
   const handleCancel = () => {
     setIsEdit(false);
     setModalMessage('수정이 취소되었습니다');
     setOpenModal(true);
-    //수정 취소되는 로직 필요
+    setDate(new Date(profile.birth));
+    setUpdateBirth(profile.birth);
+    setUpdateSubject(profile.subject);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!isEdit) {
       setIsEdit(true);
       return;
     }
 
+    const res = await postProfile(updateBirth, updateSubject);
+    if (res.status === 200) {
+      setModalMessage('수정이 완료되었습니다');
+      setOpenModal(true);
+    } else {
+      setModalMessage('수정에 실패했습니다');
+      setOpenModal(true);
+      setUpdateBirth(profile.birth);
+      setUpdateSubject(profile.subject);
+    }
     setIsEdit(false);
-    //todo: 수정되는 로직 필요
-    setModalMessage('수정이 완료되었습니다');
-    setOpenModal(true);
   };
 
   const handleModalClose = () => {
@@ -79,8 +103,7 @@ function MyProfile() {
 
             <S.BackgroundCircle />
           </S.Wrapper>
-          {/* {profile && <S.Name>{profile.name}</S.Name>} */}
-          <S.Name>손화영</S.Name>
+          <S.Name>{profile.name}</S.Name>
         </S.ProfileHeaderWrapper>
         <S.ContentWrapper>
           <S._ContentWrapper>
@@ -89,7 +112,7 @@ function MyProfile() {
               placeholder=''
               value={profile?.phoneNumber}
               onChange={(e) => handleChange('phoneNumber', e.target.value)}
-              disabled={!isEdit}
+              disabled={true}
             />
           </S._ContentWrapper>
           <S._ContentWrapper>
@@ -98,13 +121,13 @@ function MyProfile() {
               placeholder=''
               value={profile?.email}
               onChange={(e) => handleChange('email', e.target.value)}
-              disabled={!isEdit}
+              disabled={true}
             />
           </S._ContentWrapper>
           <S._ContentWrapper>
             <S.Label>생년월일</S.Label>
             <S.CalendarInput onClick={handleCalendar}>
-              {profile?.birth || '\u00A0'}
+              {updateBirth || '\u00A0'}
               <S.IconWrapper>
                 {showCalendar ? (
                   <ImageIcon name='CalendarFilled' size='2.2rem' />
@@ -132,8 +155,8 @@ function MyProfile() {
             <S.Label>과목</S.Label>
             <S.ContentInput
               placeholder=''
-              value={profile?.subject}
-              onChange={(e) => handleChange('subject', e.target.value)}
+              value={updateSubject}
+              onChange={(e) => setUpdateSubject(e.target.value)}
               disabled={!isEdit}
             />
           </S._ContentWrapper>

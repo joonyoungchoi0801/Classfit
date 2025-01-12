@@ -3,29 +3,45 @@ import ReactDOM from 'react-dom';
 import Button from '@/components/button';
 import * as S from './InviteModal.styles';
 import type { InviteModalProps } from './InviteModal.types';
+import { getInvitationCode, postInvitation } from '@/api/profileAPI';
 
 const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   if (!isOpen) return null;
+  const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     if (!name || !email) {
       alert('이름과 이메일을 입력해주세요');
       return;
     }
-    alert('초대코드를 전송했습니다');
-    //전송 로직 추가
-    setName('');
-    setEmail('');
+    const res = await postInvitation(name, email);
+    if (res.status === 200) {
+      alert('초대코드를 전송했습니다');
+      setName('');
+      setEmail('');
+    } else {
+      alert('초대코드 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getInvitationCode();
+      if (res.status === 200) {
+        setCode(res.data.data);
+      }
+    };
+    fetchData();
+  }, []);
 
   return ReactDOM.createPortal(
     <S.ModalWrapper>
       <S.ModalContainer>
         <S.Header>직원 초대</S.Header>
         <S.Content>
-          <S.Code>초대코드 : 3kekekk</S.Code>
+          <S.Code>초대코드 : {code}</S.Code>
           <S.MoreInfoWrapper>
             <S.FieldLabel>
               이름 <span className='required'>(필수)</span>
