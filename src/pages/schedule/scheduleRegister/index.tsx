@@ -4,7 +4,6 @@ import * as PS from '@/pages/schedule/Schedule.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
-import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal'; // test
 import { Attendee, Category, RegisterData } from './ScheduleRegister.type';
 import {
   getAttendeeList,
@@ -36,12 +35,10 @@ function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
-
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
   const [isAttendeeOpen, setIsAttendeeOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); //test
   const [isAllDay, setIsAllDay] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -149,7 +146,7 @@ function ScheduleRegister() {
             $isSelected={eventType === 'schedule'}
             onClick={() => navigate('/schedule/register/schedule')}
           >
-            스케쥴
+            스케줄
           </S.Button>
           <S.Button
             $isSelected={eventType === 'task'}

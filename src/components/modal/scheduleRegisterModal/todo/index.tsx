@@ -9,11 +9,26 @@ interface TodoProps {
   selectedDate: string;
 }
 
+const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
+const RepeatOptionsAPI: Record<string, string | null> = {
+  '반복 안함': 'NONE',
+  매일: 'DAILY',
+  매주: 'WEEKLY',
+  매월: 'MONTHLY',
+  매년: 'YEARLY',
+};
+
+enum EventRepeatType {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+}
+
 const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
   const [calendarValue, setCalendarValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
-  // const [todoValue, setTodoValue] = useState('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
   const [repeatStopValue, setRepeatStopValue] = useState(''); // 반복 종료 (날짜 지정, 없음)
@@ -39,24 +54,29 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
   const handleCalendarChange = (value: string) => {
     setCalendarValue(value);
     setIsCalendarOpen(false);
-    //updateFormData('eventType', eventType); 해야 함
+    //updateFormData(); 
   };
 
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
     setIsRepeatOpen(false);
-    //updateFormData('eventRepeatType', value); 
+    updateFormData('eventRepeatType', RepeatOptionsAPI[repeatValue] as EventRepeatType);
   };
 
   const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRepeatStopValue(e.target.value);
-    //updateFormData('repeatEndDate', )
+    if (repeatStopValue === 'date') {
+      updateFormData('repeatEndDate', new Date(repeatStopDate).toString());
+    } else {
+      updateFormData('repeatEndDate', null);
+    }
   };
 
   const handleTimeChange = (value: string) => {
     const date = selectedDate || value.split('T')[0];
-    const formattedTime = `${date}T00:00`; // 자동으로 00:00 시간으로 설정
+    const formattedTime = `${date}T00:00`;
     updateFormData('startDate', formattedTime);
+    updateFormData('endDate', formattedTime);
     setStartTime(formattedTime);
   };
 
@@ -116,18 +136,23 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
         <S.FormGroup>
           <S.Label>반복</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsRepeatOpen(!isRepeatOpen)} $hasValue={!!repeatValue}>
+            <S.Select
+              onClick={() => setIsRepeatOpen(!isRepeatOpen)}
+              $hasValue={!!repeatValue}
+            >
               {repeatValue || '반복 선택'}
             </S.Select>
             <S.DropdownIcon src={dropdown} alt="dropdown icon" />
             {isRepeatOpen && (
               <S.Options>
-                <S.Option onClick={() => handleRepeatChange('반복 안함')}>
-                  반복 안함
-                </S.Option>
-                <S.Option onClick={() => handleRepeatChange('매일')}>
-                  매일
-                </S.Option>
+                {RepeatOptions.map((option) => (
+                  <S.Option
+                    key={option}
+                    onClick={() => handleRepeatChange(option)}
+                  >
+                    {option}
+                  </S.Option>
+                ))}
               </S.Options>
             )}
           </S.SelectWrapper>

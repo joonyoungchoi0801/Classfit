@@ -30,7 +30,7 @@ function Sidebar() {
           학생관리
         </S.SidebarText>
       </S.SidebarItem>
-      <S.SidebarItem onClick={() => navigate('/schedule')}>
+      <S.SidebarItem onClick={() => navigate('/schedule/my')}>
         <S.Icon src={schedule} alt='schedule' />
         <S.SidebarText $isSelected={url.startsWith('/schedule')}>
           일정관리

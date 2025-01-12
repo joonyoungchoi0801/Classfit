@@ -24,24 +24,29 @@ const CalendarComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>(''); // 클릭한 날짜
 
+  const apiCalendarType =
+    calendarType === 'my' ? 'PERSONAL' : calendarType === 'shared' ? 'SHARED' : '';
+
   useEffect(() => {
     const getCalendarData = async () => {
-      const response = await getCalendarEvent(
-        calendarType || '',
-        currentYear,
-        currentMonth
-      );
-      response.data.data.map((event: CalendarEventData) => {
-        const { id, name, startDate, endDate } = event;
-        setEventData((prev) =>
-          prev
-            ? [...prev, { id, title: name, start: startDate, end: endDate }]
-            : [{ id, title: name, start: startDate, end: endDate }]
+      if (!apiCalendarType) return; // 올바르지 않은 calendarType은 API 호출 안 함
+      try {
+        const response = await getCalendarEvent(
+          apiCalendarType,
+          currentYear,
+          currentMonth
         );
-      });
+        const fetchedData = response.data.data.map((event: CalendarEventData) => {
+          const { id, name, startDate, endDate } = event;
+          return { id, title: name, start: startDate, end: endDate };
+        });
+        setEventData(fetchedData);
+      } catch (error) {
+        console.error('Failed to fetch calendar events:', error);
+      }
     };
     getCalendarData();
-  }, []);
+  }, [apiCalendarType, currentYear, currentMonth]);
 
   const handleEventDrop = (info: any) => {
     const event = info.event;

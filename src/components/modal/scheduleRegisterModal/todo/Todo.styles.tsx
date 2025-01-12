@@ -111,20 +111,8 @@ export const DateInputWrapper = styled.div`
   margin-right:  0.4rem;
 `;
 
-// export const DateSelect = styled.div`
-//   width: 100%;
-//   padding: 1rem 1rem 1rem 1rem;
-//   font-size: 1.4rem;
-//   border-radius: 1rem;
-//   border: 0.1rem solid #DEDEDE;
-//   color: var(--color-black);
-//   font-style: normal;
-//   font-weight: 600;
-//   line-height: 2.4rem;
-// `;
-
 export const DateSelect = styled.input`
-  padding: 1rem 1rem;
+  padding: 1.4rem 2rem;
   border-radius: 1rem;
   border: 0.1rem solid #DEDEDE;
   font-size: 1.2rem;
