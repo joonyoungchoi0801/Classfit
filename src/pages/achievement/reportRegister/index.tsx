@@ -32,8 +32,9 @@ import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
 import Message from '@/components/message';
 import { reverseExamPeriodList } from '../achievementRegister';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
+import ImageIcon from '@/components/imageIcon';
+import { formatDateToYYMMDD2 } from '@/utils/formatDate';
 
-//평균 토글 onSubmit에 추가
 //빈리스트 UI 추가
 
 function ReportRegister() {
@@ -131,7 +132,6 @@ function ReportRegister() {
     if (mainClassId === undefined && subClassId === undefined) {
       return;
     }
-
     const res = await getFindStudent(mainClassId, subClassId);
     if (res.status === 200) {
       const transformedData = res.data.data.map((item: ReportStudentData) => ({
@@ -228,6 +228,7 @@ function ReportRegister() {
         examName: item.examName,
         mainClassName: item.mainClassName,
         subClassName: item.subClassName,
+        createAt: formatDateToYYMMDD2(item.createAt),
         checked: false,
       }));
       setReportExam(transformedData);
@@ -247,11 +248,12 @@ function ReportRegister() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
-    navigate('/manage/achievement/report');
+    navigate(-1);
   };
 
   const toggleHandler = () => {
     setisOn((prev) => !prev);
+    setValue('includeAverage', !isOn);
   };
 
   const handleChange = (ranges: RangeKeyDict) => {
@@ -484,31 +486,44 @@ function ReportRegister() {
               </PS.RowWrapper>
             </S.Header>
             <S.List>
-              {reportExam.map((item) => (
-                <S.ListItem key={item.examId}>
+              {reportExam.length === 0 ? (
+                <S.EmptyWrapper>
                   <PS.RowWrapper>
-                    <PS.IconWrapper
-                      $alignLeft={true}
-                      onClick={() => toggleExamChecked(item.examId)}
-                    >
-                      {item.checked ? (
-                        <PS.BtnIcon src={SelectedCheckBoxIcon} />
-                      ) : (
-                        <PS.BtnIcon src={CheckBoxIcon} />
-                      )}
-                    </PS.IconWrapper>
-                    <PS.Tag $type={reverseExamPeriodList[item.examPeriod]}>
-                      {reverseExamPeriodList[item.examPeriod]}
-                    </PS.Tag>
-                    <S.ListText>
-                      {item.mainClassName}-{item.subClassName}
-                    </S.ListText>
-                    <S.ListText>{item.examName}</S.ListText>
+                    <ImageIcon name='WarningGray' size='2.2rem' />
+                    <S.Emptylabel>
+                      해당 기간의 성적이 존재하지 않습니다.
+                    </S.Emptylabel>
                   </PS.RowWrapper>
+                </S.EmptyWrapper>
+              ) : (
+                <>
+                  {reportExam.map((item) => (
+                    <S.ListItem key={item.examId}>
+                      <PS.RowWrapper>
+                        <PS.IconWrapper
+                          $alignLeft={true}
+                          onClick={() => toggleExamChecked(item.examId)}
+                        >
+                          {item.checked ? (
+                            <PS.BtnIcon src={SelectedCheckBoxIcon} />
+                          ) : (
+                            <PS.BtnIcon src={CheckBoxIcon} />
+                          )}
+                        </PS.IconWrapper>
+                        <PS.Tag $type={reverseExamPeriodList[item.examPeriod]}>
+                          {reverseExamPeriodList[item.examPeriod]}
+                        </PS.Tag>
+                        <S.ListText>
+                          {item.mainClassName}-{item.subClassName}
+                        </S.ListText>
+                        <S.ListText>{item.examName}</S.ListText>
+                      </PS.RowWrapper>
 
-                  <S.ListText>24.11.15</S.ListText>
-                </S.ListItem>
-              ))}
+                      <S.ListText>{item.createAt}</S.ListText>
+                    </S.ListItem>
+                  ))}
+                </>
+              )}
             </S.List>
           </S._Container>
           <S.LabelWrapper>
@@ -554,37 +569,53 @@ function ReportRegister() {
               </PS.RowWrapper>
             </S.Header>
             <S.List>
-              {reportStudentOpinion.map((item) => (
-                <S.OpItem key={item.studentId}>
+              {reportStudentOpinion.length === 0 ? (
+                <S.EmptyWrapper>
                   <PS.RowWrapper>
-                    <PS.IconWrapper
-                      $alignLeft={true}
-                      onClick={() => {
-                        toggleStudentOpinionChecked(item.studentId);
-                      }}
-                    >
-                      {item.checked ? (
-                        <PS.BtnIcon src={SelectedCheckBoxIcon} />
-                      ) : (
-                        <PS.BtnIcon src={CheckBoxIcon} />
-                      )}
-                    </PS.IconWrapper>
-                    <S.ListText>{item.studentName}</S.ListText>
+                    <ImageIcon name='WarningGray' size='2.2rem' />
+                    <S.Emptylabel>
+                      해당하는 학생이 존재하지 않습니다.
+                    </S.Emptylabel>
                   </PS.RowWrapper>
-                  <S.TextArea
-                    $height='8rem'
-                    $marginTop='1rem'
-                    id='textarea'
-                    value={item.studentOpinion}
-                    onChange={(e) =>
-                      handleStudentOpinionChange(item.studentId, e.target.value)
-                    }
-                    rows={5}
-                    placeholder={item.checked ? '내용을 입력해주세요' : ''}
-                    readOnly={!item.checked}
-                  />
-                </S.OpItem>
-              ))}
+                </S.EmptyWrapper>
+              ) : (
+                <>
+                  {reportStudentOpinion.map((item) => (
+                    <S.OpItem key={item.studentId}>
+                      <PS.RowWrapper>
+                        <PS.IconWrapper
+                          $alignLeft={true}
+                          onClick={() => {
+                            toggleStudentOpinionChecked(item.studentId);
+                          }}
+                        >
+                          {item.checked ? (
+                            <PS.BtnIcon src={SelectedCheckBoxIcon} />
+                          ) : (
+                            <PS.BtnIcon src={CheckBoxIcon} />
+                          )}
+                        </PS.IconWrapper>
+                        <S.ListText>{item.studentName}</S.ListText>
+                      </PS.RowWrapper>
+                      <S.TextArea
+                        $height='8rem'
+                        $marginTop='1rem'
+                        id='textarea'
+                        value={item.studentOpinion}
+                        onChange={(e) =>
+                          handleStudentOpinionChange(
+                            item.studentId,
+                            e.target.value
+                          )
+                        }
+                        rows={5}
+                        placeholder={item.checked ? '내용을 입력해주세요' : ''}
+                        readOnly={!item.checked}
+                      />
+                    </S.OpItem>
+                  ))}
+                </>
+              )}
             </S.List>
           </S._Container>
         </S.FormWrapper>

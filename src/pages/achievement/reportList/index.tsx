@@ -138,6 +138,7 @@ function ReportList() {
           ...item,
           checked: false,
         }));
+
         setReportData(updatedData);
       } else {
         alert('리포트 검색에 실패했습니다.');
