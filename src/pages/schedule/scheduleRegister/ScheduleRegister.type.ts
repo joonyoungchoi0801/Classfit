@@ -13,6 +13,7 @@ export interface Attendee {
 export interface RegisterData {
   name: string;
   eventType: EventType;
+  calendarType: string;
   categoryId: number;
   startDate: string;
   endDate: string;

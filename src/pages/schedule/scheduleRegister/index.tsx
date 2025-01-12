@@ -33,6 +33,7 @@ enum EventType {
 
 function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
+  const [calendarType, setCalendarType] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -72,6 +73,11 @@ function ScheduleRegister() {
   }, []);
 
   const handleCalendarChange = (value: string) => {
+    if (value === '내 캘린더') {
+      setCalendarType('PERSONAL');
+    } else if (value === '공용 캘린더') {
+      setCalendarType('SHARED');
+    }
     setCalendarValue(value);
     setIsCalendarOpen(false);
     setCategoryValue('');
@@ -113,6 +119,7 @@ function ScheduleRegister() {
       const data: RegisterData = {
         name: eventTitle,
         eventType: eventType?.toUpperCase() as EventType,
+        calendarType: calendarType,
         categoryId: calendarId!,
         startDate: new Date(startDate).toISOString(),
         endDate: isAllDay
@@ -131,7 +138,7 @@ function ScheduleRegister() {
       console.log(data);
       await postCalendarEvent(data);
       alert('일정이 등록되었습니다.');
-      navigate('/schedule');
+      navigate('/schedule/my');
     } catch (e) {
       alert('일정 등록에 실패했습니다.');
     }

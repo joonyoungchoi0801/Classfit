@@ -12,6 +12,7 @@ export interface NewCategory {
 export interface CalendarModal {
   name: string;
   eventType: EventType;
+  calendarType: string;
   categoryId: number;
   startDate: string;
   endDate: string;
