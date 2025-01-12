@@ -4,3 +4,6 @@ export { default as CircleBlue } from '@/assets/label/circleBlue.svg';
 export { default as CircleGray } from '@/assets/label/circleGray.svg';
 export { default as CircleLightBlue } from '@/assets/label/circleLightBlue.svg';
 export { default as WarningGray } from '@/assets/info/warningGray.svg';
+export { default as Question } from '@/assets/info/question.svg';
+export { default as Profile } from '@/assets/info/profile.svg';
+export { default as Logo } from '@/assets/header/logo.svg';

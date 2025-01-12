@@ -45,3 +45,7 @@ export const ProfileImg = styled.img`
   left: 50%;
   transform: translate(18%, -50%);
 `;
+
+export const Button = styled.div`
+  cursor: pointer;
+`;
