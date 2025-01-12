@@ -127,14 +127,13 @@ export const CategoryItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
-  cursor: pointer;
 `;
 
 export const CategoryIcon = styled.img<{ color: string }>`
   width: 1.6rem;
   height: 1.6rem;
   flex-shrink: 0;
-  background-color: ${({ color }) => color};
+  background-color: ${({ color }) => `#${color}`};
 `;
 
 export const KebobIcon = styled.img`

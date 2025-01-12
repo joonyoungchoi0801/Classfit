@@ -16,11 +16,12 @@ import {
   PersonalCategoryData,
   SharedCategoryData,
 } from '@/types/category.type';
-import { colorMapping } from '@/utils/colorMapping';
+// import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
 import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
 import CategoryDeleteModal from '@/components/modal/categoryModal/categoryDeleteModal';
+import { colorMapping } from '@/utils/colorMapping';
 
 function ScheduleSidebar() {
   const location = useLocation();
@@ -59,22 +60,8 @@ function ScheduleSidebar() {
 
         switch (statusCode) {
           case 200:
-            // personalCategories에 색상 매핑
-            const mappedPersonalCategories = data.personalCategories.map(
-              (category: PersonalCategoryData) => ({
-                ...category,
-                color: colorMapping[category.color] || category.color,
-              })
-            );
-            const mappedSharedCategories = data.sharedCategories.map(
-              (category: SharedCategoryData) => ({
-                ...category,
-                color: colorMapping[category.color] || category.color,
-              })
-            );
-
-            setPersonalCategories(mappedPersonalCategories);
-            setSharedCategories(mappedSharedCategories);
+            setPersonalCategories(data.personalCategories);
+            setSharedCategories(data.sharedCategories);
             break;
           case 404:
             console.log('ACCESS_DENIED: 접근이 거부되었습니다.');
@@ -91,7 +78,7 @@ function ScheduleSidebar() {
     };
 
     fetchCategories();
-  }, []);
+  }, [isModalOpen]);
 
   const handleButtonClick = () => {
     navigate('/schedule/register/schedule');
@@ -286,8 +273,6 @@ function ScheduleSidebar() {
             {personalCategories.map((item) => (
               <S.CategoryItem
                 key={item.id}
-                color={item.color}
-                onClick={() => navigate(`/schedule/${item.id}`)}
               >
                 <S.Category>
                   <S.CategoryIcon
@@ -345,8 +330,6 @@ function ScheduleSidebar() {
             {sharedCategories.map((item) => (
               <S.SharedItem
                 key={item.id}
-                color={item.color}
-                onClick={() => navigate(`/schedule/${item.id}`)}
               >
                 <S.Shared>
                   <S.CategoryIcon

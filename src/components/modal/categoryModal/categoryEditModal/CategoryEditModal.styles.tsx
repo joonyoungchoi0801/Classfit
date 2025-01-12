@@ -61,7 +61,7 @@ export const CategoryIcon = styled.div<{ $selectedColor?: string }>`
   width: 3.2rem;
   height: 3rem;
   border-radius: 2rem;
-  background-color: ${({ $selectedColor }) => $selectedColor || '#D9D9D9'};
+  background-color: ${({ $selectedColor }) => `#${$selectedColor}` || '#D9D9D9'};
   cursor: pointer;
 `;
 
