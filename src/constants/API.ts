@@ -89,3 +89,9 @@ export const API_CALENDAR = Object.freeze({
   MONTH: '/v1/calendar/monthly',
   MEMBER: '/v1/calendar/academy-members',
 });
+
+export const API_PROFILE = Object.freeze({
+  PROFILE: '/v1/mypage',
+  INVITE: 'v1/invitation/invite',
+  INVITE_LIST: 'v1/invitation/list',
+});
