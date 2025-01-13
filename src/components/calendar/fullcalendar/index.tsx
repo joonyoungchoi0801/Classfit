@@ -60,7 +60,7 @@ const CalendarComponent = () => {
       }
     };
     getCalendarData();
-  }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen]);
+  }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen, isScheduleModalOpen]);
 
   const handleEventDrop = (info: any) => {
     const event = info.event;
@@ -94,7 +94,6 @@ const CalendarComponent = () => {
 
   const handleDateClick = (info: any) => {
     const clickedDate = info.dateStr; // 클릭된 날짜를 받아옴
-    console.log("클릭한 날짜: ", clickedDate);
     setSelectedDate(clickedDate);
     setIsScheduleModalOpen(true);
   };

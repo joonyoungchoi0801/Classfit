@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instance from './instance';
-import { API_MODAL } from '@/constants/API';
+import { API_CALENDAR } from '@/constants/API';
 import type {
   RegisterModalResponse,
   RegisterModal,
@@ -10,7 +10,7 @@ export const postRegisterModal = (
   data: RegisterModal
 ): Promise<AxiosResponse<RegisterModalResponse>> => {
   return instance({
-    url: API_MODAL.REGISTER,
+    url: API_CALENDAR.MODAL,
     method: 'POST',
     data,
   });

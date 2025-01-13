@@ -15,6 +15,7 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
   const [formData, setFormData] = useState<RegisterModal>({
     name: '',
     eventType: isSchedule ? EventType.SCHEDULE : EventType.TASK,
+    calendarType: '',
     categoryId: 0,
     startDate: '',
     endDate: '',
@@ -35,6 +36,8 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
 
   const handleSave = async () => {
     try {
+      console.log('formData:', formData);
+
       const response = await postRegisterModal(formData);
       if (response.status === 200) {
         console.log('등록 성공');

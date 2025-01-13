@@ -48,10 +48,11 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   useEffect(() => {
     // selectedDate가 있을 경우 시작 날짜를 그 값으로 설정
     if (selectedDate) {
+      const dateWithTime = `${selectedDate}T00:00`;
       setFormData((prev) => ({
         ...prev,
-        startDate: selectedDate,
-        endDate: selectedDate,
+        startDate: dateWithTime,
+        endDate: dateWithTime,
       }));
     }
   }, [selectedDate, setFormData]);
@@ -61,10 +62,12 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   };
 
   const handleCalendarChange = (value: string) => {
+    const calendarType = value === '내 캘린더' ? 'PERSONAL' : 'SHARED';
+
     setCalendarValue(value);
-    setCategoryName(''); // 카테고리 초기화
+    updateFormData('calendarType', calendarType);
+    setCategoryName('');
     setIsCalendarOpen(false);
-    //updateFormData('eventType', eventType); 해야 함
   };
 
   const handleCategoryChange = (name: string, id: number) => {
@@ -74,7 +77,7 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   };
 
   const handleTimeChange = (value: string, isStart: boolean) => {
-    const date = selectedDate || value.split('T')[0];  // selectedDate가 있으면 이를 사용, 없으면 기존 value에서 날짜 추출
+    const date = selectedDate || value.split('T')[0];
 
     if (isAllDay) {
       // 종일 모드에서는 시간을 00:00과 23:59로 설정
@@ -88,34 +91,34 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
     } else {
       // 일반 모드에서는 사용자가 선택한 값 그대로 사용
       if (isStart) {
-        updateFormData('startDate', value);
         setStartTime(value);
+        updateFormData('startDate', value);
       } else {
-        updateFormData('endDate', value);
         setEndTime(value);
+        updateFormData('endDate', value);
       }
     }
   };
 
   const handleAllDayChange = (checked: boolean) => {
     setIsAllDay(checked);
+    updateFormData('isAllDay', checked);
 
     if (checked) {
-      const fullDate = selectedDate || startTime.split('T')[0]; // selectedDate가 있으면 해당 날짜 사용, 없으면 startTime에서 날짜만 추출
+      const fullDate = selectedDate || startTime.split('T')[0];
       const startOfDay = `${fullDate}T00:00`;
       const endOfDay = `${fullDate}T23:59`;
 
       // startTime과 endTime이 기존 값과 다를 때만 갱신
       if (startTime !== startOfDay) {
-        updateFormData('startDate', startOfDay); // 시작을 00:00으로 설정
+        updateFormData('startDate', startOfDay);
         setStartTime(startOfDay);
       }
       if (endTime !== endOfDay) {
-        updateFormData('endDate', endOfDay); // 종료를 23:59으로 설정
+        updateFormData('endDate', endOfDay);
         setEndTime(endOfDay);
       }
     } else {
-      // 종일 모드 해제 시, 시간 초기화
       setStartTime('');
       setEndTime('');
       updateFormData('startDate', '');
@@ -166,7 +169,6 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
             {isCategoryOpen && (
               <S.Options>
                 {calendarValue === '내 캘린더' ? (
-                  // 내 캘린더 선택 시 personalCategories에서 이름을 뿌림
                   personalCategories.map((category) => (
                     <S.Option
                       key={category.name}
@@ -176,7 +178,6 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
                     </S.Option>
                   ))
                 ) : (
-                  // 공용 캘린더 선택 시 sharedCategories의 카테고리 리스트 표시
                   sharedCategories.map((category) => (
                     <S.Option
                       key={category.name}
@@ -198,7 +199,7 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
           <S.DateInputWrapper>
             <S.DateInput
               type="datetime-local"
-              value={startTime}
+              value={startTime || `${selectedDate}T00:00`}
               onChange={(e) => handleTimeChange(e.target.value, true)}
               placeholder="시작 날짜와 시간 선택"
             />
