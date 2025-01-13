@@ -6,7 +6,14 @@ export interface RegisterReportData {
   startDate: string;
   endDate: string;
   examIdList: number[];
+  studentList: RegisterStudentData[];
   overallOpinion: string;
+}
+
+export interface RegisterStudentData {
+  reportId: number;
+  studentId: number;
+  studentName: string;
 }
 
 export interface StudentOpinionData {
