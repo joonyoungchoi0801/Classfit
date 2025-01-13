@@ -37,12 +37,12 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
 
   useEffect(() => {
     if (selectedDate) {
-      const formattedDate = `${selectedDate}T00:00`; // selectedDate와 '00:00'을 결합한 날짜 시간
+      const formattedDate = `${selectedDate}T00:00`;
       setStartTime(formattedDate);
       setFormData((prev) => ({
         ...prev,
-        startDate: formattedDate, // startDate를 '00:00' 시간으로 설정
-        endDate: formattedDate,   // 필요에 따라 endDate도 동일하게 설정
+        startDate: formattedDate,
+        endDate: formattedDate,
       }));
     }
   }, [selectedDate, setFormData]);
@@ -52,39 +52,57 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
   };
 
   const handleCalendarChange = (value: string) => {
+    const calendarType = value === '내 캘린더' ? 'PERSONAL' : 'SHARED';
+
     setCalendarValue(value);
+    updateFormData('calendarType', calendarType);
     setIsCalendarOpen(false);
-    //updateFormData(); 
   };
 
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
     setIsRepeatOpen(false);
-    updateFormData('eventRepeatType', RepeatOptionsAPI[repeatValue] as EventRepeatType);
+    updateFormData('eventRepeatType', RepeatOptionsAPI[value] as EventRepeatType);
   };
-
+  //
   const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRepeatStopValue(e.target.value);
-    if (repeatStopValue === 'date') {
-      updateFormData('repeatEndDate', new Date(repeatStopDate).toString());
+    const value = e.target.value;
+    setRepeatStopValue(value);
+
+    if (value === 'date') {
+      // 반복 종료일자를 새로 지정하지 않은 상태에서 updateFormData가 호출되지 않도록 처리
+      if (repeatStopDate) {
+        updateFormData('repeatEndDate', new Date(repeatStopDate).toISOString());
+      }
     } else {
       updateFormData('repeatEndDate', null);
     }
   };
 
+  const handleRepeatStopDateChange = (value: string) => {
+    setRepeatStopDate(value);
+
+    if (repeatStopValue === 'date') {
+      updateFormData('repeatEndDate', new Date(value).toISOString());
+    }
+  };
+
   const handleTimeChange = (value: string) => {
-    const date = selectedDate || value.split('T')[0];
-    const formattedTime = `${date}T00:00`;
-    updateFormData('startDate', formattedTime);
-    updateFormData('endDate', formattedTime);
-    setStartTime(formattedTime);
+    updateFormData('startDate', value);
+    updateFormData('endDate', value);
+    setStartTime(value);
   };
 
   return (
     <>
       <S.FormGroup>
         <S.Label>일정명</S.Label>
-        <S.Input type="text" placeholder="일정명 입력" />
+        <S.Input
+          type="text"
+          placeholder="일정명 입력"
+          value={formData.name}
+          onChange={(e) => updateFormData('name', e.target.value)}
+        />
       </S.FormGroup>
 
       <S.Row>
@@ -185,9 +203,10 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
           </S.RadioWrapper>
           <S.RepeatInputWrapper>
             <S.Input
-              type='date'
+              type='datetime-local'
               placeholder='날짜 선택'
-              onChange={(e) => setRepeatStopDate(e.target.value)}
+              value={repeatStopDate}
+              onChange={(e) => handleRepeatStopDateChange(e.target.value)}
             />
           </S.RepeatInputWrapper>
         </S.RepeatWrapper>
