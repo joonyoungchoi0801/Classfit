@@ -87,3 +87,10 @@ export const patchCalendarEvent = (eventId: number, data: CalendarModal) => {
     data,
   });
 };
+
+export const deleteCalendarEvent = (eventId: number) => {
+  return instance({
+    method: 'delete',
+    url: API_CALENDAR.EVENT_DETAIL(eventId),
+  });
+};
