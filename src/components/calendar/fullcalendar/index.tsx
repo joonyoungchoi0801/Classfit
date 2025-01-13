@@ -11,6 +11,7 @@ import { CalendarEvent, CalendarEventData } from './calendar.type';
 import { getCalendarEvent } from '@/api/calendarAPI';
 import { useParams } from 'react-router-dom';
 import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal';
+import EventScheduleModal from '@/components/modal/eventScheduleModal';
 
 const CalendarComponent = () => {
   const { calendarType } = useParams();
@@ -21,8 +22,10 @@ const CalendarComponent = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string>(''); // 클릭한 날짜
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState<boolean>(false); // 일정등록 모달 오픈 상태
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [isEventModalOpen, setIsEventModalOpen] = useState<boolean>(false); // 이벤트 모달 오픈 상태
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
   const apiCalendarType =
     calendarType === 'my' ? 'PERSONAL' : calendarType === 'shared' ? 'SHARED' : '';
@@ -37,8 +40,19 @@ const CalendarComponent = () => {
           currentMonth
         );
         const fetchedData = response.data.data.map((event: CalendarEventData) => {
-          const { id, name, startDate, endDate } = event;
-          return { id, title: name, start: startDate, end: endDate };
+          const { id, name, color, eventType, startDate, endDate } = event;
+          return {
+            id,
+            title: name,
+            start: startDate,
+            end: endDate,
+            color: `#${color}`,
+            eventType: eventType,
+            extendedProps: {
+              color: `#${color}`,
+              eventType: eventType,
+            }
+          };
         });
         setEventData(fetchedData);
       } catch (error) {
@@ -46,7 +60,7 @@ const CalendarComponent = () => {
       }
     };
     getCalendarData();
-  }, [apiCalendarType, currentYear, currentMonth]);
+  }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen]);
 
   const handleEventDrop = (info: any) => {
     const event = info.event;
@@ -56,8 +70,18 @@ const CalendarComponent = () => {
     console.log(start);
     console.log(end);
   }; // 이벤트가 드래그되었을 때 발생하는 이벤트 api생성되면 추후 연결
+
   const handleEventClick = (info: any) => {
-    console.log(info.event);
+    const event = info.event;
+    setSelectedEvent({
+      id: event.id,
+      title: event.title,
+      color: event.extendedProps.color,
+      eventType: event.extendedProps.eventType,
+      start: event.start,
+      end: event.end,
+    });
+    setIsEventModalOpen(true);
   };
 
   const handleDatesSet = (dateInfo: any) => {
@@ -72,11 +96,17 @@ const CalendarComponent = () => {
     const clickedDate = info.dateStr; // 클릭된 날짜를 받아옴
     console.log("클릭한 날짜: ", clickedDate);
     setSelectedDate(clickedDate);
-    setIsModalOpen(true);
+    setIsScheduleModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false); // 모달 닫기
+  const closeScheduleModal = () => {
+    setIsScheduleModalOpen(false); // 일정 등록 모달 닫기
+    setSelectedDate(''); // 선택된 날짜 초기화
+  };
+
+  const closeEventModal = () => {
+    setSelectedEvent(null); // 선택된 이벤트 초기화
+    setIsEventModalOpen(false); // 이벤트 스케줄 모달 닫기
   };
 
   return (
@@ -99,11 +129,20 @@ const CalendarComponent = () => {
           hour12: false,
         }}
       />
-      <ScheduleRegisterModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        selectedDate={selectedDate} // 선택된 날짜를 모달에 전달
-      />
+      {isScheduleModalOpen && (
+        <ScheduleRegisterModal
+          isOpen={isScheduleModalOpen}
+          onClose={closeScheduleModal}
+          selectedDate={selectedDate} // 클릭한 날짜를 전달
+        />
+      )}
+      {isEventModalOpen && selectedEvent && (
+        <EventScheduleModal
+          isOpen={isEventModalOpen}
+          onClose={closeEventModal}
+          event={selectedEvent} // 클릭한 이벤트 데이터를 전달
+        />
+      )}
     </S.CalendarContainer>
   );
 };

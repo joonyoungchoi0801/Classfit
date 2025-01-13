@@ -1,6 +1,7 @@
 export interface CalendarEventData {
   id: string;
   name: string;
+  color: string;
   eventType: string;
   startDate: string;
   endDate: string;
@@ -9,17 +10,19 @@ export interface CalendarEventData {
 export interface CalendarEvent {
   id: string;
   title: string;
+  color: string;
+  eventType: string;
   start: string;
   end: string;
 }
 
-export interface EventPatchData {
-  name: string;
-  eventType: string;
-  categoryId: number;
-  startDate: string;
-  endDate: string;
-  isAllDay: boolean;
-  eventRepeatType: string;
-  repeatEndDate: string;
-}
+// export interface EventPatchData {
+//   name: string;
+//   eventType: string;
+//   categoryId: number;
+//   startDate: string;
+//   endDate: string;
+//   isAllDay: boolean;
+//   eventRepeatType: string;
+//   repeatEndDate: string;
+// }

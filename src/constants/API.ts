@@ -90,6 +90,6 @@ export const API_CALENDAR = Object.freeze({
   MEMBER: '/v1/calendar/academy-members',
 });
 
-export const API_MODAL = Object.freeze({
-  REGISTER: '/v1/calendar/modal',
-});
+// export const API_MODAL = Object.freeze({
+//   REGISTER: '/v1/calendar/modal',
+// });
