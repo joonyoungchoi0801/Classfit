@@ -89,3 +89,14 @@ export const API_CALENDAR = Object.freeze({
   MONTH: '/v1/calendar/monthly',
   MEMBER: '/v1/calendar/academy-members',
 });
+
+export const API_DRIVE = Object.freeze({
+  FILE: '/v1/drive/files',
+  SEARCH: '/v1/drive/search',
+  FILTER: '/v1/drive/filter',
+  DOWNLOAD: '/v1/drive/download',
+  TRASH: '/v1/drive/trash',
+  RESTORE: '/v1/drive/trash/restore',
+  FOLDER: '/v1/drive/folder',
+  FOLDERS: '/v1/drive/folders',
+});

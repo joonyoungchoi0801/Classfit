@@ -1,9 +1,11 @@
 import * as S from './DriveSidebar.styles';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 function DriveSidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const url = location.pathname;
   const { type, subtype } = useParams<{ type?: string; subtype?: string }>();
   const [isTrashExpanded, setIsTrashExpanded] = useState(false);
 
@@ -28,13 +30,10 @@ function DriveSidebar() {
       >
         공용 드라이브
       </S.SidebarItem>
-      <S.SidebarItem
-        onClick={handleTrashClick}
-        $isSelected={type === 'trash'}
-      >
+      <S.SidebarItem onClick={handleTrashClick} $isSelected={type === 'trash'}>
         휴지통
       </S.SidebarItem>
-      {isTrashExpanded && (
+      {url.startsWith('/drive/trash') && (
         <S.SubSidebarWrapper>
           <S.SubSidebarItem
             onClick={() => navigate('/drive/trash/my')}
@@ -52,6 +51,6 @@ function DriveSidebar() {
       )}
     </S.DriveSidebarWrapper>
   );
-};
+}
 
 export default DriveSidebar;

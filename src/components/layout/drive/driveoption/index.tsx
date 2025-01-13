@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import * as S from './DriveOption.styles';
 import searchIcon from '@/assets/drive/search.svg';
@@ -6,113 +6,364 @@ import uploadIcon from '@/assets/drive/upload.svg';
 import sortIcon from '@/assets/drive/down.svg';
 import checkIcon from '@/assets/drive/checkbox.svg';
 import selectIcon from '@/assets/drive/selectbox.svg';
-import pptIcon from '@/assets/drive/ppt.png';
+import videoIcon from '@/assets/drive/video.png';
+import imageIcon from '@/assets/drive/image.png';
+import documentIcon from '@/assets/drive/document.png';
+import folderIcon from '@/assets/drive/folder.png';
+import audioIcon from '@/assets/drive/audio.png';
+import archiveIcon from '@/assets/drive/archive.png';
+import otherIcon from '@/assets/drive/other.png';
+import unknownIcon from '@/assets/drive/unknown.png';
 import kebabIcon from '@/assets/drive/kebab.svg';
-import { useParams } from 'react-router-dom';
-import { DriveDataProps, DriveOptionProps } from './DriveOption.type';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
+import {
+  DriveData,
+  DriveDataProps,
+  DriveOptionProps,
+  FilePopupProps,
+  PopUpProps,
+} from './DriveOption.type';
+import {
+  deleteTrashFiles,
+  getDriveFiles,
+  getFileDownload,
+  getSearchedDriveFiles,
+  getTrashFiles,
+  postDriveFiles,
+  postTrashFiles,
+  restoreTrashFiles,
+} from '@/api/driveAPI';
+import FolderModal from '@/components/modal/folderModal';
+import useDriveDataStore from '@/store/driveDataStore';
+import DeleteModal from '@/components/modal/deleteModal';
+import { type } from 'os';
+import path from 'path';
 
-const mockData = [
-  {
-    fileName: '잇타 클래스핏.pdf',
-    fileUrl:
-      'https://aws-classfit-bucket.s3.ap-northeast-2.amazonaws.com/shared/1/e80c8db5-525a-4389-985d-5430ae7bd5f8_%E1%84%8B%E1%85%B5%E1%86%BA%E1%84%90%E1%85%A1%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A2%E1%84%89%E1%85%B3%E1%84%91%E1%85%B5%E1%86%BA.pdf',
-    folderPath: '',
-    uploadedBy: '이예린',
-    uploadedAt: '2025-01-08T22:14:20.328722',
-    isChecked: false,
-  },
-  {
-    fileName: '잇타 클래스핏(1).pdf',
-    fileUrl:
-      'https://aws-classfit-bucket.s3.ap-northeast-2.amazonaws.com/shared/1/test/dcbd85cb-c83b-4eed-bb6c-c836d1a555ac_%E1%84%8B%E1%85%B5%E1%86%BA%E1%84%90%E1%85%A1%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A2%E1%84%89%E1%85%B3%E1%84%91%E1%85%B5%E1%86%BA.pdf',
-    folderPath: 'test/',
-    uploadedBy: '이예린',
-    uploadedAt: '2025-01-08T22:13:51.567537',
-    isChecked: true,
-  },
-];
+const FileType: Record<string, string> = {
+  전체: '',
+  폴더: 'FOLDER',
+  문서: 'DOCUMENT',
+  사진: 'IMAGE',
+  동영상: 'VIDEO',
+  음악: 'AUDIO',
+  압축파일: 'ARCHIVE',
+  기타: 'OTHER',
+};
 
-const DriveButtonList = ({ isDriveData }: DriveOptionProps) => {
+const fileImage: Record<string, string> = {
+  FOLDER: folderIcon,
+  DOCUMENT: documentIcon,
+  IMAGE: imageIcon,
+  VIDEO: videoIcon,
+  AUDIO: audioIcon,
+  ARCHIVE: archiveIcon,
+  OTHER: otherIcon,
+  UNKNOWN: unknownIcon,
+};
+
+const DriveButtonList = ({
+  isDriveData,
+  type,
+  path,
+  selectedData,
+}: DriveOptionProps) => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const { setIsNewFolder } = useDriveDataStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const currentPath = window.location.pathname;
+      const updatedSearchParams = new URLSearchParams(searchParams);
+
+      updatedSearchParams.set('input', searchValue.trim());
+      navigate(`${currentPath}?${updatedSearchParams.toString()}`);
+    }
+  };
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      try {
+        await postDriveFiles(
+          type === 'my' ? 'PERSONAL' : 'SHARED',
+          Array.from(files),
+          path
+        );
+        setIsNewFolder(true);
+      } catch (error) {
+        alert('파일 업로드에 실패했습니다.');
+      }
+    }
+  };
+
+  const handleDownload = async () => {
+    const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+
+    const selectedFileName = selectedData
+      ?.filter((item) => item.fileType !== 'FOLDER')
+      .map((item) => item.fileName);
+    if (selectedFileName) {
+      try {
+        const response = await getFileDownload(
+          driveType,
+          path,
+          selectedFileName
+        );
+        const blob = new Blob([response.data], { type: 'application/zip' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'download.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('파일 다운로드에 실패했습니다.');
+      }
+    }
+  };
+  const handleDelete = async () => {
+    const selectedFileName = selectedData?.map((item) => item.fileName);
+    const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+    if (selectedFileName) {
+      try {
+        await postTrashFiles(driveType, path, selectedFileName);
+        setIsNewFolder(true);
+      } catch (error) {
+        alert('파일 삭제에 실패했습니다.');
+      }
+    }
+  };
   return (
     <>
       {isDriveData ? (
         <>
           <S.DriveOption>
-            <S.UploadButton>
+            <S.UploadButton onClick={() => fileInputRef.current?.click()}>
               <S.UploadIcon src={uploadIcon} alt='upload' />
               파일올리기
             </S.UploadButton>
-            <S.DriveOptionButton>새 폴더</S.DriveOptionButton>
+            <input
+              ref={fileInputRef}
+              type='file'
+              multiple
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
+            <S.DriveOptionButton
+              onClick={() => setIsFolderModalOpen(!isFolderModalOpen)}
+            >
+              새 폴더
+            </S.DriveOptionButton>
           </S.DriveOption>
           <S.InputWrapper>
-            <S.Input type='text' placeholder='파일 명을 입력하세요' />
+            <S.Input
+              type='text'
+              placeholder='파일 명을 입력하세요'
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+            />
             <S.SearchIcon src={searchIcon} alt='search' />
           </S.InputWrapper>
         </>
       ) : (
         <>
           <S.DriveOption>
-            <S.UploadButton>
+            <S.UploadButton onClick={() => fileInputRef.current?.click()}>
               <S.UploadIcon src={uploadIcon} alt='upload' />
               파일올리기
             </S.UploadButton>
-            <S.DriveOptionButton>새 폴더</S.DriveOptionButton>
-            <S.DriveOptionButton>삭제</S.DriveOptionButton>
-            <S.DriveOptionButton>다운로드</S.DriveOptionButton>
+            <input
+              ref={fileInputRef}
+              type='file'
+              multiple
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
+            <S.DriveOptionButton
+              onClick={() => setIsFolderModalOpen(!isFolderModalOpen)}
+            >
+              새 폴더
+            </S.DriveOptionButton>
+            <S.DriveOptionButton onClick={handleDelete}>
+              삭제
+            </S.DriveOptionButton>
+            <S.DriveOptionButton onClick={handleDownload}>
+              다운로드
+            </S.DriveOptionButton>
           </S.DriveOption>
           <S.InputWrapper>
-            <S.Input type='text' placeholder='파일 명을 입력하세요' />
+            <S.Input
+              type='text'
+              placeholder='파일 명을 입력하세요'
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+            />
             <S.SearchIcon src={searchIcon} alt='search' />
           </S.InputWrapper>
         </>
       )}
+      <FolderModal
+        isOpen={isFolderModalOpen}
+        onClose={() => setIsFolderModalOpen(false)}
+        path=''
+        type={type || 'PERSONAL'}
+      />
     </>
   );
 };
 
-const TrashButtonList = () => {
-  return (
-    <>
-      <S.DriveOption>
-        <S.DriveOptionButton>비우기</S.DriveOptionButton>
-        <S.DriveOptionButton>복원</S.DriveOptionButton>
-      </S.DriveOption>
-    </>
-  );
-};
-
-const PopUp = () => {
-  return (
-    <S.PopUpWrapper>
-      <S.PopUpOption>이름 바꾸기</S.PopUpOption>
-      <S.PopUpOption>다운로드</S.PopUpOption>
-      <S.PopUpDeleteOption>삭제</S.PopUpDeleteOption>
-    </S.PopUpWrapper>
-  );
-};
-
-const DriveList = ({ data }: DriveDataProps) => {
-  const [clickedFile, setClickedFile] = useState('');
-  const handleClickedKebab = (fileName: string) => {
-    if (clickedFile === fileName) {
-      setClickedFile('');
-    } else {
-      setClickedFile(fileName);
+const TrashButtonList = ({
+  type,
+  selectedData,
+}: Pick<DriveOptionProps, 'type' | 'selectedData'>) => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { setIsNewFolder } = useDriveDataStore();
+  const selectedFileName = selectedData?.map((item) => item.fileName);
+  const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+  const handleDelete = async () => {
+    if (selectedFileName) {
+      setIsDeleteModalOpen(true);
+    }
+  };
+  const handleRestore = async () => {
+    if (selectedFileName) {
+      try {
+        await restoreTrashFiles(driveType, selectedFileName);
+        setIsNewFolder(true);
+      } catch (error) {
+        alert('파일 복구에 실패했습니다.');
+      }
     }
   };
   return (
     <>
+      <S.DriveOption>
+        <S.DriveOptionButton onClick={() => handleDelete()}>
+          비우기
+        </S.DriveOptionButton>
+        <S.DriveOptionButton onClick={() => handleRestore()}>
+          복원
+        </S.DriveOptionButton>
+      </S.DriveOption>
+      <DeleteModal
+        selectedItems={selectedData}
+        onClose={() => setIsDeleteModalOpen(false)}
+        isOpen={isDeleteModalOpen}
+        type={type}
+      />
+    </>
+  );
+};
+
+const PopUp = ({ type, path, selectedFileName }: PopUpProps) => {
+  const { setIsNewFolder } = useDriveDataStore();
+  const handleDownload = async () => {
+    const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+
+    if (selectedFileName) {
+      try {
+        const response = await getFileDownload(
+          driveType,
+          path,
+          Array(selectedFileName)
+        );
+        const blob = new Blob([response.data], { type: 'application/zip' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'download.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('파일 다운로드에 실패했습니다.');
+      }
+    }
+  };
+  const handleDelete = async () => {
+    const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+    if (selectedFileName) {
+      try {
+        await postTrashFiles(driveType, path, Array(selectedFileName));
+        setIsNewFolder(true);
+      } catch (error) {
+        alert('파일 삭제에 실패했습니다.');
+      }
+    }
+  };
+  return (
+    <S.PopUpWrapper>
+      <S.PopUpOption onClick={handleDownload}>다운로드</S.PopUpOption>
+      <S.PopUpDeleteOption onClick={handleDelete}>삭제</S.PopUpDeleteOption>
+    </S.PopUpWrapper>
+  );
+};
+
+const FilePopUp = ({ onClick }: FilePopupProps) => {
+  return (
+    <S.PopUpWrapper>
+      {Object.keys(FileType).map((key) => (
+        <S.PopUpOption key={key} onClick={() => onClick(key)}>
+          {key}
+        </S.PopUpOption>
+      ))}
+    </S.PopUpWrapper>
+  );
+};
+
+const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
+  const [clickedFile, setClickedFile] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const path = searchParams.get('path') || '';
+  const { type } = useParams();
+
+  const handleClickedKebab = (fileName: string) => {
+    if (clickedFile === fileName) {
+      setClickedFile(null);
+    } else {
+      setClickedFile(fileName);
+    }
+  };
+
+  return (
+    <S.DriveListWrapper>
       {data?.map((item, index) => (
         <S.DriveList key={index}>
           <S.DriveListFront>
-            <S.CheckBox src={item.isChecked ? selectIcon : checkIcon} />
+            <S.CheckBox
+              src={item.isChecked ? selectIcon : checkIcon}
+              onClick={() => onClickData(item.originalFileName)}
+            />
             <S.FileFormatWrapper>
-              <S.FileFormatIcon src={pptIcon} />
+              <S.FileFormatIcon src={fileImage[item.fileType]} />
             </S.FileFormatWrapper>
-            <S.FileName>{item.fileName}</S.FileName>
+            <S.FileName
+              $isFolder={item.fileType === 'FOLDER'}
+              onClick={() =>
+                onClickFolder(item.fileType, item.originalFileName)
+              }
+            >
+              {item.originalFileName}
+            </S.FileName>
           </S.DriveListFront>
           <S.DriveListBack>
-            <S.ListText style={{ marginRight: `-0.8rem` }}>32.2MB</S.ListText>
+            <S.ListText style={{ marginRight: `-0.8rem` }}>
+              {item.fileSize}
+            </S.ListText>
             <S.ListText style={{ width: `8.8rem` }}>
               {item.uploadedAt.split('T')[0].replace(/-/g, '.')}
             </S.ListText>
@@ -123,40 +374,199 @@ const DriveList = ({ data }: DriveDataProps) => {
               <S.KebabIcon
                 src={kebabIcon}
                 alt='kebab'
-                onClick={() => handleClickedKebab(item.fileName)}
+                $isFolder={item.fileType === 'FOLDER'}
+                onClick={() =>
+                  handleClickedKebab(
+                    item.fileType === 'FOLDER'
+                      ? item.originalFileName
+                      : item.fileName
+                  )
+                }
               />
-              {clickedFile === item.fileName && <PopUp />}
+              {clickedFile ===
+                (item.fileType === 'FOLDER'
+                  ? item.originalFileName
+                  : item.fileName) && (
+                <PopUp type={type} path={path} selectedFileName={clickedFile} />
+              )}
             </S.KebabIconWrapper>
           </S.DriveListBack>
         </S.DriveList>
       ))}
-    </>
+    </S.DriveListWrapper>
   );
 };
 
 function DriveOption() {
-  const [isSelectAll, setIsSelectAll] = useState(false);
-  const { type } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { type, subtype } = useParams();
+  const [searchParams] = useSearchParams();
+  const path = searchParams.get('path') || '';
+  const input = searchParams.get('input') || '';
+
+  const [driveData, setDriveData] = useState<DriveData[]>();
+  const [isFilePopUpOpen, setIsFilePopUpOpen] = useState(false);
+  const [fileType, setFileType] = useState<string | null>(null);
+  const { isNewFolder, setIsNewFolder, setPath } = useDriveDataStore();
+
+  const isListAllChecked = driveData?.every((item) => item.isChecked);
+  const handleClickFolder = (fileType: string, fileName: string) => {
+    if (fileType === 'FOLDER') {
+      const newPath = path ? `${path}/${fileName}` : `${fileName}`;
+      const updatedSearchParams = new URLSearchParams(searchParams.toString());
+      updatedSearchParams.set('path', newPath);
+      navigate(`${location.pathname}?${updatedSearchParams.toString()}`);
+    }
+  };
+  const handleCheckAll = () => {
+    if (isListAllChecked) {
+      const updatedData = driveData?.map((item) => ({
+        ...item,
+        isChecked: false,
+      }));
+      setDriveData(updatedData);
+    } else {
+      const updatedData = driveData?.map((item) => ({
+        ...item,
+        isChecked: true,
+      }));
+      setDriveData(updatedData);
+    }
+  };
+
+  const handleCheckList = (fileName: string) => {
+    const updatedData = driveData?.map((item) => {
+      if (item.originalFileName === fileName) {
+        return {
+          ...item,
+          isChecked: !item.isChecked,
+        };
+      }
+      return item;
+    });
+    setDriveData(updatedData);
+  };
+
+  const handleFileType = (fileType: string) => {
+    setFileType(fileType);
+    setIsNewFolder(true);
+    setIsFilePopUpOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchDriveData = async () => {
+      try {
+        const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+        const response = await getDriveFiles(driveType, path);
+        const updatedData: DriveData[] = response.data.data.map(
+          (item: any) => ({
+            ...item,
+            isChecked: false,
+          })
+        );
+        if (fileType !== '전체' && fileType) {
+          const filteredData = updatedData?.filter(
+            (item) => item.fileType === FileType[fileType]
+          );
+          setDriveData(filteredData);
+        } else {
+          setDriveData(updatedData);
+        }
+        setIsNewFolder(false);
+      } catch (error) {
+        alert('파일을 불러오는데 실패했습니다.');
+      }
+    };
+
+    const fetchSearchData = async () => {
+      try {
+        const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+        const response = await getSearchedDriveFiles(driveType, input, path);
+        const updatedData: DriveData[] = response.data.data.map(
+          (item: any) => ({
+            ...item,
+            isChecked: false,
+          })
+        );
+        if (fileType !== '전체' && fileType) {
+          const filteredData = updatedData?.filter(
+            (item) => item.fileType === FileType[fileType]
+          );
+          setDriveData(filteredData);
+        } else {
+          setDriveData(updatedData);
+        }
+      } catch (error) {
+        alert('파일을 불러오는데 실패했습니다.');
+      }
+    };
+    const fetchTrashData = async () => {
+      try {
+        const driveType = subtype === 'my' ? 'PERSONAL' : 'SHARED';
+        const response = await getTrashFiles(driveType);
+        const updatedData = response.data.data.map((item: any) => ({
+          ...item,
+          isChecked: false,
+        }));
+        setDriveData(updatedData);
+        setIsNewFolder(false);
+      } catch (error) {
+        alert('삭제된 파일을 불러오는데 실패했습니다.');
+      }
+    };
+
+    if (type === 'trash') {
+      fetchTrashData();
+    } else if (input) {
+      fetchSearchData();
+    } else {
+      fetchDriveData();
+    }
+  }, [type, subtype, isNewFolder, input, fileType, path]);
+
+  useEffect(() => {
+    setFileType(null);
+    setIsFilePopUpOpen(false);
+    setPath(path);
+  }, [location.pathname, path]);
+
+  const selectedData = useMemo(() => {
+    return driveData?.filter((item) => item.isChecked);
+  }, [driveData]);
 
   return (
     <>
       <S.DriveOptionWrapper>
         {type === 'trash' ? (
-          <TrashButtonList />
+          <TrashButtonList type={subtype} selectedData={selectedData} />
         ) : (
-          <DriveButtonList isDriveData={false} />
+          <DriveButtonList
+            isDriveData={false}
+            type={type}
+            path={path}
+            selectedData={selectedData}
+          />
         )}
       </S.DriveOptionWrapper>
       <S.DriveWrapper>
         <S.DriveHeader>
           <S.DriveHeaderFront>
             <S.CheckBox
-              src={isSelectAll ? selectIcon : checkIcon}
-              onClick={() => setIsSelectAll(!isSelectAll)}
+              src={
+                isListAllChecked && driveData?.length !== 0
+                  ? selectIcon
+                  : checkIcon
+              }
+              onClick={() => handleCheckAll()}
             />
-            <S.HeaderText style={{ width: `8rem` }}>
-              파일유형
+            <S.HeaderText
+              style={{ width: `8.4rem` }}
+              onClick={() => setIsFilePopUpOpen(!isFilePopUpOpen)}
+            >
+              {fileType || '파일 유형'}
               <S.SortIcon src={sortIcon} alt='sort' />
+              {isFilePopUpOpen && <FilePopUp onClick={handleFileType} />}
             </S.HeaderText>
             <S.HeaderText style={{ width: `2.8rem` }}>이름</S.HeaderText>
           </S.DriveHeaderFront>
@@ -165,11 +575,14 @@ function DriveOption() {
             <S.HeaderText style={{ width: `7.3rem` }}>업로드 날짜</S.HeaderText>
             <S.HeaderText style={{ width: `11.1rem` }}>
               업로드한 사람
-              <S.SortIcon src={sortIcon} alt='sort' />
             </S.HeaderText>
           </S.DriveHeaderBack>
         </S.DriveHeader>
-        <DriveList data={mockData} />
+        <DriveList
+          data={driveData}
+          onClickData={handleCheckList}
+          onClickFolder={handleClickFolder}
+        />
       </S.DriveWrapper>
     </>
   );

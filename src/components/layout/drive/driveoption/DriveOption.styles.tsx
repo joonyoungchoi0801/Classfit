@@ -99,7 +99,6 @@ export const SearchIcon = styled.img`
 export const DriveWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh- 21rem);
   padding: 2rem 2.5rem;
   flex-direction: column;
   align-items: flex-start;
@@ -108,6 +107,7 @@ export const DriveWrapper = styled.div`
 export const DriveHeader = styled.div`
   display: flex;
   width: 100%;
+  height: 4rem;
   padding: 0.7613rem 1rem;
   justify-content: space-between;
   align-items: center;
@@ -131,6 +131,7 @@ export const CheckBox = styled.img`
 export const HeaderText = styled.span`
   display: flex;
   align-items: center;
+  justify-content: center;
   color: #999;
   font-family: Pretendard;
   font-size: 1.6rem;
@@ -138,6 +139,7 @@ export const HeaderText = styled.span`
   font-weight: 600;
   line-height: normal;
   cursor: pointer;
+  position: relative;
 `;
 
 export const SortIcon = styled.img`
@@ -181,13 +183,17 @@ export const FileFormatIcon = styled.img`
   margin-right: 2rem;
 `;
 
-export const FileName = styled.span`
+export const FileName = styled.span<{ $isFolder: boolean }>`
   color: var(--color-black);
   font-family: Pretendard;
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  cursor: ${({ $isFolder }) => ($isFolder ? 'pointer' : 'default')};
+  &:hover {
+    text-decoration: ${({ $isFolder }) => ($isFolder ? 'underline' : 'none')};
+  }
 `;
 
 export const DriveListBack = styled.div`
@@ -214,7 +220,8 @@ export const KebabIconWrapper = styled.div`
   height: 2rem;
   position: relative;
 `;
-export const KebabIcon = styled.img`
+export const KebabIcon = styled.img<{ $isFolder: boolean }>`
+  display: ${({ $isFolder }) => ($isFolder ? 'none' : 'flex')};
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -271,5 +278,24 @@ export const PopUpDeleteOption = styled.div`
   cursor: pointer;
   &:hover {
     background-color: #f2f5fc;
+  }
+`;
+
+export const DriveListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 29rem);
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
   }
 `;
