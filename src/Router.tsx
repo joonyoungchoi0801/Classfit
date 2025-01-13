@@ -16,12 +16,14 @@ import Password from './pages/auth/password';
 import NewPassword from './pages/auth/newpassword';
 import Certification from './pages/auth/certification';
 import Profile from './pages/profile';
+import Landing from './pages/landing';
 export default function Router() {
   return (
     <BrowserRouter>
       <GlobalStyles />
       <Routes>
-        <Route path='/' element={<Attendance />} />
+        <Route path='/' element={<Landing />} />
+        <Route path='/home' element={<Attendance />} />
         <Route path='/signin' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/email' element={<Email />} />
