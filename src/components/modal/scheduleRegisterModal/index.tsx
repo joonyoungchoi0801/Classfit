@@ -71,7 +71,7 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
         )}
         <S.ButtonGroup>
           <S.TextLink onClick={handleNavigateToDetails}>
-            일정 상세보기
+            일정 상세등록
           </S.TextLink>
           <S.CloseButton title="취소" onClick={onClose}>취소</S.CloseButton>
           <Button title="저장" onClick={handleSave} />

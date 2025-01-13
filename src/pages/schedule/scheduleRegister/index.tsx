@@ -213,30 +213,23 @@ function ScheduleRegister() {
                   {categoryValue || '카테고리 선택'}
                   <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 </S.Select>
-                {isCategoryOpen &&
-                  (calendarValue === '내 캘린더'
-                    ? personalCategory?.map((category) => (
-                      <S.Options key={category.id}>
-                        <S.Option
-                          onClick={() =>
-                            handleCategoryChange(category.name, category.id)
-                          }
-                        >
-                          {category.name}
-                        </S.Option>
-                      </S.Options>
-                    ))
-                    : sharedCategory?.map((category) => (
-                      <S.Options key={category.id}>
-                        <S.Option
-                          onClick={() =>
-                            handleCategoryChange(category.name, category.id)
-                          }
-                        >
-                          {category.name}
-                        </S.Option>
-                      </S.Options>
-                    )))}
+                {isCategoryOpen && (
+                  <S.Options>
+                    {(calendarValue === '내 캘린더'
+                      ? personalCategory
+                      : sharedCategory
+                    )?.map((category) => (
+                      <S.Option
+                        key={category.id}
+                        onClick={() =>
+                          handleCategoryChange(category.name, category.id)
+                        }
+                      >
+                        {category.name}
+                      </S.Option>
+                    ))}
+                  </S.Options>
+                )}
               </S.SelectWrapper>
             </S.FormGroup>
           </S.Row>
@@ -306,7 +299,7 @@ function ScheduleRegister() {
 
           <S.Row>
             <S.FormGroup>
-              <S.Label>반복</S.Label>
+              <S.Label>반복<S.Essential> (필수)</S.Essential></S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsRepeatOpen(!isRepeatOpen)}
