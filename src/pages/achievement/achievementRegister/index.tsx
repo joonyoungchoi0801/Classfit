@@ -47,14 +47,14 @@ export const scoreStandard: ScoreStandardProps = {
 
 export const examPeriodList: Record<string, string> = {
   주간: 'WEEK',
-  월간: 'MONTHLY',
+  월간: 'MONTH',
   데일리: 'DAILY',
   기타: 'OTHER',
 };
 
 export const reverseExamPeriodList: Record<string, string> = {
   WEEK: '주간',
-  MONTHLY: '월간',
+  MONTH: '월간',
   DAILY: '데일리',
   OTHER: '기타',
 };

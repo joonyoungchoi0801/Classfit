@@ -38,10 +38,14 @@ export const registerExam = (data: RegisterExamData) => {
   });
 };
 
-export const findExam = () => {
+export const findExam = (memberName?: string, examName?: string) => {
   return instance({
     url: API_EXAM.EXAM_FIND,
-    method: 'GET',
+    method: 'POST',
+    data: {
+      memberName,
+      examName,
+    },
   });
 };
 

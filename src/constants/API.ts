@@ -90,6 +90,8 @@ export const API_CALENDAR = Object.freeze({
   MEMBER: '/v1/calendar/academy-members',
 });
 
-// export const API_MODAL = Object.freeze({
-//   REGISTER: '/v1/calendar/modal',
-// });
+export const API_PROFILE = Object.freeze({
+  PROFILE: '/v1/mypage',
+  INVITE: 'v1/invitation/invite',
+  INVITE_LIST: 'v1/invitation/list',
+});

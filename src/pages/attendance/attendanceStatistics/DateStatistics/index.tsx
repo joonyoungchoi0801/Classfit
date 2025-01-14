@@ -2,11 +2,17 @@ import * as S from './DateStatistics.styles';
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
 import paginationRight from '@/assets/attendanceTable/paginationRight.svg';
 import dropdwon from '@/assets/buttonIcon/dropdown.svg';
-import { getStatisticsDates, getStatisticsDateDetail } from '@/api/statisticsAPI';
+import {
+  getStatisticsDates,
+  getStatisticsDateDetail,
+} from '@/api/statisticsAPI';
 import useClassList from '@/hooks/useClassList';
 import { useState, useEffect } from 'react';
-import { statisticsDateData, statisticsDateDetail } from '@/types/statistics.type';
-import formatDateToISO from '@/utils/formatDate';
+import {
+  statisticsDateData,
+  statisticsDateDetail,
+} from '@/types/statistics.type';
+import { formatDateToISO } from '@/utils/formatDate';
 import AttendanceModal from './AttendanceModal';
 
 const getLastSixMonths = (offset = 0) => {
@@ -37,7 +43,7 @@ const getDatesInMonth = (year: number, month: number) => {
   let currentDate = firstDayOfMonth;
 
   while (currentDate <= lastDayOfMonth) {
-    const weekday = (currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1);
+    const weekday = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1;
 
     daysInMonth.push({
       date: currentDate.getDate(),
@@ -56,26 +62,39 @@ function DateStatistics() {
   const [selectedClass, setSelectedClass] = useState({
     mainClass: '',
     subClassId: 0,
-    subClassName: ''
+    subClassName: '',
   });
-  const [datesInMonth, setDatesInMonth] = useState<{ date: number, weekday: number }[]>([]);
+  const [datesInMonth, setDatesInMonth] = useState<
+    { date: number; weekday: number }[]
+  >([]);
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (7일씩 끊어서)
   const { classList } = useClassList();
-  const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>([]);
+  const [statisticsData, setStatisticsData] = useState<statisticsDateData[]>(
+    []
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [attendingStudents, setAttendingStudents] = useState<string[]>();
-  const [attendanceType, setAttendanceType] = useState<'PRESENT' | 'LATE' | 'ABSENT'>('PRESENT');
+  const [attendanceType, setAttendanceType] = useState<
+    'PRESENT' | 'LATE' | 'ABSENT'
+  >('PRESENT');
 
-  const handleValueClick = async (date: string, type: 'PRESENT' | 'LATE' | 'ABSENT') => {
+  const handleValueClick = async (
+    date: string,
+    type: 'PRESENT' | 'LATE' | 'ABSENT'
+  ) => {
     try {
       const isoDate = formatDateToISO(date);
-      const response = await getStatisticsDateDetail(isoDate, selectedClass.subClassId, type);
+      const response = await getStatisticsDateDetail(
+        isoDate,
+        selectedClass.subClassId,
+        type
+      );
       const studentData = response.data.data;
 
       setAttendingStudents(studentData);
     } catch (error) {
-      console.error("Failed to fetch student attendance details:", error);
+      console.error('Failed to fetch student attendance details:', error);
       setAttendingStudents([]); // 에러 시 빈 데이터 설정
     }
 
@@ -84,7 +103,6 @@ function DateStatistics() {
     setAttendanceType(type);
     setIsModalOpen(true);
   };
-
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -118,7 +136,10 @@ function DateStatistics() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleSelectClass = (mainClass: string, subClass: { subClassId: number; subClassName: string }) => {
+  const handleSelectClass = (
+    mainClass: string,
+    subClass: { subClassId: number; subClassName: string }
+  ) => {
     setSelectedClass({
       mainClass,
       subClassId: subClass.subClassId,
@@ -131,14 +152,20 @@ function DateStatistics() {
     if (!selectedClass.mainClass || !selectedClass.subClassId) return; // 클래스 선택이 안 됐으면 무시
 
     const startDate = formatDateToISO(`${currentMonth}/01`); // 현재 월의 1일을 ISO 형식으로 변환
-    const endDate = formatDateToISO(`${currentMonth}/${datesInMonth[datesInMonth.length - 1]?.date}`); // 마지막 날을 ISO 형식으로 변환
+    const endDate = formatDateToISO(
+      `${currentMonth}/${datesInMonth[datesInMonth.length - 1]?.date}`
+    ); // 마지막 날을 ISO 형식으로 변환
 
     const fetchStatisticsDates = async () => {
       try {
-        const response = await getStatisticsDates(startDate, endDate, selectedClass.subClassId); // 선택된 SubClass의 ID 전달
+        const response = await getStatisticsDates(
+          startDate,
+          endDate,
+          selectedClass.subClassId
+        ); // 선택된 SubClass의 ID 전달
         setStatisticsData(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch statistics data:", error);
+        console.error('Failed to fetch statistics data:', error);
       }
     };
 
@@ -159,7 +186,10 @@ function DateStatistics() {
     return datesInMonth.slice(startIdx, endIdx);
   };
 
-  const weekDates = getCurrentWeekDates().map((dateInfo) => `${currentMonth}/${dateInfo.date}(${['월', '화', '수', '목', '금', '토', '일'][dateInfo.weekday]})`);
+  const weekDates = getCurrentWeekDates().map(
+    (dateInfo) =>
+      `${currentMonth}/${dateInfo.date}(${['월', '화', '수', '목', '금', '토', '일'][dateInfo.weekday]})`
+  );
 
   return (
     <S.Container>
@@ -170,9 +200,7 @@ function DateStatistics() {
           alt='Previous Month'
           onClick={handlePrevMonth}
         />
-        <S.PaginationItem>
-          {currentMonth}월
-        </S.PaginationItem>
+        <S.PaginationItem>{currentMonth}월</S.PaginationItem>
         <S.ArrowButton
           src={paginationRight}
           alt='Next Month'
@@ -183,12 +211,16 @@ function DateStatistics() {
       <S.Table>
         <S.TableHeader>
           <S.DropdownClass onClick={toggleDropdown}>
-            <S.Placeholder>{selectedClass.mainClass ? `${selectedClass.mainClass} ${selectedClass.subClassName}` : '구분'}</S.Placeholder>
+            <S.Placeholder>
+              {selectedClass.mainClass
+                ? `${selectedClass.mainClass} ${selectedClass.subClassName}`
+                : '구분'}
+            </S.Placeholder>
             <S.DropdownButton src={dropdwon} alt='dropdown icon' />
           </S.DropdownClass>
           {isDropdownOpen && (
             <S.DropdownList>
-              {Object.keys(classList).map((mainClass) => (
+              {Object.keys(classList).map((mainClass) =>
                 classList[mainClass].map((subClass) => (
                   <S.DropdownItem
                     key={`${mainClass}-${subClass.subClassId}`}
@@ -197,7 +229,7 @@ function DateStatistics() {
                     {`${mainClass} ${subClass.subClassName}`}
                   </S.DropdownItem>
                 ))
-              ))}
+              )}
             </S.DropdownList>
           )}
 
@@ -208,9 +240,7 @@ function DateStatistics() {
               onClick={handlePrevPage}
             />
             {weekDates.map((date, index) => (
-              <S.DatePaginationItem key={index}>
-                {date}
-              </S.DatePaginationItem>
+              <S.DatePaginationItem key={index}>{date}</S.DatePaginationItem>
             ))}
             <S.ArrowButton
               src={paginationRight}
@@ -225,10 +255,15 @@ function DateStatistics() {
           <S.ValueContainer>
             <S.Blank />
             {weekDates.map((date) => {
-              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const [month, day] = date
+                .split('(')[0]
+                .split('/')
+                .map((str) => parseInt(str, 10));
               const isoDate = formatDateToISO(date);
 
-              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+              const statisticsRecord = statisticsData.find(
+                (record) => record.date === isoDate
+              );
 
               return (
                 <S.Value
@@ -247,10 +282,15 @@ function DateStatistics() {
           <S.ValueContainer>
             <S.Blank />
             {weekDates.map((date) => {
-              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const [month, day] = date
+                .split('(')[0]
+                .split('/')
+                .map((str) => parseInt(str, 10));
               const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+              const statisticsRecord = statisticsData.find(
+                (record) => record.date === isoDate
+              );
 
               return (
                 <S.Value
@@ -269,10 +309,15 @@ function DateStatistics() {
           <S.ValueContainer>
             <S.Blank />
             {weekDates.map((date) => {
-              const [month, day] = date.split('(')[0].split('/').map((str) => parseInt(str, 10));
+              const [month, day] = date
+                .split('(')[0]
+                .split('/')
+                .map((str) => parseInt(str, 10));
               const isoDate = `${new Date().getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-              const statisticsRecord = statisticsData.find((record) => record.date === isoDate);
+              const statisticsRecord = statisticsData.find(
+                (record) => record.date === isoDate
+              );
 
               return (
                 <S.Value
@@ -291,7 +336,11 @@ function DateStatistics() {
       <AttendanceModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        studentNames={attendingStudents ? attendingStudents.flatMap(student => student) : []}
+        studentNames={
+          attendingStudents
+            ? attendingStudents.flatMap((student) => student)
+            : []
+        }
         type={attendanceType}
         date={selectedDate ?? ''}
       />

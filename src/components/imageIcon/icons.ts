@@ -3,3 +3,10 @@ export { default as AchievementEmptyMain } from '@/assets/achievement/emptyMain.
 export { default as CircleBlue } from '@/assets/label/circleBlue.svg';
 export { default as CircleGray } from '@/assets/label/circleGray.svg';
 export { default as CircleLightBlue } from '@/assets/label/circleLightBlue.svg';
+export { default as WarningGray } from '@/assets/info/warningGray.svg';
+export { default as Question } from '@/assets/info/question.svg';
+export { default as Profile } from '@/assets/info/profile.svg';
+export { default as Logo } from '@/assets/header/logo.svg';
+export { default as ProfileImage } from '@/assets/profile/profileimage.svg';
+export { default as Calendar } from '@/assets/achievement/calendar.svg';
+export { default as CalendarFilled } from '@/assets/achievement/calendarFilled.svg';
