@@ -59,6 +59,7 @@ export const Input = styled.input`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
   line-height: 2.4rem;
   width: 100%;
 
@@ -154,6 +155,7 @@ export const DateInput = styled.input`
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
   width: 100%;
 
   ::placeholder {

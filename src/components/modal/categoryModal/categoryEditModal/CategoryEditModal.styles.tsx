@@ -55,6 +55,7 @@ export const CategoryInput = styled.input`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
 `;
 
 export const CategoryIcon = styled.div<{ $selectedColor?: string }>`

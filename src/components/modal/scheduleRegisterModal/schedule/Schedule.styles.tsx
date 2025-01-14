@@ -25,6 +25,7 @@ export const Input = styled.input`
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem;
+  font-family: Pretendard;
   width: 100%;
 
   ::placeholder {
@@ -118,6 +119,7 @@ export const DateInput = styled.input`
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
   width: 100%;
 
   ::placeholder {

@@ -24,6 +24,7 @@ export const Input = styled.input`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
   line-height: 2.4rem;
   width: 100%;
 
@@ -117,6 +118,7 @@ export const DateSelect = styled.input`
   border: 0.1rem solid #DEDEDE;
   font-size: 1.2rem;
   font-style: normal;
+  font-family: Pretendard;
   font-weight: 600;
   width: 100%;
 
