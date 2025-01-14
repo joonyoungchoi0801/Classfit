@@ -5,6 +5,22 @@ import { RegisterModal } from '@/types/schedule.type';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 import { getCategories } from '@/api/categoryAPI';
 
+const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
+const RepeatOptionsAPI: Record<string, string | null> = {
+  '반복 안함': 'NONE',
+  매일: 'DAILY',
+  매주: 'WEEKLY',
+  매월: 'MONTHLY',
+  매년: 'YEARLY',
+};
+
+enum EventRepeatType {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+}
+
 interface ScheduleProps {
   formData: RegisterModal;
   setFormData: React.Dispatch<React.SetStateAction<RegisterModal>>;
@@ -21,6 +37,11 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   const [endTime, setEndTime] = useState(formData.endDate || '');
   const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
+  const [isRepeatOpen, setIsRepeatOpen] = useState(false);
+  const [repeatValue, setRepeatValue] = useState('');
+  const [repeatStopValue, setRepeatStopValue] = useState(''); // 반복 종료 (날짜 지정, 없음)
+  const [repeatStopDate, setRepeatStopDate] = useState(''); //반복종료일자
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -126,6 +147,34 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
     }
   };
 
+  const handleRepeatChange = (value: string) => {
+    setRepeatValue(value);
+    setIsRepeatOpen(false);
+    updateFormData('eventRepeatType', RepeatOptionsAPI[value] as EventRepeatType);
+  };
+
+  const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRepeatStopValue(value);
+
+    if (value === 'date') {
+      // 반복 종료일자를 새로 지정하지 않은 상태에서 updateFormData가 호출되지 않도록 처리
+      if (repeatStopDate) {
+        updateFormData('repeatEndDate', new Date(repeatStopDate).toISOString());
+      }
+    } else {
+      updateFormData('repeatEndDate', null);
+    }
+  };
+
+  const handleRepeatStopDateChange = (value: string) => {
+    setRepeatStopDate(value);
+
+    if (repeatStopValue === 'date') {
+      updateFormData('repeatEndDate', new Date(value).toISOString());
+    }
+  };
+
   return (
     <>
       <S.FormGroup>
@@ -223,6 +272,68 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
         />
         <S.SpanText>종일</S.SpanText>
       </S.CheckboxGroup>
+
+      <S.FormGroup>
+        <S.Label>반복</S.Label>
+        <S.SelectWrapper>
+          <S.Select
+            onClick={() => setIsRepeatOpen(!isRepeatOpen)}
+            $hasValue={!!repeatValue}
+          >
+            {repeatValue || '반복 선택'}
+          </S.Select>
+          <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+          {isRepeatOpen && (
+            <S.Options>
+              {RepeatOptions.map((option) => (
+                <S.Option
+                  key={option}
+                  onClick={() => handleRepeatChange(option)}
+                >
+                  {option}
+                </S.Option>
+              ))}
+            </S.Options>
+          )}
+        </S.SelectWrapper>
+      </S.FormGroup>
+      <S.FormGroup>
+        <S.Label>반복 종료 일자</S.Label>
+        <S.RepeatWrapper>
+          <S.RadioWrapper>
+            <S.RepeatLabel>
+              없음&nbsp;
+              <S.RepeatInput
+                type='radio'
+                name='repeat'
+                value='none'
+                checked={repeatStopValue === 'none'}
+                onChange={handleRepeatStopChange}
+              />
+            </S.RepeatLabel>
+            <S.RepeatLabel>
+              날짜 지정&nbsp;
+              <S.RepeatInput
+                type='radio'
+                name='repeat'
+                value='date'
+                checked={repeatStopValue === 'date'}
+                onChange={handleRepeatStopChange}
+              />
+            </S.RepeatLabel>
+          </S.RadioWrapper>
+          <S.RepeatInputWrapper>
+            <S.Input
+              type='datetime-local'
+              placeholder='날짜 선택'
+              value={repeatStopDate}
+              onChange={(e) => handleRepeatStopDateChange(e.target.value)}
+            />
+          </S.RepeatInputWrapper>
+        </S.RepeatWrapper>
+      </S.FormGroup>
+
+
 
     </>
   );

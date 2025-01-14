@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  /* gap: 1rem; */
   justify-content: space-between;
   flex: 1 0 0;
 `;
@@ -14,7 +14,7 @@ export const Label = styled.label`
   font-weight: 600;
   line-height: normal;
   margin-bottom: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 `;
 
 export const Input = styled.input`
@@ -139,7 +139,6 @@ export const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
   margin-top: 1rem;
-  margin-bottom: 2rem;
   cursor: pointer;
 `;
 
@@ -151,4 +150,38 @@ export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
 
 export const SpanText = styled.span`
   font-size: 1.4rem;
+`;
+
+export const RepeatWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1.4rem;
+`;
+
+export const RadioWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+`;
+export const RepeatLabel = styled.label`
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const RepeatInput = styled.input`
+  width: 2rem;
+  height: 2rem;
+`;
+
+export const RepeatInputWrapper = styled.div`
+  position: relative;
+  flex-grow: 13;
 `;
