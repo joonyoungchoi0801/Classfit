@@ -77,13 +77,16 @@ export const MyCalendar = styled.div`
 export const Icon = styled.img`
   width: 2rem;
   height: 2rem;
+  cursor: pointer;
 `;
 
-export const CalendarItemText = styled.span`
+export const CalendarItemText = styled.span<{ $isActive?: boolean }>`
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: pointer;
+  color: ${({ $isActive }) => ($isActive ? 'var(--color-blue)' : 'var(--color-black)')};
 `;
 
 export const CalendarAddBtn = styled.button`
@@ -98,6 +101,7 @@ export const CalendarAddIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
+  cursor: pointer;
 `;
 
 export const CategoryList = styled.div`
@@ -124,14 +128,13 @@ export const CategoryItem = styled.div`
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
-  cursor: pointer;
 `;
 
 export const CategoryIcon = styled.img<{ color: string }>`
   width: 1.6rem;
   height: 1.6rem;
   flex-shrink: 0;
-  background-color: ${({ color }) => color};
+  background-color: ${({ color }) => `#${color}`};
 `;
 
 export const KebobIcon = styled.img`

@@ -4,7 +4,6 @@ import * as PS from '@/pages/schedule/Schedule.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import Button from '@/components/button';
 import close from '@/assets/label/close.svg';
-import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal'; // test
 import { Attendee, Category, RegisterData } from './ScheduleRegister.type';
 import {
   getAttendeeList,
@@ -34,14 +33,13 @@ enum EventType {
 
 function ScheduleRegister() {
   const [calendarValue, setCalendarValue] = useState('');
+  const [calendarType, setCalendarType] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [repeatValue, setRepeatValue] = useState('');
-
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
   const [isAttendeeOpen, setIsAttendeeOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); //test
   const [isAllDay, setIsAllDay] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -75,6 +73,11 @@ function ScheduleRegister() {
   }, []);
 
   const handleCalendarChange = (value: string) => {
+    if (value === '내 캘린더') {
+      setCalendarType('PERSONAL');
+    } else if (value === '공용 캘린더') {
+      setCalendarType('SHARED');
+    }
     setCalendarValue(value);
     setIsCalendarOpen(false);
     setCategoryValue('');
@@ -116,6 +119,7 @@ function ScheduleRegister() {
       const data: RegisterData = {
         name: eventTitle,
         eventType: eventType?.toUpperCase() as EventType,
+        calendarType: calendarType,
         categoryId: calendarId!,
         startDate: new Date(startDate).toISOString(),
         endDate: isAllDay
@@ -126,7 +130,7 @@ function ScheduleRegister() {
         repeatEndDate:
           repeatStopValue === 'date'
             ? new Date(repeatStopDate).toISOString()
-            : undefined,
+            : null,
         memberIds: attendees.map((attendee) => attendee.id),
         location: place,
         memo,
@@ -134,7 +138,7 @@ function ScheduleRegister() {
       console.log(data);
       await postCalendarEvent(data);
       alert('일정이 등록되었습니다.');
-      navigate('/schedule');
+      navigate('/schedule/my');
     } catch (e) {
       alert('일정 등록에 실패했습니다.');
     }
@@ -149,7 +153,7 @@ function ScheduleRegister() {
             $isSelected={eventType === 'schedule'}
             onClick={() => navigate('/schedule/register/schedule')}
           >
-            스케쥴
+            스케줄
           </S.Button>
           <S.Button
             $isSelected={eventType === 'task'}
@@ -209,30 +213,23 @@ function ScheduleRegister() {
                   {categoryValue || '카테고리 선택'}
                   <S.DropdownIcon src={dropdown} alt='dropdown icon' />
                 </S.Select>
-                {isCategoryOpen &&
-                  (calendarValue === '내 캘린더'
-                    ? personalCategory?.map((category) => (
-                        <S.Options key={category.id}>
-                          <S.Option
-                            onClick={() =>
-                              handleCategoryChange(category.name, category.id)
-                            }
-                          >
-                            {category.name}
-                          </S.Option>
-                        </S.Options>
-                      ))
-                    : sharedCategory?.map((category) => (
-                        <S.Options key={category.id}>
-                          <S.Option
-                            onClick={() =>
-                              handleCategoryChange(category.name, category.id)
-                            }
-                          >
-                            {category.name}
-                          </S.Option>
-                        </S.Options>
-                      )))}
+                {isCategoryOpen && (
+                  <S.Options>
+                    {(calendarValue === '내 캘린더'
+                      ? personalCategory
+                      : sharedCategory
+                    )?.map((category) => (
+                      <S.Option
+                        key={category.id}
+                        onClick={() =>
+                          handleCategoryChange(category.name, category.id)
+                        }
+                      >
+                        {category.name}
+                      </S.Option>
+                    ))}
+                  </S.Options>
+                )}
               </S.SelectWrapper>
             </S.FormGroup>
           </S.Row>
@@ -250,8 +247,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(0, 0, 0, 0))
-                            .toLocaleString('sv-SE')
-                            .slice(0, 16)
+                          .toLocaleString('sv-SE')
+                          .slice(0, 16)
                         : startDate
                     }
                     onChange={(e) => setStartDate(e.target.value)}
@@ -265,8 +262,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(23, 59, 0, 0))
-                            .toLocaleString('sv-SE')
-                            .slice(0, 16)
+                          .toLocaleString('sv-SE')
+                          .slice(0, 16)
                         : endDate
                     }
                     onChange={(e) => setEndDate(e.target.value)}
@@ -302,7 +299,7 @@ function ScheduleRegister() {
 
           <S.Row>
             <S.FormGroup>
-              <S.Label>반복</S.Label>
+              <S.Label>반복<S.Essential> (필수)</S.Essential></S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsRepeatOpen(!isRepeatOpen)}

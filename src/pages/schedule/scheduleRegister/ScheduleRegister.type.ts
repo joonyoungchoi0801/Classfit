@@ -13,12 +13,13 @@ export interface Attendee {
 export interface RegisterData {
   name: string;
   eventType: EventType;
+  calendarType: string;
   categoryId: number;
   startDate: string;
   endDate: string;
   isAllDay: boolean;
   eventRepeatType?: EventRepeatType;
-  repeatEndDate?: string;
+  repeatEndDate?: string | null;
   memberIds: number[];
   location: string;
   memo: string;
