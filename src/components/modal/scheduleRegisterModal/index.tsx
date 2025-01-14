@@ -47,7 +47,6 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
       }
     } catch (error) {
       console.error(error);
-      console.log('API 호출 중 오류가 발생했습니다.');
     }
   };
 
