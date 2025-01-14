@@ -36,12 +36,6 @@ function Sidebar() {
           일정관리
         </S.SidebarText>
       </S.SidebarItem>
-      <S.SidebarItem onClick={() => navigate('/board')}>
-        <S.Icon src={board} alt='board' />
-        <S.SidebarText $isSelected={url.startsWith('/board')}>
-          게시판
-        </S.SidebarText>
-      </S.SidebarItem>
       <S.SidebarItem onClick={() => navigate('/drive/my')}>
         <S.Icon src={drive} alt='drive' />
         <S.SidebarText $isSelected={url.startsWith('/drive')}>

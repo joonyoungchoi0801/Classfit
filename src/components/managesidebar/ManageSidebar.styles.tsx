@@ -10,7 +10,6 @@ export const ManageSidebarWrapper = styled.div`
   background: var(--color-white);
   padding: 3.5rem 0rem;
   background: #f2f5fc;
-  overflow: visible;
   &::-webkit-scrollbar {
     width: 0.8rem;
     height: 0.8rem;
@@ -85,6 +84,7 @@ export const GradeWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  position: relative;
 `;
 export const Grade = styled.div`
   display: flex;
@@ -95,6 +95,22 @@ export const Grade = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const GradeInput = styled.input`
+  border-radius: 0.5rem;
+  border: 0.1rem solid #afafaf;
+  background-color: inherit;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.792rem;
+  width: 100%;
+  outline: none;
+  border: none;
 `;
 
 export const Icon = styled.img`
@@ -118,7 +134,7 @@ export const ClassWrapper = styled.div<{ $isSelected?: boolean }>`
   position: relative;
   overflow: visible;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2rem;
 `;
 
 export const ClassContainer = styled.div`
@@ -126,6 +142,7 @@ export const ClassContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   position: relative;
+  /* margin-left: 1rem; */
 `;
 
 export const Class = styled.div<{ $isSelected?: boolean }>`
@@ -135,17 +152,19 @@ export const Class = styled.div<{ $isSelected?: boolean }>`
   justify-content: space-between;
   color: ${(props) =>
     props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
+  left: 1rem;
+  position: relative;
   &::before {
     content: '';
     width: 0.7rem;
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;
@@ -188,13 +207,14 @@ export const Info = styled.div<{ $isSelected?: boolean }>`
   font-style: normal;
   font-weight: 600;
   line-height: 1.792rem;
+
   &::before {
     content: '';
     width: 0.7rem;
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;

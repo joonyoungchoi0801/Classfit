@@ -8,7 +8,7 @@ export interface DriveOptionProps {
 export interface DriveDataProps {
   data?: DriveData[];
   onClickData: (fileName: string) => void;
-  onClickFolder: (fileType: string, fileName: string) => void;
+  onClickFolder: (fileType: string, fileName: string, fileUrl: string) => void;
 }
 
 export interface DriveData {

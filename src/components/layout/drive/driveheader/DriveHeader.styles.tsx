@@ -24,11 +24,11 @@ export const PathList = styled.ul`
 `;
 export const PathItem = styled.li`
   cursor: pointer;
-  color: var(--color-black);
+  color: #999;
   font-family: Pretendard;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: normal;
   list-style: none;
   &:hover {

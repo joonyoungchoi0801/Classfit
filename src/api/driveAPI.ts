@@ -2,7 +2,6 @@ import instance from './instance';
 import { FileType } from '@/types/drive.type';
 import { API_DRIVE } from '@/constants/API';
 import qs from 'qs';
-import { dr } from 'node_modules/@fullcalendar/core/internal-common';
 
 export const getDriveFiles = (driveType: string, folderPath: string) => {
   return instance({
@@ -104,6 +103,19 @@ export const postDriveFolder = (
     },
   });
 };
+export const deleteDriveFolder = (driveType: string, folderName: string[]) => {
+  return instance({
+    method: 'delete',
+    url: API_DRIVE.FOLDER,
+    params: {
+      driveType,
+      folderName,
+    },
+    paramsSerializer: (params) => {
+      return qs.stringify(params, { arrayFormat: 'repeat' });
+    },
+  });
+};
 
 export const getDriveFolders = (driveType: string, folderPath: string) => {
   return instance({
@@ -145,14 +157,13 @@ export const postTrashFiles = (
   });
 };
 
-export const deleteTrashFiles = (driveType: string, fileNames: string[]) => {
+export const deleteTrashFiles = (driveType: string, fileName: string[]) => {
   return instance({
     method: 'delete',
     url: API_DRIVE.TRASH,
     params: {
       driveType,
-
-      fileNames,
+      fileName,
     },
     paramsSerializer: (params) => {
       return qs.stringify(params, { arrayFormat: 'repeat' });

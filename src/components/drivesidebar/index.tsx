@@ -33,22 +33,21 @@ function DriveSidebar() {
       <S.SidebarItem onClick={handleTrashClick} $isSelected={type === 'trash'}>
         휴지통
       </S.SidebarItem>
-      {url.startsWith('/drive/trash') && (
-        <S.SubSidebarWrapper>
-          <S.SubSidebarItem
-            onClick={() => navigate('/drive/trash/my')}
-            $isSelected={type === 'trash' && subtype === 'my'}
-          >
-            개인 휴지통
-          </S.SubSidebarItem>
-          <S.SubSidebarItem
-            onClick={() => navigate('/drive/trash/shared')}
-            $isSelected={type === 'trash' && subtype === 'shared'}
-          >
-            공용 휴지통
-          </S.SubSidebarItem>
-        </S.SubSidebarWrapper>
-      )}
+
+      <S.SubSidebarWrapper>
+        <S.SubSidebarItem
+          onClick={() => navigate('/drive/trash/my')}
+          $isSelected={type === 'trash' && subtype === 'my'}
+        >
+          개인 휴지통
+        </S.SubSidebarItem>
+        <S.SubSidebarItem
+          onClick={() => navigate('/drive/trash/shared')}
+          $isSelected={type === 'trash' && subtype === 'shared'}
+        >
+          공용 휴지통
+        </S.SubSidebarItem>
+      </S.SubSidebarWrapper>
     </S.DriveSidebarWrapper>
   );
 }

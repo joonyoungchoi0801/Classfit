@@ -1,3 +1,5 @@
+import { M } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
+
 export const API_SUBCLASS = Object.freeze({
   SUBCLASS: '/v1/home/sub-category',
   SUBCLASSEDIT: (subClassId: number) => `/v1/home/sub-category/${subClassId}`,
@@ -13,6 +15,8 @@ export const API_MAINCLASS = Object.freeze({
   MAINCLASS: '/v1/home/main-category',
   MAINCLASSEDIT: (mainClassId: number) =>
     `/v1/home/main-category/${mainClassId}`,
+  MAINCLASSDETAIL: (mainClassId: number) =>
+    `/v1/home/main-category/${mainClassId}/update`,
 });
 
 export const API_STUDENT = Object.freeze({
