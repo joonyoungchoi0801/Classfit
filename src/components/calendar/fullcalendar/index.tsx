@@ -8,7 +8,7 @@ import './customcalendar.css';
 import * as S from '../Calendar.styles';
 
 import { CalendarEvent, CalendarEventData } from './calendar.type';
-import { getCalendarEvent } from '@/api/calendarAPI';
+import { getCalendarEvent, dragCalendarEvent } from '@/api/calendarAPI';
 import { useParams } from 'react-router-dom';
 import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal';
 import EventScheduleModal from '@/components/modal/eventScheduleModal';
@@ -32,7 +32,7 @@ const CalendarComponent = () => {
 
   useEffect(() => {
     const getCalendarData = async () => {
-      if (!apiCalendarType) return; // 올바르지 않은 calendarType은 API 호출 안 함
+      if (!apiCalendarType) return;
       try {
         const response = await getCalendarEvent(
           apiCalendarType,
@@ -62,14 +62,26 @@ const CalendarComponent = () => {
     getCalendarData();
   }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen, isScheduleModalOpen]);
 
-  const handleEventDrop = (info: any) => {
+  const handleEventDrop = async (info: any) => {
     const event = info.event;
+    const eventId = event.id;
     const start = event.start;
     const end = event.end;
-    console.log(event);
-    console.log(start);
-    console.log(end);
-  }; // 이벤트가 드래그되었을 때 발생하는 이벤트 api생성되면 추후 연결
+
+    const startDate = start?.toISOString();
+    const endDate = end?.toISOString();
+
+    try {
+      const response = await dragCalendarEvent(eventId, startDate, endDate);
+      if (response.status === 200) {
+        console.log('Event updated successfully');
+      } else {
+        console.error('Failed to update event');
+      }
+    } catch (error) {
+      console.error('Error updating event:', error);
+    }
+  };
 
   const handleEventClick = (info: any) => {
     const event = info.event;
@@ -93,19 +105,19 @@ const CalendarComponent = () => {
   };
 
   const handleDateClick = (info: any) => {
-    const clickedDate = info.dateStr; // 클릭된 날짜를 받아옴
+    const clickedDate = info.dateStr;
     setSelectedDate(clickedDate);
     setIsScheduleModalOpen(true);
   };
 
   const closeScheduleModal = () => {
-    setIsScheduleModalOpen(false); // 일정 등록 모달 닫기
-    setSelectedDate(''); // 선택된 날짜 초기화
+    setIsScheduleModalOpen(false);
+    setSelectedDate('');
   };
 
   const closeEventModal = () => {
-    setSelectedEvent(null); // 선택된 이벤트 초기화
-    setIsEventModalOpen(false); // 이벤트 스케줄 모달 닫기
+    setSelectedEvent(null);
+    setIsEventModalOpen(false);
   };
 
   return (
@@ -132,14 +144,14 @@ const CalendarComponent = () => {
         <ScheduleRegisterModal
           isOpen={isScheduleModalOpen}
           onClose={closeScheduleModal}
-          selectedDate={selectedDate} // 클릭한 날짜를 전달
+          selectedDate={selectedDate}
         />
       )}
       {isEventModalOpen && selectedEvent && (
         <EventScheduleModal
           isOpen={isEventModalOpen}
           onClose={closeEventModal}
-          event={selectedEvent} // 클릭한 이벤트 데이터를 전달
+          event={selectedEvent}
         />
       )}
     </S.CalendarContainer>

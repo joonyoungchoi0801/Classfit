@@ -102,3 +102,15 @@ export const deleteCalendarEvent = (eventId: number) => {
     url: API_CALENDAR.EVENT_DETAIL(eventId),
   });
 };
+
+export const dragCalendarEvent = (
+  eventId: number,
+  startDate: string,
+  endDate: string
+) => {
+  return instance({
+    method: 'patch',
+    url: API_CALENDAR.DRAG(eventId),
+    data: { startDate, endDate },
+  });
+};
