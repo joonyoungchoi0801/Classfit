@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@/components/button';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import { getCategories } from '@/api/categoryAPI';
-import { getCalendarEventDetail } from '@/api/calendarAPI';
+import { getCalendarEventDetail, patchCalendarEvent } from '@/api/calendarAPI';
 import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
 
 const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
@@ -14,6 +14,11 @@ const RepeatOptionsAPI: Record<string, string | null> = {
   매월: 'MONTHLY',
   매년: 'YEARLY',
 };
+
+enum EventType {
+  TASK = 'TASK',
+  SCHEDULE = 'SCHEDULE',
+}
 
 enum EventRepeatType {
   DAILY = 'DAILY',
@@ -30,9 +35,11 @@ interface EditEventModalProps {
 
 const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
   const [calendarValue, setCalendarValue] = useState('');
+  const [calendarType, setCalendarType] = useState('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [categoryName, setCategoryName] = useState<string>('');
+  const [categoryId, setCategoryId] = useState(0);
   const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
   const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
   const [startTime, setStartTime] = useState('');
@@ -65,6 +72,8 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
             setEventData(data);
 
             setCalendarValue(data.calendarType === 'PERSONAL' ? '내 캘린더' : '공용 캘린더');
+            setCalendarType(data.calendarType);
+            setCategoryId(data.categoryId);
             setCategoryName(
               [...personalCategories, ...sharedCategories].find((cat) => cat.id === data.categoryId)?.name || ''
             );
@@ -90,6 +99,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
     const calendarType = value === '내 캘린더' ? 'PERSONAL' : 'SHARED';
 
     setCalendarValue(value);
+    setCalendarType(calendarType);
     setIsCalendarOpen(false);
   };
 
@@ -111,14 +121,60 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
 
   const handleCategoryChange = (name: string, id: number) => {
     setCategoryName(name);
-    // updateFormData('categoryId', id);
+    setCategoryId(id);
     setIsCategoryOpen(false);
+  };
+
+  const handleAllDayChange = (checked: boolean) => {
+    setIsAllDay(checked);
+
+    if (checked) {
+      setStartTime(new Date(startTime).toISOString().split('T')[0] + 'T00:00');
+      setEndTime(new Date(startTime).toISOString().split('T')[0] + 'T23:59');
+    }
   };
 
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
     setIsRepeatOpen(false);
-    // updateFormData('eventRepeatType', RepeatOptionsAPI[value] as EventRepeatType);
+  };
+
+  const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRepeatStopValue(value);
+
+    if (value === 'date') {
+      if (repeatStopDate) {
+        setRepeatStopDate(new Date(repeatStopDate).toISOString());
+      }
+    } else {
+      setRepeatStopDate('null');
+    }
+  };
+
+  const handleSave = async () => {
+    const updatedEventData = {
+      name: eventData.name,
+      eventType: eventData.eventType as EventType,
+      calendarType: calendarValue === '내 캘린더' ? 'PERSONAL' : 'SHARED',
+      startDate: startTime,
+      endDate: endTime,
+      categoryId: categoryId,
+      eventRepeatType: RepeatOptionsAPI[repeatValue] as EventRepeatType,
+      repeatEndDate: repeatStopValue === 'date' ? repeatStopDate : null,
+      isAllDay,
+    };
+
+    try {
+      console.log('수정된 데이터: ', updatedEventData);
+      const response = await patchCalendarEvent(eventId, updatedEventData);
+      if (response.status === 200) {
+        console.log('Event updated successfully');
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error saving event:', error);
+    }
   };
 
   return (
@@ -134,7 +190,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                 type="text"
                 placeholder="일정명 입력"
                 value={eventData.name}
-              // onChange={(e) => updateFormData('name', e.target.value)}
+                onChange={(e) => setEventData({ ...eventData, name: e.target.value })}
               />
             </S.FormGroup>
 
@@ -142,7 +198,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
               <S.FormGroup>
                 <S.Label>캘린더</S.Label>
                 <S.SelectWrapper
-                // onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                 >
                   <S.Select
                     $hasValue={!!calendarValue}
@@ -204,7 +260,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                   <S.DateInput
                     type="datetime-local"
                     value={startTime}
-                    // onChange={(e) => handleTimeChange(e.target.value, true)}
+                    onChange={(e) => setStartTime(e.target.value)}
                     placeholder="시작 날짜와 시간 선택"
                   />
                 </S.DateInputWrapper>
@@ -213,7 +269,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                   <S.DateInput
                     type="datetime-local"
                     value={endTime}
-                    // onChange={(e) => handleTimeChange(e.target.value, false)}
+                    onChange={(e) => setEndTime(e.target.value)}
                     placeholder="종료 날짜와 시간 선택"
                   />
                 </S.DateInputWrapper>
@@ -223,7 +279,8 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
               <S.Checkbox
                 type="checkbox"
                 checked={isAllDay}
-              // onChange={(e) => handleAllDayChange(e.target.checked)}
+                onChange={(e) => handleAllDayChange(e.target.checked)}
+              // onChange={(e) => setIsAllDay(e.target.checked)}
               />
               <S.SpanText>종일</S.SpanText>
             </S.CheckboxGroup>
@@ -263,7 +320,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                       name='repeat'
                       value='none'
                       checked={repeatStopValue === 'none'}
-                    // onChange={handleRepeatStopChange}
+                      onChange={handleRepeatStopChange}
                     />
                   </S.RepeatLabel>
                   <S.RepeatLabel>
@@ -273,7 +330,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                       name='repeat'
                       value='date'
                       checked={repeatStopValue === 'date'}
-                    // onChange={handleRepeatStopChange}
+                      onChange={handleRepeatStopChange}
                     />
                   </S.RepeatLabel>
                 </S.RadioWrapper>
@@ -282,7 +339,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
                     type='datetime-local'
                     placeholder='날짜 선택'
                     value={repeatStopDate}
-                  // onChange={(e) => handleRepeatStopDateChange(e.target.value)}
+                    onChange={(e) => setRepeatStopDate(e.target.value)}
                   />
                 </S.RepeatInputWrapper>
               </S.RepeatWrapper>
@@ -290,7 +347,7 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
 
             <S.ButtonGroup>
               <S.CloseButton title="취소" onClick={onClose}>취소</S.CloseButton>
-              <Button title="저장" />
+              <Button title="저장" onClick={handleSave} />
             </S.ButtonGroup>
           </S.ModalContent>
         </S.ModalOverlay>

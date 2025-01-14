@@ -26,8 +26,6 @@ const EventScheduleModal = ({ isOpen, onClose, event }: EventScheduleModalProps)
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  console.log(event);
-
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
   };
@@ -47,6 +45,7 @@ const EventScheduleModal = ({ isOpen, onClose, event }: EventScheduleModalProps)
 
   const handleEditCancel = () => {
     setEditModalOpen(false);
+    onClose();
   }
 
   if (!isOpen) return null;

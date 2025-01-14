@@ -101,6 +101,7 @@ export const CalendarAddIcon = styled.img`
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
+  cursor: pointer;
 `;
 
 export const CategoryList = styled.div`
