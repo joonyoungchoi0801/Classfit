@@ -4,7 +4,7 @@ import editBtn from '@/assets/calendar/editBtn.svg';
 import deleteBtn from '@/assets/calendar/deleteBtn.svg';
 import { CalendarEvent } from '@/components/calendar/fullcalendar/calendar.type';
 import DeleteEventModal from './deleteEventModal';
-import ScheduleRegisterModal from '../scheduleRegisterModal';
+import EditEventModal from './editEventModal';
 
 const formatDateTime = (date: string) => {
   const d = new Date(date);
@@ -43,7 +43,10 @@ const EventScheduleModal = ({ isOpen, onClose, event }: EventScheduleModalProps)
 
   const handleEditClick = () => {
     setEditModalOpen(true);
-    onClose();
+  }
+
+  const handleEditCancel = () => {
+    setEditModalOpen(false);
   }
 
   if (!isOpen) return null;
@@ -83,11 +86,11 @@ const EventScheduleModal = ({ isOpen, onClose, event }: EventScheduleModalProps)
         event={event}
       />
 
-      {/* <ScheduleRegisterModal
-        isOpen={}
-        onClose={}
-        selectedDate={}
-      /> */}
+      <EditEventModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditCancel}
+        eventId={Number(event.id)}
+      />
     </>
   );
 };

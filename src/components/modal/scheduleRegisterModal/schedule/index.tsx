@@ -332,9 +332,6 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
           </S.RepeatInputWrapper>
         </S.RepeatWrapper>
       </S.FormGroup>
-
-
-
     </>
   );
 };

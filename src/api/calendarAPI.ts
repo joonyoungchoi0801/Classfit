@@ -80,6 +80,14 @@ export const getCalendarEvent = (
   });
 };
 
+// 모달 일정 상세 조회
+export const getCalendarEventDetail = (eventId: number) => {
+  return instance({
+    url: API_CALENDAR.EVENT_DETAIL(eventId),
+    method: 'GET',
+  });
+};
+
 export const patchCalendarEvent = (eventId: number, data: CalendarModal) => {
   return instance({
     method: 'patch',
