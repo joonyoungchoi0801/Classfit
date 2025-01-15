@@ -38,13 +38,28 @@ export const registerExam = (data: RegisterExamData) => {
   });
 };
 
-export const findExam = (memberName?: string, examName?: string) => {
+export const findExam = (searchFilter?: string, searchText?: string) => {
+  if (!searchFilter) {
+    return instance({
+      url: API_EXAM.EXAM_FIND,
+      method: 'POST',
+      data: {},
+    });
+  }
+  if (searchFilter === '강사명') {
+    return instance({
+      url: API_EXAM.EXAM_FIND,
+      method: 'POST',
+      data: {
+        memberName: searchText,
+      },
+    });
+  }
   return instance({
     url: API_EXAM.EXAM_FIND,
     method: 'POST',
     data: {
-      memberName,
-      examName,
+      examName: searchText,
     },
   });
 };

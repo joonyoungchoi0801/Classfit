@@ -40,7 +40,7 @@ function AchievementList() {
   const [data, setData] = useState<ExamData[]>([]);
 
   const { classList } = useClassList();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(true);
   const testSearchOptions: string[] = ['강사명', '시험명'];
 
   useEffect(() => {
@@ -52,6 +52,7 @@ function AchievementList() {
         setIsInitialized(true);
       } else {
         alert('성적 정보를 불러오는 데 실패했습니다.');
+        setIsInitialized(true);
       }
     };
     fetchData();
@@ -121,20 +122,30 @@ function AchievementList() {
     }
   };
 
-  const handleOnClickSearch = () => {
-    const _data = data.filter((item) => {
+  const handleOnClickSearch = async () => {
+    let _data;
+    _data = data.filter((item) => {
       const matchesType =
         filter === '전체' || item.standard === filterData[filter];
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = item.examName == searchText;
+        matchesSearch = item.memberName == searchText;
       } else {
         matchesSearch = item.examName == searchText;
       }
 
       return matchesType && matchesSearch;
     });
+
+    if (_data.length === 0) {
+      const res = await findExam(searchFilter, searchText);
+      if (res.status === 200) {
+        _data = res.data.data;
+      } else {
+        alert('성적 정보를 불러오는 데 실패했습니다.');
+      }
+    }
 
     setPreviousFilteredData(_data.length > 0 ? _data : previousFilteredData);
     setDisplayData(_data);
@@ -249,7 +260,10 @@ function AchievementList() {
           </S.EmptyListSection>
         )
       ) : (
-        <div />
+        <S.EmptyListSection>
+          <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
+          <S.AchievementInfoText>조회된 성적이 없습니다.</S.AchievementInfoText>
+        </S.EmptyListSection>
       )}
     </S.Container>
   );
