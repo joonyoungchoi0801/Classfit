@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ClassDropDown from '@/components/dropDown/classDropDown';
 import SelectedCheckBoxIcon from '@/assets/info/selectedCheckBox.svg';
 import ReportMainIcon from '@/assets/achievement/reportMain.svg';
-import { deleteReport, getFindReport } from '@/api/reportAPI';
+import { deleteReport, getFindReport, getReportAll } from '@/api/reportAPI';
 import { ReportDataWithChecked } from '@/types/report.types';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import useClassList from '@/hooks/useClassList';
@@ -68,7 +68,8 @@ function ReportList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getFindReport();
+        const res = await getReportAll();
+        console.log(res);
         if (res.status == 200) {
           const updatedData = res.data.data.map((item: any) => ({
             ...item,

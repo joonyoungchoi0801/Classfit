@@ -116,7 +116,8 @@ function AchievementScoreEdit() {
         item.studentId === id
           ? {
               ...item,
-              evaluationDetail: value,
+              // evaluationDetail: value,
+              score: value === 'P' ? '-3' : '-4',
               isEdited: true,
             }
           : item
@@ -186,7 +187,7 @@ function AchievementScoreEdit() {
                         handlePF(item.studentId, 'P');
                       }}
                     >
-                      {item.evaluationDetail === 'P' ? (
+                      {item.score === '-3' ? (
                         <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                       ) : (
                         <S.BtnIcon src={ToggleIcon} $size='2rem' />
@@ -201,7 +202,7 @@ function AchievementScoreEdit() {
                         handlePF(item.studentId, 'F');
                       }}
                     >
-                      {item.evaluationDetail === 'F' ? (
+                      {item.score === '-4' ? (
                         <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                       ) : (
                         <S.BtnIcon src={ToggleIcon} $size='2rem' />

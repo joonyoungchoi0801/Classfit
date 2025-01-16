@@ -17,6 +17,7 @@ import useClassList from '@/hooks/useClassList';
 import { Controller, useForm } from 'react-hook-form';
 import {
   RegisterReportData,
+  RegisterStudentData,
   ReportExamData,
   ReportExamDataWithChecked,
   ReportStudentData,
@@ -161,19 +162,46 @@ function ReportRegister() {
     const updatedData = getValues();
 
     try {
+      console.log(updatedData);
       const res = await postReportRegister(updatedData);
+      console.log(res);
+
       if (res.status === 200) {
+        // 백엔드에서 리포트 생성 후, 응답으로 아래 형태를 가정
+        // res.data.data = {
+        //   reportId: number;
+        //   studentList: Array<{
+        //     studentId: number;
+        //     reportId: number;
+        //   }>
+        // };
+        const { studentList } = res.data.data;
+        // ↑ 여기서 각 학생별 studentId, reportId를 받아온다고 가정
+
         const filteredStudentOpinion = reportStudentOpinion
           .filter((item) => item.checked)
-          .map(({ checked, studentName, ...rest }) => ({
-            ...rest,
-            reportId: res.data.data.reportId,
-          }));
+          .map(({ checked, studentName, studentId, ...rest }) => {
+            // 백엔드 응답 studentList 중 해당 studentId가 있는 걸 찾기
+            const matched = studentList.find(
+              (s: RegisterStudentData) => s.studentId === studentId
+            );
+            return {
+              ...rest,
+              // 혹시 studentId도 patch에 필요하다면 명시적으로 넣어줄 수도 있음
+              studentId,
+              // studentName도 넘길지 여부는 상황에 맞게
+              // studentName,
+              reportId: matched ? matched.reportId : 0,
+              // 혹은 matched가 없을 때 에러 처리할 수도 있음
+            };
+          });
 
         if (filteredStudentOpinion.length > 0) {
           try {
-            const res = await patchStudentOpinion(filteredStudentOpinion);
-            if (res.status === 200) {
+            console.log(filteredStudentOpinion);
+            const res2 = await patchStudentOpinion(filteredStudentOpinion);
+            console.log(res2);
+            if (res2.status === 200) {
               setModalMessage('리포트가 등록되었습니다.');
               setIsModalVisible(true);
             } else {

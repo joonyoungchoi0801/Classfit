@@ -39,7 +39,7 @@ function AchievementRegisterStudent() {
               ...item,
               checkedStudent: !item.checkedStudent,
               score: item.checkedStudent ? '0' : item.score,
-              evaluationDetail: standard === 'PF' ? 'F' : '',
+              evaluationDetail: '',
             }
           : item
       )
@@ -52,7 +52,8 @@ function AchievementRegisterStudent() {
         item.studentId === id
           ? {
               ...item,
-              evaluationDetail: value,
+              // evaluationDetail: value,
+              score: value === 'P' ? '-3' : '-4',
             }
           : item
       )
@@ -115,8 +116,7 @@ function AchievementRegisterStudent() {
               (item: ExamStudentData) => ({
                 studentId: item.studentId,
                 name: item.name,
-                score: '-1',
-                evaluationDetail: 'F',
+                score: '-4',
                 checkedStudent: false,
               })
             );
@@ -221,7 +221,7 @@ function AchievementRegisterStudent() {
                         handlePF(item.studentId, 'P');
                       }}
                     >
-                      {item.evaluationDetail === 'P' ? (
+                      {item.score === '-3' ? (
                         <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                       ) : (
                         <S.BtnIcon src={ToggleIcon} $size='2rem' />
@@ -239,7 +239,7 @@ function AchievementRegisterStudent() {
                       }}
                     >
                       {/* <S.BtnIcon src={ToggleIcon} $size='2rem' /> */}
-                      {item.evaluationDetail === 'F' ? (
+                      {item.score === '-4' ? (
                         <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                       ) : (
                         <S.BtnIcon src={ToggleIcon} $size='2rem' />

@@ -71,6 +71,7 @@ export const API_REPORT = Object.freeze({
   FIND: '/v1/report/student-report',
   EXAM_FIND: '/v1/report/exam-list',
   STUDENT_FIND: '/v1/report/class-student',
+  GET_REPORT: '/v1/report/all-report',
 });
 
 export const API_STATISTICS = Object.freeze({

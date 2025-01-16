@@ -161,3 +161,9 @@ export const Tag = styled.div<{ $type: string }>`
   font-weight: 600;
   line-height: normal;
 `;
+
+export const TagWrapper = styled.div`
+  display: flex;
+  width: 8rem;
+  align-items: flex-start;
+`;

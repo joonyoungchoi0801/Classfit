@@ -100,6 +100,14 @@ function AchievementRegister() {
   const [standardValue, setStandardValue] = useState('점수');
 
   const onSubmit = async (data: RegisterExamData) => {
+    if (
+      standardValue === '개수' &&
+      (!data.highestScore || data.highestScore === 0)
+    ) {
+      alert('최대 개수를 입력해주세요.');
+      return;
+    }
+
     if (!data.highestScore) {
       if (standardValue === '점수') {
         data.highestScore = 100;
@@ -109,7 +117,7 @@ function AchievementRegister() {
     }
     const selectedExamPeriod = getValues('examPeriod');
 
-    data.examPeriod = examPeriodList[selectedExamPeriod] || 'SCORE';
+    data.examPeriod = examPeriodList[selectedExamPeriod] || 'MONTH';
     data.standard = standardList[data.standard] || 'SCORE';
 
     const res = await registerExam(data);

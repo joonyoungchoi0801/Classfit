@@ -25,6 +25,13 @@ export const getReportDetail = (reportId: number) => {
   });
 };
 
+export const getReportAll = () => {
+  return instance({
+    url: API_REPORT.GET_REPORT,
+    method: 'GET',
+  });
+};
+
 export const deleteReport = (reportId: number) => {
   return instance({
     url: API_REPORT.DETAIL(reportId),

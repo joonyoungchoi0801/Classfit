@@ -38,11 +38,19 @@ function AchievementDetail() {
     const fetchData = async () => {
       if (id) {
         const res = await getExamDetail(Number(id));
+        console.log(res);
 
         if (res.status == 200) {
           const { examClassStudents, ...examInfo } = res.data.data;
           setExamInfoData(examInfo);
-          setStudentData(examClassStudents);
+          const convertedData = examClassStudents.map(
+            (student: ExamStudentDataWithChecked) => ({
+              ...student,
+              score: String(student.score), // 문자열 → 숫자
+            })
+          );
+
+          setStudentData(convertedData);
           if (examInfo.standard === 'SCORE') {
             setTotalScore('/' + examInfo.highestScore + ' 점');
           } else if (examInfo.standard === 'QUESTION') {
@@ -148,7 +156,7 @@ function AchievementDetail() {
                     <S.ToggleWrapper>
                       <S.Toggle>
                         <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                          {item.evaluationDetail === 'P' ? (
+                          {item.score === '-3' ? (
                             <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                           ) : (
                             <S.BtnIcon src={ToggleIcon} $size='2rem' />
@@ -158,7 +166,7 @@ function AchievementDetail() {
                       </S.Toggle>
                       <S.Toggle>
                         <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                          {item.evaluationDetail === 'F' ? (
+                          {item.score === '-4' ? (
                             <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
                           ) : (
                             <S.BtnIcon src={ToggleIcon} $size='2rem' />
