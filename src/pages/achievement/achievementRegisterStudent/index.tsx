@@ -21,11 +21,12 @@ function AchievementRegisterStudent() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [totalScore, setTotalScore] = useState<string>('');
+  const isEvaluated = standard === 'EVALUATION';
 
   useEffect(() => {
     if (standard === 'SCORE') {
       setTotalScore('/' + highestScore + ' 점');
-    } else if (standard === 'QEUSTION') {
+    } else if (standard === 'QUESTION') {
       setTotalScore('/' + highestScore + ' 개');
     }
   }, [standard, highestScore]);
@@ -33,7 +34,27 @@ function AchievementRegisterStudent() {
   const toggleChecked = (id: number) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.studentId === id ? { ...item, checked: !item.checked } : item
+        item.studentId === id
+          ? {
+              ...item,
+              checkedStudent: !item.checkedStudent,
+              score: item.checkedStudent ? '0' : item.score,
+              evaluationDetail: standard === 'PF' ? 'F' : '',
+            }
+          : item
+      )
+    );
+  };
+
+  const handlePF = (id: number, value: string) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.studentId === id
+          ? {
+              ...item,
+              evaluationDetail: value,
+            }
+          : item
       )
     );
   };
@@ -41,18 +62,17 @@ function AchievementRegisterStudent() {
   const toggleCheckedAll = () => {
     if (isCheckedAll) {
       setData((prevData) =>
-        prevData.map((item) => ({ ...item, checked: false }))
+        prevData.map((item) => ({ ...item, checkedStudent: false, score: '0' }))
       );
     } else {
       setData((prevData) =>
-        prevData.map((item) => ({ ...item, checked: true }))
+        prevData.map((item) => ({ ...item, checkedStudent: true }))
       );
     }
     setIsCheckedAll(!isCheckedAll);
   };
 
   const handleOnChangeScoreValue = (id: number, value: string) => {
-    console.log('value', value);
     setData((prevData) =>
       prevData.map((item) =>
         item.studentId === id ? { ...item, score: value } : item
@@ -61,20 +81,16 @@ function AchievementRegisterStudent() {
   };
 
   const handleOnSubmit = async () => {
-    const scoreData = data
-      .filter((item) => item.checked)
-      .map((item) => ({
-        studentId: item.studentId,
-        score: Number(item.score),
-      }));
+    const scoreData = data.map((item) => ({
+      studentId: item.studentId,
+      score: Number(item.score),
+      checkedStudent: item.checkedStudent,
+      evaluationDetail: item.evaluationDetail,
+    }));
     if (examId) {
-      console.log('scoreData', scoreData);
       const data = await scoreRegisterExam(Number(examId), scoreData);
-      console.log('data', data);
       if (data.status === 200) {
         setIsModalVisible(true);
-
-        navigate('/manage/achievement/management/register/student');
       } else {
         alert('점수 등록에 실패했습니다. 다시 시도해주세요');
       }
@@ -94,15 +110,43 @@ function AchievementRegisterStudent() {
       if (examId) {
         const res = await getExamStudent(Number(examId));
         if (res.status === 200) {
-          const transformedData = res.data.data.map(
-            (item: ExamStudentData) => ({
-              studentId: item.studentId,
-              name: item.name,
-              score: item.score,
-              checked: false,
-            })
-          );
-          setData(transformedData);
+          if (standard === 'PF') {
+            const transformedData = res.data.data.map(
+              (item: ExamStudentData) => ({
+                studentId: item.studentId,
+                name: item.name,
+                score: '-1',
+                evaluationDetail: 'F',
+                checkedStudent: false,
+              })
+            );
+            setData(transformedData);
+            return;
+          } else if (standard === 'EVALUATION') {
+            const transformedData = res.data.data.map(
+              (item: ExamStudentData) => ({
+                studentId: item.studentId,
+                name: item.name,
+                score: '-2',
+                evaluationDetail: '',
+                checkedStudent: false,
+              })
+            );
+            setData(transformedData);
+            return;
+          } else {
+            const transformedData = res.data.data.map(
+              (item: ExamStudentData) => ({
+                studentId: item.studentId,
+                name: item.name,
+                score: '0',
+                evaluationDetail: '',
+                checkedStudent: false,
+              })
+            );
+            setData(transformedData);
+            return;
+          }
         } else {
           alert('학생 데이터를 불러오는데 실패했습니다.');
         }
@@ -134,40 +178,94 @@ function AchievementRegisterStudent() {
         </S.TotalChooseWrapper>
         <S.ScoreList>
           {data.map((item) => (
-            <S.ScoreItem key={item.studentId}>
-              <S.RowWrapper>
-                <S.IconWrapper
-                  $alignLeft={true}
-                  onClick={() => {
-                    toggleChecked(item.studentId);
-                  }}
-                >
-                  {item.checked ? (
-                    <S.BtnIcon src={SelectedCheckBoxIcon} />
-                  ) : (
-                    <S.BtnIcon src={CheckBoxIcon} />
-                  )}
-                </S.IconWrapper>
-                <S.Name $isChecked={item.checked}>{item.name}</S.Name>
-              </S.RowWrapper>
+            <S.ScoreItem key={item.studentId} $isEvaluated={isEvaluated}>
+              {isEvaluated ? (
+                <S.EvaluateWrapper>
+                  <S.IconWrapper
+                    $alignLeft={true}
+                    onClick={() => {
+                      toggleChecked(item.studentId);
+                    }}
+                  >
+                    {item.checkedStudent ? (
+                      <S.BtnIcon src={SelectedCheckBoxIcon} />
+                    ) : (
+                      <S.BtnIcon src={CheckBoxIcon} />
+                    )}
+                  </S.IconWrapper>
+                  <S.Name $isChecked={item.checkedStudent}>{item.name}</S.Name>
+                </S.EvaluateWrapper>
+              ) : (
+                <S.RowWrapper>
+                  <S.IconWrapper
+                    $alignLeft={true}
+                    onClick={() => {
+                      toggleChecked(item.studentId);
+                    }}
+                  >
+                    {item.checkedStudent ? (
+                      <S.BtnIcon src={SelectedCheckBoxIcon} />
+                    ) : (
+                      <S.BtnIcon src={CheckBoxIcon} />
+                    )}
+                  </S.IconWrapper>
+                  <S.Name $isChecked={item.checkedStudent}>{item.name}</S.Name>
+                </S.RowWrapper>
+              )}
               {standard == 'PF' ? (
                 <S.ToggleWrapper>
                   <S.Toggle>
-                    <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                      <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                    <S.IconWrapper
+                      $alignLeft={true}
+                      onClick={() => {
+                        handlePF(item.studentId, 'P');
+                      }}
+                    >
+                      {item.evaluationDetail === 'P' ? (
+                        <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                      ) : (
+                        <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                      )}
+
+                      {/* <S.BtnIcon src={SelectedToggleIcon} $size='2rem' /> */}
                     </S.IconWrapper>
-                    <S.Label>T</S.Label>
+                    <S.Label>P</S.Label>
                   </S.Toggle>
                   <S.Toggle>
-                    <S.IconWrapper $alignLeft={true} onClick={() => {}}>
-                      <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                    <S.IconWrapper
+                      $alignLeft={true}
+                      onClick={() => {
+                        handlePF(item.studentId, 'F');
+                      }}
+                    >
+                      {/* <S.BtnIcon src={ToggleIcon} $size='2rem' /> */}
+                      {item.evaluationDetail === 'F' ? (
+                        <S.BtnIcon src={SelectedToggleIcon} $size='2rem' />
+                      ) : (
+                        <S.BtnIcon src={ToggleIcon} $size='2rem' />
+                      )}
                     </S.IconWrapper>
                     <S.Label>F</S.Label>
                   </S.Toggle>
                 </S.ToggleWrapper>
+              ) : standard == 'EVALUATION' ? (
+                <S.EvaluationInput
+                  placeholder='내용을 입력해주세요'
+                  value={item.evaluationDetail}
+                  onChange={(e) =>
+                    setData((prevData) =>
+                      prevData.map((prevItem) =>
+                        prevItem.studentId === item.studentId
+                          ? { ...prevItem, evaluationDetail: e.target.value }
+                          : prevItem
+                      )
+                    )
+                  }
+                  disabled={!item.checkedStudent}
+                />
               ) : (
                 <S.ScoreWrapper>
-                  {item.checked && (
+                  {item.checkedStudent && (
                     <S.ScoreInput
                       placeholder=''
                       value={item.score}
@@ -177,7 +275,7 @@ function AchievementRegisterStudent() {
                     />
                   )}
 
-                  <S.TotalScore $isChecked={item.checked}>
+                  <S.TotalScore $isChecked={item.checkedStudent}>
                     {totalScore}
                   </S.TotalScore>
                 </S.ScoreWrapper>

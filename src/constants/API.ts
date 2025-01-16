@@ -92,6 +92,13 @@ export const API_CALENDAR = Object.freeze({
   EVENT_DETAIL: (eventId: number) => `/v1/calendar/modal/${eventId}`,
   MONTH: '/v1/calendar/monthly',
   MEMBER: '/v1/calendar/academy-members',
+  DRAG: (eventId: number) => `/v1/calendar/drag/${eventId}`,
+});
+
+export const API_PROFILE = Object.freeze({
+  PROFILE: '/v1/mypage',
+  INVITE: 'v1/invitation/invite',
+  INVITE_LIST: 'v1/invitation/list',
 });
 
 export const API_DRIVE = Object.freeze({

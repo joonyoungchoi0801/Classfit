@@ -55,13 +55,14 @@ export const CategoryInput = styled.input`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
+  font-family: Pretendard;
 `;
 
 export const CategoryIcon = styled.div<{ $selectedColor?: string }>`
   width: 3.2rem;
   height: 3rem;
   border-radius: 2rem;
-  background-color: ${({ $selectedColor }) => $selectedColor || '#D9D9D9'};
+  background-color: ${({ $selectedColor }) => `#${$selectedColor}` || '#D9D9D9'};
   cursor: pointer;
 `;
 

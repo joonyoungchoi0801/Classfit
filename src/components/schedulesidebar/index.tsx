@@ -16,17 +16,17 @@ import {
   PersonalCategoryData,
   SharedCategoryData,
 } from '@/types/category.type';
-import { colorMapping } from '@/utils/colorMapping';
+// import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
 import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
 import CategoryDeleteModal from '@/components/modal/categoryModal/categoryDeleteModal';
+import { colorMapping } from '@/utils/colorMapping';
 
 function ScheduleSidebar() {
   const location = useLocation();
   const url = location.pathname;
   const navigate = useNavigate();
-  const [isClicked, setIsClicked] = useState(false);
   const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(false);
   const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(false);
   const [personalCategories, setPersonalCategories] = useState<
@@ -60,22 +60,8 @@ function ScheduleSidebar() {
 
         switch (statusCode) {
           case 200:
-            // personalCategories에 색상 매핑
-            const mappedPersonalCategories = data.personalCategories.map(
-              (category: PersonalCategoryData) => ({
-                ...category,
-                color: colorMapping[category.color] || category.color,
-              })
-            );
-            const mappedSharedCategories = data.sharedCategories.map(
-              (category: SharedCategoryData) => ({
-                ...category,
-                color: colorMapping[category.color] || category.color,
-              })
-            );
-
-            setPersonalCategories(mappedPersonalCategories);
-            setSharedCategories(mappedSharedCategories);
+            setPersonalCategories(data.personalCategories);
+            setSharedCategories(data.sharedCategories);
             break;
           case 404:
             console.log('ACCESS_DENIED: 접근이 거부되었습니다.');
@@ -92,7 +78,7 @@ function ScheduleSidebar() {
     };
 
     fetchCategories();
-  }, []);
+  }, [isModalOpen]);
 
   const handleButtonClick = () => {
     navigate('/schedule/register/schedule');
@@ -191,12 +177,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
@@ -204,12 +190,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
@@ -263,12 +249,18 @@ function ScheduleSidebar() {
 
       <S.CalendarSection>
         <S.CalendarItem>
-          <S.MyCalendar onClick={toggleMyCalendar}>
+          <S.MyCalendar>
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
               alt='arrow'
+              onClick={toggleMyCalendar}
             />
-            <S.CalendarItemText>내 캘린더</S.CalendarItemText>
+            <S.CalendarItemText
+              onClick={() => navigate('/schedule/my')}
+              $isActive={url === '/schedule/my'}
+            >
+              내 캘린더
+            </S.CalendarItemText>
           </S.MyCalendar>
           <S.CalendarAddIcon
             src={plusbtn}
@@ -281,8 +273,6 @@ function ScheduleSidebar() {
             {personalCategories.map((item) => (
               <S.CategoryItem
                 key={item.id}
-                color={item.color}
-                onClick={() => navigate(`/schedule/${item.id}`)}
               >
                 <S.Category>
                   <S.CategoryIcon
@@ -316,12 +306,18 @@ function ScheduleSidebar() {
         )}
 
         <S.CalendarItem>
-          <S.SharedCalendar onClick={toggleSharedCal}>
+          <S.SharedCalendar>
             <S.Icon
               src={isSharedCalExpanded ? downArrow : rightArrow}
               alt='arrow'
+              onClick={toggleSharedCal}
             />
-            <S.CalendarItemText>공용 캘린더</S.CalendarItemText>
+            <S.CalendarItemText
+              onClick={() => navigate('/schedule/shared')}
+              $isActive={url === '/schedule/shared'}
+            >
+              공용 캘린더
+            </S.CalendarItemText>
           </S.SharedCalendar>
           <S.CalendarAddIcon
             src={plusbtn}
@@ -334,8 +330,6 @@ function ScheduleSidebar() {
             {sharedCategories.map((item) => (
               <S.SharedItem
                 key={item.id}
-                color={item.color}
-                onClick={() => navigate(`/schedule/${item.id}`)}
               >
                 <S.Shared>
                   <S.CategoryIcon

@@ -6,12 +6,14 @@ import { CategoryModalProps } from './CategoryModal.types';
 const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) => {
   const [categoryName, setCategoryName] = useState('');
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedColorKey, setSelectedColorKey] = useState<string>('');
+  const [selectedColorValue, setSelectedColorValue] = useState<string>('');
 
   useEffect(() => {
     if (isOpen) {
       setCategoryName('');
-      setSelectedColor('');
+      setSelectedColorKey('');
+      setSelectedColorValue('');
     }
   }, [isOpen]);
 
@@ -20,28 +22,23 @@ const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) =>
   };
 
   const handleColorIconClick = () => {
-    setIsColorPaletteOpen(true);
+    setIsColorPaletteOpen(!isColorPaletteOpen);
   };
 
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
+  const handleColorSelect = (key: string, value: string) => {
+    setSelectedColorKey(key);
+    setSelectedColorValue(value);
     setIsColorPaletteOpen(false);
   };
 
   const handleSave = () => {
-    if (categoryName.trim() && selectedColor) {
-      const mappedColor = Object.keys(colorMapping).find(key => colorMapping[key] === selectedColor);
-
-      if (mappedColor) {
-        onSave(categoryName, mappedColor);
-        onClose();
-      } else {
-        console.error("Color not found in the mapping.");
-      }
+    if (categoryName.trim() && selectedColorKey) {
+      onSave(categoryName, selectedColorKey);
+      onClose();
     }
   };
 
-  const colorPalette = Object.values(colorMapping);
+  const colorPalette = Object.entries(colorMapping);
 
   return (
     isOpen && (
@@ -51,12 +48,23 @@ const CategoryModal = ({ isOpen, type, onClose, onSave }: CategoryModalProps) =>
           <S.Divider />
           <S.CategoryLabel>카테고리명</S.CategoryLabel>
           <S.InputWrapper>
-            <S.CategoryInput value={categoryName} onChange={handleCategoryNameChange} placeholder="카테고리명 입력" />
-            <S.CategoryIcon $selectedColor={selectedColor} onClick={handleColorIconClick} />
+            <S.CategoryInput
+              value={categoryName}
+              onChange={handleCategoryNameChange}
+              placeholder="카테고리명 입력"
+            />
+            <S.CategoryIcon
+              $selectedColor={selectedColorValue}
+              onClick={handleColorIconClick}
+            />
             {isColorPaletteOpen && (
               <S.ColorPalette>
-                {colorPalette.map((color) => (
-                  <S.ColorOption key={color} color={color} onClick={() => handleColorSelect(color)} />
+                {colorPalette.map(([key, value]) => (
+                  <S.ColorOption
+                    key={key}
+                    color={value}
+                    onClick={() => handleColorSelect(key, value)}
+                  />
                 ))}
               </S.ColorPalette>
             )}

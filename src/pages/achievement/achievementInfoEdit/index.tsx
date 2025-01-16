@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
 import Message from '@/components/message';
 import type { ModifyExamData } from '@/types/exam.type';
-import { deleteExam, putExam, registerExam } from '@/api/examAPI';
+import { deleteExam, putExam } from '@/api/examAPI';
 import {
   examLst,
   examPeriodList,
@@ -59,12 +59,20 @@ function AchievementInfoEdit() {
     setShowCalendar((prev) => !prev);
   };
 
+  const initHighestScore = () => {
+    if (standardValue === 'QUESTION') {
+      return Number(examInfoData.highestScore);
+    } else {
+      return 0;
+    }
+  };
+
   const { control, handleSubmit, getValues, setValue } =
     useForm<ModifyExamData>({
       defaultValues: {
         examDate: examInfoData.examDate,
         standard: reverseStandardList[examInfoData.standard],
-        highestScore: Number(examInfoData.perfectScore),
+        highestScore: initHighestScore(),
         examPeriod: reverseExamPeriodList[examInfoData.examPeriod],
         examName: examInfoData.examName,
         examRange: transformExamRange,
@@ -73,17 +81,21 @@ function AchievementInfoEdit() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
-    navigate('/manage/achievement/management');
+    navigate(-1);
   };
 
   const onSubmit = async (data: ModifyExamData) => {
-    if (!data.highestScore) {
-      if (standardValue === '점수') {
-        data.highestScore = 100;
-      } else {
-        data.highestScore = 0;
-      }
+    const tempHighestScore = getValues('highestScore');
+    if (standardValue === '점수') {
+      data.highestScore = 100;
+    } else if (standardValue === '개수') {
+      data.highestScore = tempHighestScore;
+    } else if (standardValue === '정성평가') {
+      data.highestScore = -2;
+    } else {
+      data.highestScore = -1;
     }
+
     const selectedExamPeriod = getValues('examPeriod');
 
     data.examPeriod = examPeriodList[selectedExamPeriod] || 'SCORE';
@@ -252,7 +264,7 @@ function AchievementInfoEdit() {
                           placeholder={
                             scoreStandard[standardValue]?.placeholder
                           }
-                          value={field.value}
+                          value={standardValue == '개수' ? field.value : ''}
                           onChange={field.onChange}
                           disabled={scoreStandard[standardValue]?.isBlocked}
                         />

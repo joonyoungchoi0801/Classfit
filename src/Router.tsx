@@ -15,7 +15,7 @@ import Class from './pages/auth/class';
 import Password from './pages/auth/password';
 import NewPassword from './pages/auth/newpassword';
 import Certification from './pages/auth/certification';
-
+import Profile from './pages/profile';
 export default function Router() {
   return (
     <BrowserRouter>
@@ -47,6 +47,8 @@ export default function Router() {
         <Route path='/drive' element={<Navigate to='/drive/my' />} />
         <Route path='/drive/:type' element={<Drive />} />
         <Route path='/drive/:type/:subtype?' element={<Drive />} />
+        <Route path='/profile' element={<Navigate to='/profile/my' />} />
+        <Route path='/profile/:type' element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

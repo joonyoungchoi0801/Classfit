@@ -55,17 +55,6 @@ export const ScoreList = styled.div`
   padding: 1rem 0;
 `;
 
-export const ScoreItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 0;
-  border-bottom: 0.1rem solid var(--color-gray);
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
 export const CheckboxWrapper = styled.div`
   flex: 0 0 3%;
 `;
@@ -133,6 +122,7 @@ export const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding-bottom: 1rem;
 `;
 
 export const IconWrapper = styled.div<{
@@ -161,4 +151,40 @@ export const Toggle = styled.div`
   flex-direction: row;
   /* gap: 0.5rem; */
   align-items: center;
+`;
+
+export const EvaluationInput = styled.textarea<{
+  $height?: string;
+  $marginTop?: string;
+}>`
+  width: 100%;
+  height: ${({ $height }) => $height || '8rem'};
+  margin-top: ${({ $marginTop }) => $marginTop || '0'};
+  padding: 2rem;
+  border: 0.1rem solid var(--color-gray);
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  resize: vertical;
+  outline: none;
+  box-shadow: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+  }
+`;
+
+export const ScoreItem = styled.div<{ $isEvaluated: boolean }>`
+  display: flex;
+  align-items: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'flex-start' : 'center'}; /* 교차축: 위쪽 또는 중앙 정렬 */
+  flex-direction: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'column' : 'row'}; /* 세로 또는 가로 방향 */
+  justify-content: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'flex-start' : 'space-between'}; /* 주축: 왼쪽 정렬 */
+  padding: 1.5rem 0;
+  border-bottom: 0.1rem solid var(--color-gray);
+  &:last-child {
+    border-bottom: none;
+  }
 `;

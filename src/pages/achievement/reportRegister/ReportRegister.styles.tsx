@@ -47,6 +47,15 @@ export const Sublabel = styled.label<{ $color?: string }>`
   margin-bottom: 1rem;
 `;
 
+export const Emptylabel = styled.label`
+  color: var(--color-lightgray);
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  padding-left: 1rem;
+`;
+
 export const LabelWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -251,4 +260,13 @@ export const ToggleContainer = styled.div`
 
 export const ToggleWrapper = styled.div`
   margin: 0 1rem;
+`;
+
+export const EmptyWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20rem;
 `;

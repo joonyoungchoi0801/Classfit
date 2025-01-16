@@ -41,6 +41,7 @@ export const Input = styled.input`
   padding: 1rem 2rem;
   border-radius: 1rem;
   border: 1px solid #dedede;
+  font-family: Pretendard;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;

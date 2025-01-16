@@ -29,7 +29,7 @@ import white_status from '@/assets/attendanceTable/white_status.svg';
 
 import StudentInfoModal from '../modal/studentInfoModal';
 import useClassStore from '@/store/classStore';
-import formatDateToISO from '@/utils/formatDate';
+import { formatDateToISO } from '@/utils/formatDate';
 import useAttendanceStore from '@/store/attendancedataStore';
 
 function AttendanceTable({
@@ -241,14 +241,14 @@ function AttendanceTable({
             (attendanceRecord) =>
               attendanceRecord.date === formattedDate
                 ? {
-                  ...attendanceRecord,
-                  status:
-                    attendanceRecord.status === 'PRESENT'
-                      ? 'LATE'
-                      : attendanceRecord.status === 'LATE'
-                        ? 'ABSENT'
-                        : 'PRESENT',
-                }
+                    ...attendanceRecord,
+                    status:
+                      attendanceRecord.status === 'PRESENT'
+                        ? 'LATE'
+                        : attendanceRecord.status === 'LATE'
+                          ? 'ABSENT'
+                          : 'PRESENT',
+                  }
                 : attendanceRecord
           );
 

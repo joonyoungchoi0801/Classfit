@@ -3,9 +3,9 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
   width: 100%;
   overflow: hidden;
+  padding-bottom: 10rem;
 `;
 
 export const ClassWrapper = styled.div`
@@ -157,10 +157,14 @@ export const ScoreList = styled.div`
   padding: 1rem 0;
 `;
 
-export const ScoreItem = styled.div`
+export const ScoreItem = styled.div<{ $isEvaluated: boolean }>`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'flex-start' : 'center'}; /* 교차축: 위쪽 또는 중앙 정렬 */
+  flex-direction: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'column' : 'row'}; /* 세로 또는 가로 방향 */
+  justify-content: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'flex-start' : 'space-between'}; /* 주축: 왼쪽 정렬 */
   padding: 1.5rem 0;
   border-bottom: 0.1rem solid var(--color-gray);
   &:last-child {
@@ -172,11 +176,17 @@ export const CheckboxWrapper = styled.div`
   flex: 0 0 3%;
 `;
 
-export const Name = styled.div`
+export const Name = styled.div<{ $isChecked: boolean; $isEvaluated?: boolean }>`
+  color: ${({ $isChecked }) =>
+    $isChecked ? 'var(--color-black)' : 'var(--color-lightgray)'};
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  width: 6rem;
+  align-items: center;
+  justify-content: ${({ $isEvaluated }) =>
+    $isEvaluated ? 'flex-start' : 'center'};
 `;
 
 export const Score = styled.div`
@@ -186,10 +196,13 @@ export const Score = styled.div`
   color: var(--color-blue);
 `;
 
-export const TotalScore = styled.div`
+export const TotalScore = styled.div<{
+  $isChecked: boolean;
+}>`
   font-size: 1.6rem;
   font-weight: 500;
-  color: var(--color-black);
+  color: ${({ $isChecked }) =>
+    $isChecked ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const ScoreWrapper = styled.div`
@@ -229,4 +242,29 @@ export const BtnIcon = styled.img<{ $size?: string }>`
 export const Label = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
+`;
+
+export const EvaluateWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem 0;
+`;
+
+export const EvaluationInput = styled.textarea<{
+  $height?: string;
+  $marginTop?: string;
+}>`
+  width: 100%;
+  height: ${({ $height }) => $height || '8rem'};
+  margin-top: ${({ $marginTop }) => $marginTop || '0'};
+  padding: 2rem;
+  border: 0.1rem solid var(--color-gray);
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  resize: vertical;
+  outline: none;
+  box-shadow: none;
 `;

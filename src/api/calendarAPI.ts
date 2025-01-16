@@ -65,7 +65,7 @@ export const getAttendeeList = () => {
 };
 
 export const getCalendarEvent = (
-  categoryId: number,
+  calendarType: string,
   year: number,
   month: number
 ) => {
@@ -73,10 +73,18 @@ export const getCalendarEvent = (
     method: 'get',
     url: API_CALENDAR.MONTH,
     params: {
-      categoryId,
+      calendarType,
       year,
       month,
     },
+  });
+};
+
+// 모달 일정 상세 조회
+export const getCalendarEventDetail = (eventId: number) => {
+  return instance({
+    url: API_CALENDAR.EVENT_DETAIL(eventId),
+    method: 'GET',
   });
 };
 
@@ -85,5 +93,24 @@ export const patchCalendarEvent = (eventId: number, data: CalendarModal) => {
     method: 'patch',
     url: API_CALENDAR.EVENT_DETAIL(eventId),
     data,
+  });
+};
+
+export const deleteCalendarEvent = (eventId: number) => {
+  return instance({
+    method: 'delete',
+    url: API_CALENDAR.EVENT_DETAIL(eventId),
+  });
+};
+
+export const dragCalendarEvent = (
+  eventId: number,
+  startDate: string,
+  endDate: string
+) => {
+  return instance({
+    method: 'patch',
+    url: API_CALENDAR.DRAG(eventId),
+    data: { startDate, endDate },
   });
 };

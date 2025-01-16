@@ -32,24 +32,33 @@ export interface ExamStudentData {
   studentId: number;
   name: string;
   score: string;
+  evaluationDetail: string;
 }
 
 export interface ExamStudentDataWithChecked extends ExamStudentData {
-  checked: boolean;
+  checkedStudent: boolean;
+}
+
+export interface ExamStudentDataWithEdited extends ExamStudentDataWithChecked {
+  isEdited: boolean;
 }
 
 export interface StudentScoreData {
   studentId: number;
   score: number;
+  evaluationDetail?: string;
+  checkedStudent: boolean;
 }
 
 export interface ExamData {
   examId: number;
   memberId: number;
+  memberName: string;
   standard: string;
   mainClassName: string;
   subClassName: string;
   examName: string;
+  examPeriod: string;
   createdAt: string;
 }
 
@@ -61,6 +70,7 @@ export interface ExamInfoData {
   subClassName: string;
   lowestScore: number;
   perfectScore: number;
+  highestScore: number;
   average: number;
   examRange: string[];
   standard: string;
