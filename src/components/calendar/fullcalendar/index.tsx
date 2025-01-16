@@ -41,6 +41,12 @@ const CalendarComponent = () => {
         );
         const fetchedData = response.data.data.map((event: CalendarEventData) => {
           const { id, name, color, eventType, startDate, endDate } = event;
+          const startDateOnly = new Date(startDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
+          const endDateOnly = new Date(endDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
+
+          // startDate와 endDate의 날짜만 비교하여 동일한 경우에 display: block
+          const isBlockDisplay = eventType === 'SCHEDULE' && startDateOnly === endDateOnly;
+
           return {
             id,
             title: name,
@@ -48,10 +54,7 @@ const CalendarComponent = () => {
             end: endDate,
             color: `#${color}`,
             eventType: eventType,
-            extendedProps: {
-              color: `#${color}`,
-              eventType: eventType,
-            }
+            display: isBlockDisplay ? 'block' : 'inline-block',
           };
         });
         setEventData(fetchedData);
@@ -88,8 +91,8 @@ const CalendarComponent = () => {
     setSelectedEvent({
       id: event.id,
       title: event.title,
-      color: event.extendedProps.color,
-      eventType: event.extendedProps.eventType,
+      color: event.color,
+      eventType: event.eventType,
       start: event.start,
       end: event.end,
     });
