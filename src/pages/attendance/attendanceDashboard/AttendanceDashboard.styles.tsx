@@ -175,17 +175,20 @@ export const DefaultImageWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vh;
+  min-width: 30rem;
   background-color: var(--color-white);
   position: fixed;
   top: 40%;
-  left: 35%;
+  left: 50%;
   overflow: hidden;
+  @media (max-width: 700px){
+    display: none;
+  }
 `;
 
 export const DefaultImage = styled.img`
-  width: 19.25rem;
-  height: 22.6551rem;
+  width: 17rem;
+  height: 20rem;
 `;
 
 export const DefaultText = styled.p`
