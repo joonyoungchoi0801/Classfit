@@ -2,18 +2,22 @@ import { useEffect, useState } from 'react';
 import * as S from './ManageSidebar.styles';
 import downArrow from '@/assets/managesidebar/downarrow.svg';
 import rightArrow from '@/assets/managesidebar/rightarrow.svg';
-import plusIcon from '@/assets/managesidebar/plus.svg';
 import bluePlusIcon from '@/assets/managesidebar/blueplus.svg';
 import kebabIcon from '@/assets/managesidebar/kebab.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import Popup from '@/components/popup';
-import { ClassData, ClassDataForm } from './Attendance.type';
+import { ClassDataForm } from './Attendance.type';
 import { getClassList } from '@/api/classAPI';
 import { deleteSubClass, patchSubClass, postSubClass } from '@/api/subclassAPI';
-import { postMainClass } from '@/api/mainclassAPI';
+import {
+  deleteMainClass,
+  patchMainClass,
+  postMainClass,
+} from '@/api/mainclassAPI';
 import axios from 'axios';
 import useClassStore from '@/store/classStore';
 import useSubClassShowStore from '@/store/subClassShowStore';
+import MainPopup from '../popup/MainPopup';
 
 function Attendance() {
   const { grade, class: className } = useParams<{
@@ -33,8 +37,11 @@ function Attendance() {
   const [tempMainClassName, setTempMainClassName] = useState<string>('');
   const [isMainClassAdd, setIsMainClassAdd] = useState<boolean>(false);
   const [isSubClassAdd, setIsSubClassAdd] = useState<boolean>(false);
-  // const [isSubClassShow, setIsSubClassShow] = useState<boolean>(false);
+  const [isMainClassPopup, setIsMainClassPopup] = useState<boolean>(false);
+  const [isMainClassEdit, setIsMainClassEdit] = useState<boolean>(false);
+  const [mainClassEdit, setMainClassEdit] = useState<string>('');
   const { isSubClassShow, setIsSubClassShow } = useSubClassShowStore();
+
   const fetchClassList = async () => {
     try {
       const res = await getClassList();
@@ -137,12 +144,13 @@ function Attendance() {
     setIsMainClassAdd(false);
   };
 
-  const handleSubClassBtnClick = (e: React.MouseEvent) => {
+  const handleSubClassAddBtnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsSubClassAdd(!isSubClassAdd);
     setIsPopupOpen(false);
     setIsMainClassAdd(false);
     setIsSubClassShow(true);
+    setIsMainClassPopup(!isMainClassPopup);
   };
 
   const handleSubClassAdd = async (
@@ -183,10 +191,58 @@ function Attendance() {
       }
     }
   };
+
+  const handleMainClassDelete = async (mainClassId: number) => {
+    try {
+      await deleteMainClass(mainClassId);
+      setClassData((prev) => {
+        if (!prev) return prev;
+
+        return prev.filter((data) => data.mainClassId !== mainClassId);
+      });
+    } catch (error) {
+      alert('메인 클래스를 삭제하는데 실패했습니다.');
+    } finally {
+      setIsMainClassPopup(false);
+      setIsSubClassShow(true);
+    }
+  };
   const handleMainAddBtnClick = () => {
     setIsMainClassAdd(!isMainClassAdd);
     setIsPopupOpen(false);
     setIsSubClassAdd(false);
+  };
+
+  const handleMainClassKebabClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMainClassPopup(!isMainClassPopup);
+    setIsSubClassShow(true);
+  };
+  const handleMainClassEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMainClassEdit(true);
+    setIsMainClassPopup(false);
+    setIsSubClassShow(true);
+  };
+
+  const handleMainClassNameEdit = async (
+    mainClassName: string,
+    mainClassId: number
+  ) => {
+    try {
+      if (mainClassName.length === 0) {
+        alert('메인 클래스 이름을 입력해주세요.');
+      } else if (mainClassName.length > 10) {
+        alert('메인 클래스 이름은 20자 이하로 입력해주세요.');
+      } else {
+        await patchMainClass(mainClassId, { mainClassName: mainClassName });
+        fetchClassList();
+      }
+    } catch (error) {
+      alert('메인 클래스를 수정하는데 실패했습니다.');
+    } finally {
+      setIsMainClassEdit(false);
+    }
   };
 
   return (
@@ -209,14 +265,39 @@ function Attendance() {
                   }
                   alt='down arrow'
                 />
-                {data.mainClassName}
+                {isMainClassEdit && data.mainClassName === grade ? (
+                  <>
+                    <S.GradeInput
+                      onChange={(e) => setMainClassEdit(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleMainClassNameEdit(
+                            mainClassEdit,
+                            data.mainClassId
+                          );
+                        }
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </>
+                ) : (
+                  data.mainClassName
+                )}
               </S.Grade>
               <S.PlusIcon
-                src={plusIcon}
+                src={kebabIcon}
                 alt='plusIcon'
                 $isSelected={grade === data.mainClassName}
-                onClick={(e) => handleSubClassBtnClick(e)}
+                onClick={(e) => handleMainClassKebabClick(e)}
               />
+              {isMainClassPopup && (
+                <MainPopup
+                  isOpen={isMainClassPopup && data.mainClassName === grade}
+                  onAdd={(e) => handleSubClassAddBtnClick(e)}
+                  onEdit={(e) => handleMainClassEdit(e)}
+                  onDelete={() => handleMainClassDelete(data.mainClassId)}
+                />
+              )}
             </S.GradeWrapper>
 
             <S.ClassWrapper

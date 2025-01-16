@@ -9,7 +9,6 @@ import {
 import * as S from './Attendance.styles';
 import AttendanceDashboard from './attendanceDashboard';
 import AttendanceStatistics from './attendanceStatistics';
-import AttendanceMessage from './attendanceMessage';
 
 function Attendance() {
   const navigate = useNavigate();
