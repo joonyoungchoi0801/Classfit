@@ -86,6 +86,7 @@ const DriveButtonList = ({
 
       updatedSearchParams.set('input', searchValue.trim());
       navigate(`${currentPath}?${updatedSearchParams.toString()}`);
+      setIsNewFolder(true);
     }
   };
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,14 +109,17 @@ const DriveButtonList = ({
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
 
     const selectedFileName = selectedData
-      ?.filter((item) => item.fileType !== 'FOLDER')
+      ?.filter((item) => item.fileType !== 'FOLDER') //폴더는 제외
       .map((item) => item.fileName);
-    if (selectedFileName) {
+
+    const fileLength = selectedFileName?.length || 0;
+
+    if (fileLength > 0) {
       try {
         const response = await getFileDownload(
           driveType,
           path,
-          selectedFileName
+          selectedFileName || []
         );
         const blob = new Blob([response.data], { type: 'application/zip' });
         const url = window.URL.createObjectURL(blob);
@@ -129,6 +133,8 @@ const DriveButtonList = ({
       } catch (error) {
         alert('파일 다운로드에 실패했습니다.');
       }
+    } else {
+      alert('다운로드는 파일만 가능합니다');
     }
   };
   const handleDelete = async () => {
@@ -139,7 +145,7 @@ const DriveButtonList = ({
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
     if (selectedFileName) {
       try {
-        await postTrashFiles(driveType, path, selectedFileName);
+        await postTrashFiles(driveType, '', selectedFileName);
 
         setIsNewFolder(true);
       } catch (error) {
@@ -301,7 +307,7 @@ const PopUp = ({ type, path, selectedFileName }: PopUpProps) => {
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
     if (selectedFileName) {
       try {
-        await postTrashFiles(driveType, path, Array(selectedFileName));
+        await postTrashFiles(driveType, '', Array(selectedFileName));
         setIsNewFolder(true);
       } catch (error) {
         alert('파일 삭제에 실패했습니다.');
@@ -457,84 +463,84 @@ function DriveOption() {
     setIsNewFolder(true);
     setIsFilePopUpOpen(false);
   };
-  // const fetchDriveData = useCallback(async () => {
-  //   try {
-  //     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
-  //     const response = await getDriveFiles(driveType, path);
-  //     const updatedData: DriveData[] = response.data.data.map((item: any) => ({
-  //       ...item,
-  //       isChecked: false,
-  //     }));
-  //     if (fileType !== '전체' && fileType) {
-  //       const filteredData = updatedData?.filter(
-  //         (item) => item.fileType === FileType[fileType]
-  //       );
-  //       setDriveData(filteredData);
-  //     } else {
-  //       setDriveData(updatedData);
-  //     }
-  //     setIsNewFolder(false);
-  //   } catch (error) {
-  //     alert('파일을 불러오는데 실패했습니다.');
-  //   }
-  // }, [type, path, fileType, setDriveData, setIsNewFolder]);
+  const fetchDriveData = useCallback(async () => {
+    try {
+      const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+      const response = await getDriveFiles(driveType, path);
+      const updatedData: DriveData[] = response.data.data.map((item: any) => ({
+        ...item,
+        isChecked: false,
+      }));
+      if (fileType !== '전체' && fileType) {
+        const filteredData = updatedData?.filter(
+          (item) => item.fileType === FileType[fileType]
+        );
+        setDriveData(filteredData);
+      } else {
+        setDriveData(updatedData);
+      }
+      setIsNewFolder(false);
+    } catch (error) {
+      alert('파일을 불러오는데 실패했습니다.');
+    }
+  }, [type, path, fileType, setDriveData, setIsNewFolder]);
 
-  // const fetchSearchData = useCallback(async () => {
-  //   try {
-  //     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
-  //     const response = await getSearchedDriveFiles(driveType, input, path);
-  //     const updatedData: DriveData[] = response.data.data.map((item: any) => ({
-  //       ...item,
-  //       isChecked: false,
-  //     }));
-  //     if (fileType !== '전체' && fileType) {
-  //       const filteredData = updatedData?.filter(
-  //         (item) => item.fileType === FileType[fileType]
-  //       );
-  //       setDriveData(filteredData);
-  //     } else {
-  //       setDriveData(updatedData);
-  //     }
-  //   } catch (error) {
-  //     alert('파일을 불러오는데 실패했습니다.');
-  //   }
-  // }, [type, input, path, fileType, setDriveData]);
+  const fetchSearchData = useCallback(async () => {
+    try {
+      const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
+      const response = await getSearchedDriveFiles(driveType, input, path);
+      const updatedData: DriveData[] = response.data.data.map((item: any) => ({
+        ...item,
+        isChecked: false,
+      }));
+      if (fileType !== '전체' && fileType) {
+        const filteredData = updatedData?.filter(
+          (item) => item.fileType === FileType[fileType]
+        );
+        setDriveData(filteredData);
+      } else {
+        setDriveData(updatedData);
+      }
+    } catch (error) {
+      alert('파일을 불러오는데 실패했습니다.');
+    }
+  }, [type, input, path, fileType, setDriveData]);
 
-  // const fetchTrashData = useCallback(async () => {
-  //   try {
-  //     const driveType = subtype === 'my' ? 'PERSONAL' : 'SHARED';
-  //     const response = await getTrashFiles(driveType);
-  //     const updatedData = response.data.data.map((item: any) => ({
-  //       ...item,
-  //       isChecked: false,
-  //     }));
-  //     setDriveData(updatedData);
-  //     setIsNewFolder(false);
-  //   } catch (error) {
-  //     alert('삭제된 파일을 불러오는데 실패했습니다.');
-  //   }
-  // }, [subtype, setDriveData, setIsNewFolder]);
-  // useEffect(() => {
-  //   if (isNewFolder) {
-  //     if (type === 'trash') {
-  //       fetchTrashData();
-  //     } else if (input) {
-  //       fetchSearchData();
-  //     } else {
-  //       fetchDriveData();
-  //     }
-  //   }
-  // }, [
-  //   type,
-  //   subtype,
-  //   isNewFolder,
-  //   input,
-  //   fileType,
-  //   path,
-  //   fetchDriveData,
-  //   fetchSearchData,
-  //   fetchTrashData,
-  // ]);
+  const fetchTrashData = useCallback(async () => {
+    try {
+      const driveType = subtype === 'my' ? 'PERSONAL' : 'SHARED';
+      const response = await getTrashFiles(driveType);
+      const updatedData = response.data.data.map((item: any) => ({
+        ...item,
+        isChecked: false,
+      }));
+      setDriveData(updatedData);
+      setIsNewFolder(false);
+    } catch (error) {
+      alert('삭제된 파일을 불러오는데 실패했습니다.');
+    }
+  }, [subtype, setDriveData, setIsNewFolder]);
+  useEffect(() => {
+    if (isNewFolder) {
+      if (type === 'trash') {
+        fetchTrashData();
+      } else if (input) {
+        fetchSearchData();
+      } else {
+        fetchDriveData();
+      }
+    }
+  }, [
+    type,
+    subtype,
+    isNewFolder,
+    input,
+    fileType,
+    path,
+    fetchDriveData,
+    fetchSearchData,
+    fetchTrashData,
+  ]);
 
   useEffect(() => {
     const fetchDriveData = async () => {

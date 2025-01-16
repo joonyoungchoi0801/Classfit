@@ -157,13 +157,13 @@ export const postTrashFiles = (
   });
 };
 
-export const deleteTrashFiles = (driveType: string, fileName: string[]) => {
+export const deleteTrashFiles = (driveType: string, fileNames: string[]) => {
   return instance({
     method: 'delete',
     url: API_DRIVE.TRASH,
     params: {
       driveType,
-      fileName,
+      fileNames,
     },
     paramsSerializer: (params) => {
       return qs.stringify(params, { arrayFormat: 'repeat' });
