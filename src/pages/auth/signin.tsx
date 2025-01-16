@@ -33,7 +33,7 @@ function Signin() {
       const authHeader = response.headers['authorization'];
       const accessToken = authHeader.split(' ')[1];
       localStorage.setItem('accessToken', accessToken);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         sessionStorage.setItem('email', data.email);
