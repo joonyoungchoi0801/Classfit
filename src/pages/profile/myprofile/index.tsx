@@ -19,7 +19,7 @@ function MyProfile() {
   });
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(new Date());
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
 
