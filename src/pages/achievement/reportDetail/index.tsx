@@ -171,12 +171,12 @@ function ReportDetail() {
 
   const updateLineChart = (
     studentName: string,
-    examHistoryData: ExamHistoryData[]
+    examHistoryData: ExamHistoryData[],
+    includeAverage: boolean
   ) => {
     const scoreData = examHistoryData.map((item) => item.score);
     const averageData = examHistoryData.map((item) => item.average);
     const categories = examHistoryData.map((item) => item.examName);
-    const includeAverage = reportDetailData?.includeAverage;
 
     setState((prevState) => {
       const updatedSeries = includeAverage
@@ -185,15 +185,15 @@ function ReportDetail() {
               name: studentName || '',
               data: scoreData,
             },
+            {
+              name: '평균',
+              data: averageData,
+            },
           ]
         : [
             {
               name: studentName || '',
               data: scoreData,
-            },
-            {
-              name: '평균',
-              data: averageData,
             },
           ];
 
@@ -221,7 +221,8 @@ function ReportDetail() {
             updateDonutChart(res.data.data.attendanceInfoList);
             updateLineChart(
               res.data.data.studentName,
-              res.data.data.examHistoryList
+              res.data.data.examHistoryList,
+              res.data.data.includeAverage
             );
           } else {
             alert('정보를 불러오는 데 실패하였습니다.');

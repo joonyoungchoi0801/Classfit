@@ -40,7 +40,7 @@ function OtherProfile() {
       console.log(res);
     };
     fetchData();
-  });
+  }, []);
 
   return (
     <PS.Container>
