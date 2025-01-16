@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   min-height: 100vh; /* 화면 전체 높이 사용 */
   background: var(--color-white);
+  min-width: 180rem;
 `;
 
 export const Header = styled.header`
@@ -28,6 +29,8 @@ export const Main = styled.main`
   margin: 0 auto;
   padding: 3rem 2rem;
   padding-left: 10rem;
+  position: relative;
+  overflow: hidden;
 `;
 
 export const LeftSection = styled.div`
@@ -37,8 +40,9 @@ export const LeftSection = styled.div`
 
 export const RightSection = styled.div`
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -40rem;
+  right: -110rem;
+  overflow: hidden;
 `;
 
 export const Title1 = styled.h1`
@@ -78,7 +82,6 @@ export const StartButton = styled.button`
 `;
 
 export const GraphImage = styled.img`
-  width: 100%;
-  height: auto;
-  width: 90rem;
+  width: 73%;
+  height: 87%;
 `;
