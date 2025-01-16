@@ -236,9 +236,11 @@ function AchievementList() {
                 }
               >
                 <S.TitleWrapper>
-                  <PS.Tag $type={reverseFilterData[item.examPeriod]}>
-                    {reverseFilterData[item.examPeriod]}
-                  </PS.Tag>
+                  <PS.TagWrapper>
+                    <PS.Tag $type={reverseFilterData[item.examPeriod]}>
+                      {reverseFilterData[item.examPeriod]}
+                    </PS.Tag>
+                  </PS.TagWrapper>
                   <PS.Text>
                     {item.mainClassName}-{item.subClassName}
                   </PS.Text>
