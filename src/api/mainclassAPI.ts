@@ -13,3 +13,18 @@ export const postMainClass = (memberNo: number, data: MainClassData) => {
     },
   });
 };
+
+export const deleteMainClass = (mainClassId: number) => {
+  return instance({
+    url: API_MAINCLASS.MAINCLASSEDIT(mainClassId),
+    method: 'DELETE',
+  });
+};
+
+export const patchMainClass = (mainClassId: number, data: MainClassData) => {
+  return instance({
+    url: API_MAINCLASS.MAINCLASSDETAIL(mainClassId),
+    method: 'PATCH',
+    data,
+  });
+};

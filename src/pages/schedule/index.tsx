@@ -12,7 +12,7 @@ function Schedule() {
     <ScheduleLayout>
       <Routes>
         <Route path='/register/:eventType' element={<ScheduleRegister />} />
-        <Route path='/:categoryid' element={<CalendarComponent />} />
+        <Route path='/:calendarType' element={<CalendarComponent />} />
       </Routes>
     </ScheduleLayout>
   );

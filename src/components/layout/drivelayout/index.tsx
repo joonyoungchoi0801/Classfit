@@ -1,7 +1,6 @@
-import ScheduleSidebar from "@/components/schedulesidebar";
-import Layout from "..";
+import Layout from '..';
 import type { DriveLayoutProps } from './DriveLayout.types';
-import * as S from "./DriveLayout.styles";
+import * as S from './DriveLayout.styles';
 import DriveSidebar from '@/components/drivesidebar';
 
 function DriveLayout({ children }: DriveLayoutProps) {
@@ -9,7 +8,7 @@ function DriveLayout({ children }: DriveLayoutProps) {
     <Layout>
       <S.LayoutContainer>
         <DriveSidebar />
-        {children}
+        <S.DriveWrapper>{children}</S.DriveWrapper>
       </S.LayoutContainer>
     </Layout>
   );

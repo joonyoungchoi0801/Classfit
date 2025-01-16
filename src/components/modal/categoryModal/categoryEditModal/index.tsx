@@ -24,13 +24,14 @@ const CategoryEditModal = ({ isOpen, categoryData, onClose, onSave }: CategoryEd
   };
 
   const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
+    setSelectedColor(color.replace('#', ''));
     setIsColorPaletteOpen(false);
   };
 
   const handleSave = () => {
     if (categoryData && categoryName.trim() && selectedColor) {
-      onSave(categoryData.id, categoryName.trim(), selectedColor);
+      const colorWithHash = `#${selectedColor.replace('#', '')}`;
+      onSave(categoryData.id, categoryName.trim(), colorWithHash);
       onClose();
     }
   };
@@ -50,7 +51,10 @@ const CategoryEditModal = ({ isOpen, categoryData, onClose, onSave }: CategoryEd
             {isColorPaletteOpen && (
               <S.ColorPalette>
                 {colorPalette.map((color) => (
-                  <S.ColorOption key={color} color={color} onClick={() => handleColorSelect(color)} />
+                  <S.ColorOption
+                    key={color}
+                    color={color}
+                    onClick={() => handleColorSelect(color)} />
                 ))}
               </S.ColorPalette>
             )}

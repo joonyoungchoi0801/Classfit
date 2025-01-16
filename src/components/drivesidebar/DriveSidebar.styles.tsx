@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const DriveSidebarWrapper = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ export const SubSidebarItem = styled.div<{ $isSelected?: boolean }>`
     height: 0.7rem;
     border-radius: 50%;
     background-color: ${(props) =>
-    props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
+      props.$isSelected ? 'var(--color-blue)' : 'var(--color-black)'};
     margin-right: 0.8rem;
   }
 `;

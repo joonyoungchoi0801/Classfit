@@ -179,7 +179,8 @@ export const DefaultImageWrapper = styled.div`
   background-color: var(--color-white);
   position: fixed;
   top: 40%;
-  left: 40%;
+  left: 35%;
+  overflow: hidden;
 `;
 
 export const DefaultImage = styled.img`
@@ -194,4 +195,3 @@ export const DefaultText = styled.p`
   font-weight: 500;
   line-height: normal;
 `;
-

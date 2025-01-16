@@ -8,11 +8,13 @@ import './customcalendar.css';
 import * as S from '../Calendar.styles';
 
 import { CalendarEvent, CalendarEventData } from './calendar.type';
-import { getCalendarEvent } from '@/api/calendarAPI';
+import { getCalendarEvent, dragCalendarEvent } from '@/api/calendarAPI';
 import { useParams } from 'react-router-dom';
+import ScheduleRegisterModal from '@/components/modal/scheduleRegisterModal';
+import EventScheduleModal from '@/components/modal/eventScheduleModal';
 
 const CalendarComponent = () => {
-  const { categoryid } = useParams();
+  const { calendarType } = useParams();
   const [eventData, setEventData] = useState<CalendarEvent[]>();
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth() + 1
@@ -20,36 +22,81 @@ const CalendarComponent = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState<boolean>(false); // 일정등록 모달 오픈 상태
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [isEventModalOpen, setIsEventModalOpen] = useState<boolean>(false); // 이벤트 모달 오픈 상태
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+
+  const apiCalendarType =
+    calendarType === 'my' ? 'PERSONAL' : calendarType === 'shared' ? 'SHARED' : '';
 
   useEffect(() => {
     const getCalendarData = async () => {
-      const response = await getCalendarEvent(
-        Number(categoryid),
-        currentYear,
-        currentMonth
-      );
-      response.data.data.map((event: CalendarEventData) => {
-        const { id, name, startDate, endDate } = event;
-        setEventData((prev) =>
-          prev
-            ? [...prev, { id, title: name, start: startDate, end: endDate }]
-            : [{ id, title: name, start: startDate, end: endDate }]
+      if (!apiCalendarType) return;
+      try {
+        const response = await getCalendarEvent(
+          apiCalendarType,
+          currentYear,
+          currentMonth
         );
-      });
+        const fetchedData = response.data.data.map((event: CalendarEventData) => {
+          const { id, name, color, eventType, startDate, endDate } = event;
+          const startDateOnly = new Date(startDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
+          const endDateOnly = new Date(endDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
+
+          // startDate와 endDate의 날짜만 비교하여 동일한 경우에 display: block
+          const isBlockDisplay = eventType === 'SCHEDULE' && startDateOnly === endDateOnly;
+
+          return {
+            id,
+            title: name,
+            start: startDate,
+            end: endDate,
+            color: `#${color}`,
+            eventType: eventType,
+            display: isBlockDisplay ? 'block' : 'inline-block',
+          };
+        });
+        setEventData(fetchedData);
+      } catch (error) {
+        console.error('Failed to fetch calendar events:', error);
+      }
     };
     getCalendarData();
-  }, []);
+  }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen, isScheduleModalOpen]);
 
-  const handleEventDrop = (info: any) => {
+  const handleEventDrop = async (info: any) => {
     const event = info.event;
+    const eventId = event.id;
     const start = event.start;
     const end = event.end;
-    console.log(event);
-    console.log(start);
-    console.log(end);
-  }; // 이벤트가 드래그되었을 때 발생하는 이벤트 api생성되면 추후 연결
+
+    const startDate = start?.toISOString();
+    const endDate = end?.toISOString();
+
+    try {
+      const response = await dragCalendarEvent(eventId, startDate, endDate);
+      if (response.status === 200) {
+        console.log('Event updated successfully');
+      } else {
+        console.error('Failed to update event');
+      }
+    } catch (error) {
+      console.error('Error updating event:', error);
+    }
+  };
+
   const handleEventClick = (info: any) => {
-    console.log(info.event);
+    const event = info.event;
+    setSelectedEvent({
+      id: event.id,
+      title: event.title,
+      color: event.color,
+      eventType: event.eventType,
+      start: event.start,
+      end: event.end,
+    });
+    setIsEventModalOpen(true);
   };
 
   const handleDatesSet = (dateInfo: any) => {
@@ -58,6 +105,22 @@ const CalendarComponent = () => {
     const midDate = new Date((start.getTime() + end.getTime()) / 2);
     setCurrentMonth(midDate.getMonth() + 1);
     setCurrentYear(midDate.getFullYear());
+  };
+
+  const handleDateClick = (info: any) => {
+    const clickedDate = info.dateStr;
+    setSelectedDate(clickedDate);
+    setIsScheduleModalOpen(true);
+  };
+
+  const closeScheduleModal = () => {
+    setIsScheduleModalOpen(false);
+    setSelectedDate('');
+  };
+
+  const closeEventModal = () => {
+    setSelectedEvent(null);
+    setIsEventModalOpen(false);
   };
 
   return (
@@ -73,12 +136,27 @@ const CalendarComponent = () => {
         eventDrop={handleEventDrop}
         eventClick={handleEventClick}
         datesSet={handleDatesSet}
+        dateClick={handleDateClick}
         eventTimeFormat={{
           hour: '2-digit',
           minute: '2-digit',
           hour12: false,
         }}
       />
+      {isScheduleModalOpen && (
+        <ScheduleRegisterModal
+          isOpen={isScheduleModalOpen}
+          onClose={closeScheduleModal}
+          selectedDate={selectedDate}
+        />
+      )}
+      {isEventModalOpen && selectedEvent && (
+        <EventScheduleModal
+          isOpen={isEventModalOpen}
+          onClose={closeEventModal}
+          event={selectedEvent}
+        />
+      )}
     </S.CalendarContainer>
   );
 };

@@ -1,9 +1,11 @@
 import * as S from './DriveSidebar.styles';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 function DriveSidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const url = location.pathname;
   const { type, subtype } = useParams<{ type?: string; subtype?: string }>();
   const [isTrashExpanded, setIsTrashExpanded] = useState(false);
 
@@ -28,30 +30,26 @@ function DriveSidebar() {
       >
         공용 드라이브
       </S.SidebarItem>
-      <S.SidebarItem
-        onClick={handleTrashClick}
-        $isSelected={type === 'trash'}
-      >
+      <S.SidebarItem onClick={handleTrashClick} $isSelected={type === 'trash'}>
         휴지통
       </S.SidebarItem>
-      {isTrashExpanded && (
-        <S.SubSidebarWrapper>
-          <S.SubSidebarItem
-            onClick={() => navigate('/drive/trash/my')}
-            $isSelected={type === 'trash' && subtype === 'my'}
-          >
-            개인 휴지통
-          </S.SubSidebarItem>
-          <S.SubSidebarItem
-            onClick={() => navigate('/drive/trash/shared')}
-            $isSelected={type === 'trash' && subtype === 'shared'}
-          >
-            공용 휴지통
-          </S.SubSidebarItem>
-        </S.SubSidebarWrapper>
-      )}
+
+      <S.SubSidebarWrapper>
+        <S.SubSidebarItem
+          onClick={() => navigate('/drive/trash/my')}
+          $isSelected={type === 'trash' && subtype === 'my'}
+        >
+          개인 휴지통
+        </S.SubSidebarItem>
+        <S.SubSidebarItem
+          onClick={() => navigate('/drive/trash/shared')}
+          $isSelected={type === 'trash' && subtype === 'shared'}
+        >
+          공용 휴지통
+        </S.SubSidebarItem>
+      </S.SubSidebarWrapper>
     </S.DriveSidebarWrapper>
   );
-};
+}
 
 export default DriveSidebar;
