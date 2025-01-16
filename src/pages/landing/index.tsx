@@ -1,6 +1,7 @@
 import * as S from './Landing.styles';
 import Logo from '@/assets/auth/signin/logo.svg';
 import Graph from '@/assets/landing/graph.svg';
+import Chart from '@/assets/landing/chart.png';
 import { useNavigate } from 'react-router-dom';
 
 function Landing() {
@@ -18,7 +19,6 @@ function Landing() {
       <S.Header>
         <S.StyledLogo src={Logo} alt='classfit' />
       </S.Header>
-
       <S.Main>
         <S.LeftSection>
           <S.Title1>선생님은 수업만 하세요!</S.Title1>
@@ -30,10 +30,10 @@ function Landing() {
           </S.Desc>
           <S.StartButton onClick={handleClick}>클래스핏 시작하기</S.StartButton>
         </S.LeftSection>
+        <S.RightSection>
+          <S.GraphImage src={Chart} alt='우측 그래프 예시' />
+        </S.RightSection>
       </S.Main>
-      <S.RightSection>
-        <S.GraphImage src={Graph} alt='우측 그래프 예시' />
-      </S.RightSection>
     </S.Container>
   );
 }
