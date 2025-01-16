@@ -166,10 +166,8 @@ const EditEventModal = ({ isOpen, onClose, eventId }: EditEventModalProps) => {
     };
 
     try {
-      console.log('수정된 데이터: ', updatedEventData);
       const response = await patchCalendarEvent(eventId, updatedEventData);
       if (response.status === 200) {
-        console.log('Event updated successfully');
         onClose();
       }
     } catch (error) {

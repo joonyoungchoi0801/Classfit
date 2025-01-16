@@ -37,7 +37,6 @@ function OtherProfile() {
       } else {
         alert('직원 목록을 불러오는데 실패했습니다.');
       }
-      console.log(res);
     };
     fetchData();
   });

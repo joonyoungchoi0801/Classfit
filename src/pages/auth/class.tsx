@@ -21,7 +21,6 @@ function Class() {
   };
   const handleAcademyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAcademyName(e.target.value);
-    console.log(academyName);
   };
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;

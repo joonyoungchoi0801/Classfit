@@ -71,18 +71,15 @@ const CalendarComponent = () => {
     const start = event.start;
     const end = event.end;
 
-    const startDate = start?.toISOString();
-    const endDate = end?.toISOString();
+    const koreanOffset = 9 * 60 * 60 * 1000;
+
+    const startDate = new Date(start.getTime() + koreanOffset).toISOString();
+    const endDate = new Date(end.getTime() + koreanOffset).toISOString();
 
     try {
-      const response = await dragCalendarEvent(eventId, startDate, endDate);
-      if (response.status === 200) {
-        console.log('Event updated successfully');
-      } else {
-        console.error('Failed to update event');
-      }
+      await dragCalendarEvent(eventId, startDate, endDate);
     } catch (error) {
-      console.error('Error updating event:', error);
+      alert('일정 수정을 실패하였습니다.');
     }
   };
 

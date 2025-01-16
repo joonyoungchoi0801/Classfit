@@ -15,7 +15,6 @@ const StudentInfoModal = ({
 }: StudentInfoModalProps) => {
   const [studentDetailData, setStudentDetialData] =
     useState<Omit<StudentViewData, 'birth'>>();
-  console.log('studentId:', studentId);
 
   useEffect(() => {
     const getStudentDetail = async () => {

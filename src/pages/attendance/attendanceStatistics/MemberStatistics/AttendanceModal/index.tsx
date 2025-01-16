@@ -19,7 +19,6 @@ const AttendanceModal = ({ isOpen, onClose, month, studentId, status }: Attendan
       try {
         const response = await getStatisticsMemberDetail(studentId, month, status);
         setAttendanceDates(response.data.data || []);
-        console.log(response.data.data);
       } catch (error) {
         console.error('출결 세부 사항을 가져오는 데 실패했습니다:', error);
       }
