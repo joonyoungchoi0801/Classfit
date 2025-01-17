@@ -241,10 +241,10 @@ function ScheduleSidebar() {
       <S.CalendarSection>
         <S.CalendarItem>
           <S.MyCalendar
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMyCalendar();
-            }}
+          // onClick={(e) => {
+          //   e.stopPropagation();
+          //   toggleMyCalendar();
+          // }}
           >
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
