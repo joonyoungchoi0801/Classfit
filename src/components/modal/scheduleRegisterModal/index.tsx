@@ -36,14 +36,9 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
 
   const handleSave = async () => {
     try {
-      console.log('formData:', formData);
-
       const response = await postRegisterModal(formData);
       if (response.status === 200) {
-        console.log('등록 성공');
         onClose();
-      } else {
-        console.log(`오류 발생: ${response.data.message}`);
       }
     } catch (error) {
       console.error(error);

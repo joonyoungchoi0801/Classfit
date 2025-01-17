@@ -16,7 +16,6 @@ import {
   PersonalCategoryData,
   SharedCategoryData,
 } from '@/types/category.type';
-// import { colorMapping } from '@/utils/colorMapping';
 import CategoryModal from '@/components/modal/categoryModal';
 import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
@@ -27,8 +26,8 @@ function ScheduleSidebar() {
   const location = useLocation();
   const url = location.pathname;
   const navigate = useNavigate();
-  const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(false);
-  const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(false);
+  const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(url.startsWith('/schedule/my'));
+  const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(url.startsWith('/schedule/shared'));
   const [personalCategories, setPersonalCategories] = useState<
     PersonalCategoryData[]
   >([]);
@@ -63,14 +62,6 @@ function ScheduleSidebar() {
             setPersonalCategories(data.personalCategories);
             setSharedCategories(data.sharedCategories);
             break;
-          case 404:
-            console.log('ACCESS_DENIED: 접근이 거부되었습니다.');
-            break;
-          case 401:
-            console.log('UNAUTHORIZED: 인증에 실패했습니다.');
-            break;
-          default:
-            console.log(message || '알 수 없는 오류가 발생했습니다.');
         }
       } catch (error) {
         console.error('Error fetching categories:', error);

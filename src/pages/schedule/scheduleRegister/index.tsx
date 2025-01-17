@@ -91,7 +91,6 @@ function ScheduleRegister() {
 
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
-    console.log(RepeatOptionsAPI[value]); // 추후 api 전송 시 삭제
     setIsRepeatOpen(false);
   };
 
@@ -135,7 +134,6 @@ function ScheduleRegister() {
         location: place,
         memo,
       };
-      console.log(data);
       await postCalendarEvent(data);
       alert('일정이 등록되었습니다.');
       navigate('/schedule/my');

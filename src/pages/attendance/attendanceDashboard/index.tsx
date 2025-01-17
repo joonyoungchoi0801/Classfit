@@ -202,7 +202,6 @@ function AttendanceDashboard() {
       });
       await AttendanceEdit(updatedData);
 
-      console.log('출결 데이터 저장 성공:', updatedData);
       alert('출결 상태가 저장되었습니다!');
     } catch (error) {
       console.error('출결 데이터 저장 실패:', error);
