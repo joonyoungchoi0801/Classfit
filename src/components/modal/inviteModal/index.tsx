@@ -10,13 +10,19 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
   const onConfirm = async () => {
+    if (isSending) return;
+
     if (!name || !email) {
       alert('이름과 이메일을 입력해주세요');
       return;
     }
+    setIsSending(true);
     const res = await postInvitation(name, email);
+    setIsSending(false);
+    onClose();
     if (res.status === 200) {
       alert('초대코드를 전송했습니다');
       setName('');
@@ -65,9 +71,11 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
             onClick={onClose}
           />
           <Button
-            title='초대하기'
+            title={isSending ? '초대중' : '초대하기'}
             textColor={'var(--color-white)'}
-            backgroundColor={'var(--color-blue)'}
+            backgroundColor={
+              isSending ? 'var(--color-lightgray)' : 'var(--color-blue)'
+            }
             isBorder={false}
             onClick={onConfirm}
           />

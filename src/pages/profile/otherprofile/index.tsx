@@ -23,21 +23,23 @@ function OtherProfile() {
 
   const handleModalClose = () => {
     setOpenModal(false);
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const res = await getInvitationList();
+    if (res.status === 200) {
+      setStaffs(res.data.data);
+      const count = res.data.data.filter(
+        (item: StaffData) => item.status === 'IN_PROGRESS'
+      ).length;
+      setInviteCount(count);
+    } else {
+      alert('직원 목록을 불러오는데 실패했습니다.');
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getInvitationList();
-      if (res.status === 200) {
-        setStaffs(res.data.data);
-        const count = res.data.data.filter(
-          (item: StaffData) => item.status === 'IN_PROGRESS'
-        ).length;
-        setInviteCount(count);
-      } else {
-        alert('직원 목록을 불러오는데 실패했습니다.');
-      }
-    };
     fetchData();
   }, []);
 

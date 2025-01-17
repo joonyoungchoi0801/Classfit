@@ -10,6 +10,7 @@ import Button from '@/components/button';
 import { getExamStudent, scoreRegisterExam } from '@/api/examAPI';
 import { ExamStudentData, ExamStudentDataWithChecked } from '@/types/exam.type';
 import Modal from '@/components/modal';
+import Message from '@/components/message';
 
 function AchievementRegisterStudent() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ function AchievementRegisterStudent() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [totalScore, setTotalScore] = useState<string>('');
+  const [error, setError] = useState<Record<number, boolean>>({});
+  const hasError = Object.values(error).some((value) => value === true);
   const isEvaluated = standard === 'EVALUATION';
 
   useEffect(() => {
@@ -79,9 +82,16 @@ function AchievementRegisterStudent() {
         item.studentId === id ? { ...item, score: value } : item
       )
     );
+    setError((prevError) => ({
+      ...prevError,
+      [id]: Number(value) > highestScore ? true : false,
+    }));
   };
 
   const handleOnSubmit = async () => {
+    if (hasError) {
+      return;
+    }
     const scoreData = data.map((item) => ({
       studentId: item.studentId,
       score: Number(item.score),
@@ -159,7 +169,13 @@ function AchievementRegisterStudent() {
     <S.Container>
       <PS.ButtonWrapper>
         <S.ButtonWrapper>
-          <Button title='저장' onClick={handleOnSubmit} />
+          <Button
+            title='저장'
+            onClick={handleOnSubmit}
+            backgroundColor={
+              hasError ? 'var(--color-lightgray)' : 'var(--color-blue)'
+            }
+          />
         </S.ButtonWrapper>
       </PS.ButtonWrapper>
 
@@ -264,21 +280,31 @@ function AchievementRegisterStudent() {
                   disabled={!item.checkedStudent}
                 />
               ) : (
-                <S.ScoreWrapper>
-                  {item.checkedStudent && (
-                    <S.ScoreInput
-                      placeholder=''
-                      value={item.score}
-                      onChange={(e) =>
-                        handleOnChangeScoreValue(item.studentId, e.target.value)
-                      }
-                    />
-                  )}
+                <S.ErrorWrapper>
+                  <S.ScoreWrapper>
+                    {item.checkedStudent && (
+                      <S.ScoreInput
+                        placeholder=''
+                        value={item.score}
+                        $isError={error[item.studentId]}
+                        onChange={(e) =>
+                          handleOnChangeScoreValue(
+                            item.studentId,
+                            e.target.value
+                          )
+                        }
+                      />
+                    )}
 
-                  <S.TotalScore $isChecked={item.checkedStudent}>
-                    {totalScore}
-                  </S.TotalScore>
-                </S.ScoreWrapper>
+                    <S.TotalScore $isChecked={item.checkedStudent}>
+                      {totalScore}
+                    </S.TotalScore>
+                  </S.ScoreWrapper>
+
+                  {error[item.studentId] && (
+                    <Message content='최고 점수를 초과한 점수는 입력할 수 없습니다.' />
+                  )}
+                </S.ErrorWrapper>
               )}
             </S.ScoreItem>
           ))}

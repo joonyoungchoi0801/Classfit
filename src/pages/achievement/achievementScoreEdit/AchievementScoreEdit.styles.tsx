@@ -77,7 +77,9 @@ export const Score = styled.div`
   color: var(--color-lightgray);
 `;
 
-export const ScoreInput = styled.input`
+export const ScoreInput = styled.input<{
+  $isError: boolean;
+}>`
   padding: 1rem;
   border: 0.1rem solid #d5d7dd;
   border-radius: 0.4rem;
@@ -86,14 +88,16 @@ export const ScoreInput = styled.input`
   height: 2.7rem;
   align-items: center;
   background-color: var(--color-white);
-  color: var(--color-blue);
+  color: ${(props) =>
+    props.$isError ? 'var(--color-red)' : 'var(--color-blue)'};
   &::placeholder {
     color: #8a91a1;
     opacity: 1;
   }
   margin-right: 0.5rem;
   &:focus {
-    color: var(--color-black);
+    color: ${(props) =>
+      props.$isError ? 'var(--color-red)' : 'var(--color-black)'};
   }
 `;
 
@@ -164,7 +168,7 @@ export const EvaluationInput = styled.textarea<{
   border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
-  resize: vertical;
+  resize: none;
   outline: none;
   box-shadow: none;
 
@@ -187,4 +191,10 @@ export const ScoreItem = styled.div<{ $isEvaluated: boolean }>`
   &:last-child {
     border-bottom: none;
   }
+`;
+
+export const ErrorWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;

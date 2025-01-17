@@ -9,7 +9,7 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import CalendarIcon from '@/assets/achievement/calendar.svg';
 import CalendarFilledIcon from '@/assets/achievement/calendarFilled.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
 import Message from '@/components/message';
@@ -26,6 +26,7 @@ import {
 } from '../achievementRegister';
 import InActiveDropDown from '@/components/dropDown/inactiveDropDown';
 import Modal from '@/components/modal';
+import QuestionModal from '@/components/modal/questionModal';
 
 function AchievementInfoEdit() {
   const location = useLocation();
@@ -45,6 +46,8 @@ function AchievementInfoEdit() {
     reverseStandardList[examInfoData.standard]
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isQuestionModalVisible, setIsQuestionModalVisible] =
+    useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleSelectDate = (date: Date) => {
@@ -53,6 +56,9 @@ function AchievementInfoEdit() {
 
   const [isCalendarInitialized, setIsCalendarInitialized] =
     useState<boolean>(true);
+  const [isHighestScoreEdited, setIsHighestScoreEdited] =
+    useState<boolean>(false);
+  const [isRequested, setIsRequested] = useState<boolean>(true);
 
   const toggleCalendar = () => {
     setIsCalendarInitialized(true);
@@ -60,7 +66,9 @@ function AchievementInfoEdit() {
   };
 
   const initHighestScore = () => {
-    if (standardValue === 'QUESTION') {
+    console.log('init', standardValue);
+    if (standardValue === 'QUESTION' || standardValue === '개수') {
+      console.log(examInfoData);
       return Number(examInfoData.highestScore);
     } else {
       return 0;
@@ -81,7 +89,7 @@ function AchievementInfoEdit() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
-    navigate(-1);
+    navigate(-2);
   };
 
   const onSubmit = async (data: ModifyExamData) => {
@@ -89,6 +97,41 @@ function AchievementInfoEdit() {
     if (standardValue === '점수') {
       data.highestScore = 100;
     } else if (standardValue === '개수') {
+      if (
+        isHighestScoreEdited &&
+        tempHighestScore < examInfoData.highestScore
+      ) {
+        setIsQuestionModalVisible(true);
+        return;
+      }
+
+      data.highestScore = tempHighestScore;
+    } else if (standardValue === '정성평가') {
+      data.highestScore = -2;
+    } else {
+      data.highestScore = -1;
+    }
+
+    const selectedExamPeriod = getValues('examPeriod');
+
+    data.examPeriod = examPeriodList[selectedExamPeriod] || 'SCORE';
+    data.standard = standardList[data.standard] || 'SCORE';
+
+    const res = await putExam(Number(id), data);
+    if (res.status === 200) {
+      setModalMessage('시험 정보가 수정되었습니다.');
+      setIsModalVisible(true);
+    } else {
+      setModalMessage('시험 정보 수정에 실패했습니다.');
+    }
+  };
+
+  const onSubmit2 = async (data: ModifyExamData) => {
+    const tempHighestScore = getValues('highestScore');
+    if (standardValue === '점수') {
+      data.highestScore = 100;
+    } else if (standardValue === '개수') {
+      setIsQuestionModalVisible(true);
       data.highestScore = tempHighestScore;
     } else if (standardValue === '정성평가') {
       data.highestScore = -2;
@@ -130,6 +173,15 @@ function AchievementInfoEdit() {
       setIsModalVisible(true);
     }
   };
+
+  const handleOnEdit = () => {
+    setIsQuestionModalVisible(false);
+    onSubmit2(getValues());
+  };
+
+  useEffect(() => {
+    console.log(standardValue);
+  }, [standardValue]);
 
   return (
     <form>
@@ -265,7 +317,10 @@ function AchievementInfoEdit() {
                             scoreStandard[standardValue]?.placeholder
                           }
                           value={standardValue == '개수' ? field.value : ''}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setIsHighestScoreEdited(true);
+                          }}
                           disabled={scoreStandard[standardValue]?.isBlocked}
                         />
                         {fieldState.error && (
@@ -371,6 +426,15 @@ function AchievementInfoEdit() {
           message={modalMessage}
           onClose={handleOnModalClose}
           isOpen={isModalVisible}
+        />
+        <QuestionModal
+          title='수정 확인'
+          message='최고점수가 감소될 경우, 최고 점수를 초과하는 학생들의 점수가 초기화됩니다. 수정하시겠습니까?'
+          onConfirm={handleOnEdit}
+          onCancel={() => {
+            setIsQuestionModalVisible(false);
+          }}
+          isOpen={isQuestionModalVisible}
         />
       </S.Container>
     </form>

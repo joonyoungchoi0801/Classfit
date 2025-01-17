@@ -40,7 +40,7 @@ function AchievementList() {
   const [data, setData] = useState<ExamData[]>([]);
 
   const { classList } = useClassList();
-  const [isInitialized, setIsInitialized] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
   const testSearchOptions: string[] = ['강사명', '시험명'];
 
   useEffect(() => {
@@ -262,10 +262,11 @@ function AchievementList() {
           </S.EmptyListSection>
         )
       ) : (
-        <S.EmptyListSection>
-          <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
-          <S.AchievementInfoText>조회된 성적이 없습니다.</S.AchievementInfoText>
-        </S.EmptyListSection>
+        // <S.EmptyListSection>
+        //   <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
+        //   <S.AchievementInfoText>조회된 성적이 없습니다.</S.AchievementInfoText>
+        // </S.EmptyListSection>
+        <div></div>
       )}
     </S.Container>
   );

@@ -159,13 +159,17 @@ function ReportDetail() {
       .filter((item) => item.attendanceStatus === 'PRESENT')
       .reduce((sum, item) => sum + item.attendanceCount, 0);
 
-    const absentCount = data
+    const lateCount = data
       .filter((item) => item.attendanceStatus === 'LATE')
+      .reduce((sum, item) => sum + item.attendanceCount, 0);
+
+    const absentCount = data
+      .filter((item) => item.attendanceStatus === 'ABSENT')
       .reduce((sum, item) => sum + item.attendanceCount, 0);
 
     setDonutState((prevState) => ({
       ...prevState,
-      series: [presentCount, absentCount],
+      series: [presentCount, lateCount, absentCount],
     }));
   };
 
@@ -174,7 +178,11 @@ function ReportDetail() {
     examHistoryData: ExamHistoryData[],
     includeAverage: boolean
   ) => {
-    const scoreData = examHistoryData.map((item) => {
+    const filteredData = examHistoryData.filter(
+      (item) => item.standard !== 'EVALUATION'
+    );
+
+    const scoreData = filteredData.map((item) => {
       if (item.standard === 'PF') {
         if (item.score === -3) {
           return 100;
@@ -184,8 +192,9 @@ function ReportDetail() {
       }
       return item.score;
     });
-    const averageData = examHistoryData.map((item) => item.average);
-    const categories = examHistoryData.map((item) => item.examName);
+
+    const averageData = filteredData.map((item) => item.average);
+    const categories = filteredData.map((item) => item.examName);
 
     setState((prevState) => {
       const updatedSeries = includeAverage
