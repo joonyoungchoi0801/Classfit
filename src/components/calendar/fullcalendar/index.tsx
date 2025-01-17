@@ -22,13 +22,20 @@ const CalendarComponent = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState<boolean>(false); // 일정등록 모달 오픈 상태
+  const [isScheduleModalOpen, setIsScheduleModalOpen] =
+    useState<boolean>(false); // 일정등록 모달 오픈 상태
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isEventModalOpen, setIsEventModalOpen] = useState<boolean>(false); // 이벤트 모달 오픈 상태
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
 
   const apiCalendarType =
-    calendarType === 'my' ? 'PERSONAL' : calendarType === 'shared' ? 'SHARED' : '';
+    calendarType === 'my'
+      ? 'PERSONAL'
+      : calendarType === 'shared'
+        ? 'SHARED'
+        : '';
 
   useEffect(() => {
     const getCalendarData = async () => {
@@ -39,31 +46,45 @@ const CalendarComponent = () => {
           currentYear,
           currentMonth
         );
-        const fetchedData = response.data.data.map((event: CalendarEventData) => {
-          const { id, name, color, eventType, startDate, endDate } = event;
-          const startDateOnly = new Date(startDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
-          const endDateOnly = new Date(endDate).toISOString().slice(0, 10); // 'YYYY-MM-DD'
+        const fetchedData = response.data.data.map(
+          (event: CalendarEventData) => {
+            const { id, name, color, eventType, startDate, endDate } = event;
+            const startDateOnly = new Date(startDate);
+            startDateOnly.setHours(startDateOnly.getHours() + 9);
 
-          // startDate와 endDate의 날짜만 비교하여 동일한 경우에 display: block
-          const isBlockDisplay = eventType === 'SCHEDULE' && startDateOnly === endDateOnly;
+            const endDateOnly = new Date(endDate);
+            endDateOnly.setHours(endDateOnly.getHours() + 9);
 
-          return {
-            id,
-            title: name,
-            start: startDate,
-            end: endDate,
-            color: `#${color}`,
-            eventType: eventType,
-            display: isBlockDisplay ? 'block' : 'inline-block',
-          };
-        });
+            const startDateKorea = startDateOnly.toISOString().slice(0, 10);
+            const endDateKorea = endDateOnly.toISOString().slice(0, 10);
+
+            const isBlockDisplay =
+              eventType === 'SCHEDULE' && startDateKorea === endDateKorea;
+
+            return {
+              id,
+              title: name,
+              start: startDate,
+              end: endDate,
+              color: `#${color}`,
+              eventType: eventType,
+              display: isBlockDisplay ? 'block' : '',
+            };
+          }
+        );
         setEventData(fetchedData);
       } catch (error) {
         console.error('Failed to fetch calendar events:', error);
       }
     };
     getCalendarData();
-  }, [apiCalendarType, currentYear, currentMonth, isEventModalOpen, isScheduleModalOpen]);
+  }, [
+    apiCalendarType,
+    currentYear,
+    currentMonth,
+    isEventModalOpen,
+    isScheduleModalOpen,
+  ]);
 
   const handleEventDrop = async (info: any) => {
     const event = info.event;

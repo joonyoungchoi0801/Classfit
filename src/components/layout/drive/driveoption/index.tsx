@@ -374,9 +374,12 @@ const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
             </S.FileName>
           </S.DriveListFront>
           <S.DriveListBack>
-            <S.ListText style={{ marginRight: `-0.8rem` }}>
-              {item.fileSize}
-            </S.ListText>
+            {type !== 'trash' && (
+              <S.ListText style={{ marginRight: `-0.8rem` }}>
+                {item.fileSize}
+              </S.ListText>
+            )}
+
             <S.ListText style={{ width: `8.8rem` }}>
               {item.uploadedAt.split('T')[0].replace(/-/g, '.')}
             </S.ListText>
@@ -661,7 +664,10 @@ function DriveOption() {
             <S.HeaderText style={{ width: `2.8rem` }}>이름</S.HeaderText>
           </S.DriveHeaderFront>
           <S.DriveHeaderBack>
-            <S.HeaderText style={{ width: `2.8rem` }}>크기</S.HeaderText>
+            {type !== 'trash' && (
+              <S.HeaderText style={{ width: `2.8rem` }}>크기</S.HeaderText>
+            )}
+
             <S.HeaderText style={{ width: `7.3rem` }}>업로드 날짜</S.HeaderText>
             <S.HeaderText style={{ width: `11.1rem` }}>
               업로드한 사람

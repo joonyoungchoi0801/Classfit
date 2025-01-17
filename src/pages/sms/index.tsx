@@ -114,9 +114,6 @@ function Sms() {
                   />
                 ))}
             </S.RecipientArea>
-            <S.BtnArea>
-              <S.PhraseBtn>자주쓰는문구</S.PhraseBtn>
-            </S.BtnArea>
             <S.TextArea
               placeholder='내용을 입력하세요.'
               value={message}

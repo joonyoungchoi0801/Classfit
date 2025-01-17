@@ -70,6 +70,7 @@ function Signup() {
             type='text'
             placeholder='이름을 입력해주세요'
             {...register('name', { required: '이름을 입력해주세요' })}
+            autoComplete='off'
           />
           {errors.name && <ErrorComponent message={errors?.name.message} />}
         </S.InputWrapper>
@@ -88,6 +89,7 @@ function Signup() {
                 message: '적합하지 않은 번호 형식입니다.',
               },
             })}
+            autoComplete='off'
           />
           {errors.phonenum && (
             <ErrorComponent message={errors?.phonenum.message} />
@@ -108,6 +110,7 @@ function Signup() {
                 message: '적합하지 않은 이메일 형식입니다.',
               },
             })}
+            autoComplete='off'
           />
           {errors.email && <ErrorComponent message={errors?.email.message} />}
         </S.InputWrapper>

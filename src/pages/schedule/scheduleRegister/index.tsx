@@ -115,6 +115,17 @@ function ScheduleRegister() {
 
   const handleRegisterEvent = async () => {
     try {
+      if (
+        !eventTitle ||
+        !calendarType ||
+        !calendarId ||
+        !startDate ||
+        !repeatValue
+      ) {
+        alert('필수 입력값을 모두 입력해주세요.');
+        return;
+      }
+
       const data: RegisterData = {
         name: eventTitle,
         eventType: eventType?.toUpperCase() as EventType,
@@ -199,37 +210,39 @@ function ScheduleRegister() {
                 )}
               </S.SelectWrapper>
             </S.FormGroup>
-            <S.FormGroup>
-              <S.Label>
-                카테고리 <S.Essential>(필수)</S.Essential>
-              </S.Label>
-              <S.SelectWrapper>
-                <S.Select
-                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                  $hasValue={Boolean(categoryValue)}
-                >
-                  {categoryValue || '카테고리 선택'}
-                  <S.DropdownIcon src={dropdown} alt='dropdown icon' />
-                </S.Select>
-                {isCategoryOpen && (
-                  <S.Options>
-                    {(calendarValue === '내 캘린더'
-                      ? personalCategory
-                      : sharedCategory
-                    )?.map((category) => (
-                      <S.Option
-                        key={category.id}
-                        onClick={() =>
-                          handleCategoryChange(category.name, category.id)
-                        }
-                      >
-                        {category.name}
-                      </S.Option>
-                    ))}
-                  </S.Options>
-                )}
-              </S.SelectWrapper>
-            </S.FormGroup>
+            {eventType === 'schedule' && (
+              <S.FormGroup>
+                <S.Label>
+                  카테고리 <S.Essential>(필수)</S.Essential>
+                </S.Label>
+                <S.SelectWrapper>
+                  <S.Select
+                    onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                    $hasValue={Boolean(categoryValue)}
+                  >
+                    {categoryValue || '카테고리 선택'}
+                    <S.DropdownIcon src={dropdown} alt='dropdown icon' />
+                  </S.Select>
+                  {isCategoryOpen && (
+                    <S.Options>
+                      {(calendarValue === '내 캘린더'
+                        ? personalCategory
+                        : sharedCategory
+                      )?.map((category) => (
+                        <S.Option
+                          key={category.id}
+                          onClick={() =>
+                            handleCategoryChange(category.name, category.id)
+                          }
+                        >
+                          {category.name}
+                        </S.Option>
+                      ))}
+                    </S.Options>
+                  )}
+                </S.SelectWrapper>
+              </S.FormGroup>
+            )}
           </S.Row>
 
           <S.ColumnRow>
@@ -245,8 +258,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(0, 0, 0, 0))
-                          .toLocaleString('sv-SE')
-                          .slice(0, 16)
+                            .toLocaleString('sv-SE')
+                            .slice(0, 16)
                         : startDate
                     }
                     onChange={(e) => setStartDate(e.target.value)}
@@ -260,8 +273,8 @@ function ScheduleRegister() {
                     value={
                       isAllDay
                         ? new Date(new Date(startDate).setHours(23, 59, 0, 0))
-                          .toLocaleString('sv-SE')
-                          .slice(0, 16)
+                            .toLocaleString('sv-SE')
+                            .slice(0, 16)
                         : endDate
                     }
                     onChange={(e) => setEndDate(e.target.value)}
@@ -297,7 +310,9 @@ function ScheduleRegister() {
 
           <S.Row>
             <S.FormGroup>
-              <S.Label>반복<S.Essential> (필수)</S.Essential></S.Label>
+              <S.Label>
+                반복<S.Essential> (필수)</S.Essential>
+              </S.Label>
               <S.SelectWrapper>
                 <S.Select
                   onClick={() => setIsRepeatOpen(!isRepeatOpen)}

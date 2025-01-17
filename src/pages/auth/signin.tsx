@@ -58,6 +58,7 @@ function Signin() {
                 value={emailValue}
                 placeholder='이메일을 입력해주세요'
                 onChange={(e) => setEmailValue(e.target.value)}
+                autoComplete='off'
               />
               <S.InputImg
                 src={Id}
