@@ -68,11 +68,12 @@ export const DropdownClass = styled.div`
   cursor: pointer;
 `;
 
-export const Placeholder = styled.span`
+export const Placeholder = styled.span<{ isSelected?: boolean }>`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  color: var(--color-lightgray);
+  color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const DropdownButton = styled.img`
@@ -133,6 +134,17 @@ export const StatisticsContainer = styled.div`
   align-items: flex-start;
   gap: 1rem;
   margin-top: 3rem;
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
+  }
 `;
 
 export const Row = styled.div`

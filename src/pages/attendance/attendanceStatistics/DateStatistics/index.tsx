@@ -211,7 +211,7 @@ function DateStatistics() {
       <S.Table>
         <S.TableHeader>
           <S.DropdownClass onClick={toggleDropdown}>
-            <S.Placeholder>
+            <S.Placeholder isSelected={!!selectedClass.mainClass}>
               {selectedClass.mainClass
                 ? `${selectedClass.mainClass} ${selectedClass.subClassName}`
                 : '구분'}

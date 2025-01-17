@@ -43,9 +43,19 @@ export const DateList = styled.div`
   min-height: 10rem;
   overflow-y: auto;
   max-height: 10rem;
-  overflow-y: auto;
   width: 100%;
   margin-bottom: 1rem;
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
+  }
 `;
 
 export const DateItem = styled.div`
