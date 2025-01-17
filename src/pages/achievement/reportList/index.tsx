@@ -243,7 +243,7 @@ function ReportList() {
                     <S.ReportName>{item.reportName}</S.ReportName>
                   </PS.RowWrapper>
                   <S.MoreInfoWrapper>
-                    <PS.Text>{item.memberName}</PS.Text>
+                    <PS.Text>{item.ReportCreatedBy}</PS.Text>
                     <PS.Text>{formatDateToYYMMDD(item.createAt)}</PS.Text>
                   </S.MoreInfoWrapper>
                 </S.ReportItem>

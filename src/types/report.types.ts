@@ -41,7 +41,7 @@ export interface ReportData {
   studentId: number;
   studentName: string;
   reportName: string;
-  memberName: string;
+  ReportCreatedBy: string;
   createAt: string;
 }
 
