@@ -247,12 +247,7 @@ function ScheduleSidebar() {
 
       <S.CalendarSection>
         <S.CalendarItem>
-          <S.MyCalendar
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMyCalendar();
-            }}
-          >
+          <S.MyCalendar>
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
               alt='arrow'
@@ -306,12 +301,7 @@ function ScheduleSidebar() {
         )}
 
         <S.CalendarItem>
-          <S.SharedCalendar
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleSharedCal();
-            }}
-          >
+          <S.SharedCalendar>
             <S.Icon
               src={isSharedCalExpanded ? downArrow : rightArrow}
               alt='arrow'
