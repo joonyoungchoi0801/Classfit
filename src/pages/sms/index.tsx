@@ -130,7 +130,7 @@ function Sms() {
       </ManageLayout>
       <QuestionModal
         title='메세지를 전송하시겠습니까 ?'
-        message={`총 ${studentData.length * 2}명에게 전송될 예정입니다.`}
+        message={`총 ${studentData.length}명에게 전송될 예정입니다.`}
         onConfirm={() => handleSendSms()}
         onCancel={() => setIsSendModalOpen(!isSendModalOpen)}
         isOpen={isSendModalOpen}
