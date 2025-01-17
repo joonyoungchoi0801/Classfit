@@ -59,10 +59,10 @@ function Email() {
   const handleSendEmail = async () => {
     try {
       if (timer > 0) alert('이미 전송된 이메일이 있습니다.');
-      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
       setIsResendOccur(true);
       setTimer(60);
+      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         alert(
@@ -137,6 +137,18 @@ function Email() {
     return () => clearInterval(countdown);
   }, [isResendOccur]);
 
+  const handleOpenPdf = (type: number) => {
+    if (type == 1) {
+      window.open('/locationInfo.pdf', '_blank');
+    } else if (type == 2) {
+      window.open('/serviceInfo.pdf', '_blank');
+    } else if (type == 3) {
+      window.open('/locationInfo.pdf', '_blank');
+    } else {
+      window.open('/marketingInfo.pdf', '_blank');
+    }
+  };
+
   return (
     <S.PageWrapper>
       <S.EmailForm>
@@ -198,7 +210,7 @@ function Email() {
               alt='checkbox'
               onClick={() => setPersonalInfo(!personalInfo)}
             />
-            <S.PersonalInfo href='/'>
+            <S.PersonalInfo onClick={() => handleOpenPdf(1)}>
               개인정보 수집이용 동의하기{' '}
             </S.PersonalInfo>
             <S.PersonalLink>(필수)</S.PersonalLink>
@@ -209,7 +221,7 @@ function Email() {
               alt='checkbox'
               onClick={() => setServiceInfo(!serviceInfo)}
             />
-            <S.PersonalInfo href='/'>
+            <S.PersonalInfo onClick={() => handleOpenPdf(2)}>
               서비스 이용약관에 동의하기{' '}
             </S.PersonalInfo>
             <S.PersonalLink>(필수)</S.PersonalLink>
@@ -220,7 +232,7 @@ function Email() {
               alt='checkbox'
               onClick={() => setLocationInfo(!locationInfo)}
             />
-            <S.PersonalInfo href='/'>
+            <S.PersonalInfo onClick={() => handleOpenPdf(3)}>
               위치기반 서비스 이용 약관에 동의하기{' '}
             </S.PersonalInfo>
             <S.PersonalLink>(필수)</S.PersonalLink>
@@ -231,7 +243,7 @@ function Email() {
               alt='checkbox'
               onClick={() => setMarketingInfo(!marketingInfo)}
             />
-            <S.PersonalInfo href='/'>
+            <S.PersonalInfo onClick={() => handleOpenPdf(4)}>
               마케팅 이용, 수신에 동의하기{' '}
             </S.PersonalInfo>
             <S.PersonalLink>(선택)</S.PersonalLink>

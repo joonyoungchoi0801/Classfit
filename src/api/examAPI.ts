@@ -38,12 +38,25 @@ export const registerExam = (data: RegisterExamData) => {
   });
 };
 
-export const findExam = (searchFilter?: string, searchText?: string) => {
+export const findExam = ({
+  mainClassId,
+  subClassId,
+  searchFilter,
+  searchText,
+}: {
+  mainClassId?: number;
+  subClassId?: number;
+  searchFilter?: string;
+  searchText?: string;
+}) => {
   if (!searchFilter) {
     return instance({
       url: API_EXAM.EXAM_FIND,
       method: 'POST',
-      data: {},
+      data: {
+        mainClassId,
+        subClassId,
+      },
     });
   }
   if (searchFilter === '강사명') {
@@ -52,6 +65,8 @@ export const findExam = (searchFilter?: string, searchText?: string) => {
       method: 'POST',
       data: {
         memberName: searchText,
+        mainClassId,
+        subClassId,
       },
     });
   }
@@ -60,6 +75,8 @@ export const findExam = (searchFilter?: string, searchText?: string) => {
     method: 'POST',
     data: {
       examName: searchText,
+      mainClassId,
+      subClassId,
     },
   });
 };

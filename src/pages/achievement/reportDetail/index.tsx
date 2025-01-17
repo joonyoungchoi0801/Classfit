@@ -37,9 +37,9 @@ function ReportDetail() {
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: '55%',
           borderRadius: 5,
           borderRadiusApplication: 'end',
+          columnWidth: '30px',
         },
       },
       dataLabels: {
@@ -261,18 +261,18 @@ function ReportDetail() {
     <S.Container>
       <S.Header>
         <PS.RowWrapper>
-          <PS.Name $size='1.8rem'>{reportDetailData?.studentName}</PS.Name>
+          <PS.Name2 $size='1.8rem'>{reportDetailData?.studentName}</PS.Name2>
           <S.PaddingWrapper>
-            <PS.Name $size='1.8rem'>|</PS.Name>
+            <PS.Name2 $size='1.8rem'>|</PS.Name2>
           </S.PaddingWrapper>
-          <PS.Name $size='1.8rem'>
+          <PS.Name2 $size='1.8rem'>
             {reportDetailData?.mainClassName}-{reportDetailData?.subClassName}
-          </PS.Name>
+          </PS.Name2>
         </PS.RowWrapper>
         <S.BoldText>{reportDetailData?.reportName}</S.BoldText>
-        <PS.Name>
+        <PS.Period>
           평가기간 {reportDetailData?.startDate} ~ {reportDetailData?.endDate}
-        </PS.Name>
+        </PS.Period>
       </S.Header>
       <S.DonutSection>
         <S.LabelWrapper>

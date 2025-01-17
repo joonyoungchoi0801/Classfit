@@ -135,9 +135,36 @@ export const Name = styled.div<{ $size?: string }>`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  width: 8rem;
+  text-align: left;
+`;
+
+export const Name2 = styled.div<{ $size?: string }>`
+  font-size: ${({ $size }) => ($size ? $size : '1.6rem')};
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
+`;
+
+export const Period = styled.div<{ $size?: string }>`
+  font-size: ${({ $size }) => ($size ? $size : '1.6rem')};
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
 `;
 
 export const Text = styled.div`
+  width: 10rem;
+  text-align: left;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+export const Text2 = styled.div`
   text-align: left;
   font-size: 1.6rem;
   font-style: normal;
