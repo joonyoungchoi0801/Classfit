@@ -24,6 +24,7 @@ function Account() {
           code: inviteCode,
         };
         await postAcademyInvite(inviteData);
+        alert('학원에 초대되었습니다.');
         navigate('/signin');
       } catch (error) {
         setCodeError(true);
