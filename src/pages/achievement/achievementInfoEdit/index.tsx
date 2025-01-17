@@ -66,9 +66,7 @@ function AchievementInfoEdit() {
   };
 
   const initHighestScore = () => {
-    console.log('init', standardValue);
     if (standardValue === 'QUESTION' || standardValue === '개수') {
-      console.log(examInfoData);
       return Number(examInfoData.highestScore);
     } else {
       return 0;
@@ -178,10 +176,6 @@ function AchievementInfoEdit() {
     setIsQuestionModalVisible(false);
     onSubmit2(getValues());
   };
-
-  useEffect(() => {
-    console.log(standardValue);
-  }, [standardValue]);
 
   return (
     <form>

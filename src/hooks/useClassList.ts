@@ -16,6 +16,9 @@ function useClassList() {
   >({});
 
   const [mainClassList, setMainClassList] = useState<mainClassDict[]>([]);
+  const [totalMainClassList, setTotalMainClassList] = useState<mainClassDict[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchClass = async () => {
@@ -44,6 +47,11 @@ function useClassList() {
 
       setClassList(_data);
       setMainClassList(_mdata);
+      const _mtdata = [
+        { mainClassId: -1, mainClassName: '전체' }, // 추가할 데이터
+        ..._mdata,
+      ];
+      setTotalMainClassList(_mtdata);
     };
     fetchClass();
   }, []);
@@ -51,6 +59,7 @@ function useClassList() {
   return {
     classList,
     mainClassList,
+    totalMainClassList,
   };
 }
 

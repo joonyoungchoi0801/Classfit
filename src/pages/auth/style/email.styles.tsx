@@ -122,7 +122,7 @@ export const Checkbox = styled.img`
   cursor: pointer;
 `;
 
-export const PersonalInfo = styled.a`
+export const PersonalInfo = styled.div`
   color: var(--color-black);
   font-family: Pretendard;
   font-size: 1.6rem;

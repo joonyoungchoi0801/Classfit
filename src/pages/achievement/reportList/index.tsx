@@ -224,7 +224,9 @@ function ReportList() {
                   <PS.RowWrapper>
                     <PS.IconWrapper
                       $alignLeft={true}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
                         handleOnClickCheckBox(
                           item.studentReportId,
                           item.checked
