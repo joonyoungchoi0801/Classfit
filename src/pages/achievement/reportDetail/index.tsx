@@ -174,7 +174,11 @@ function ReportDetail() {
     examHistoryData: ExamHistoryData[],
     includeAverage: boolean
   ) => {
-    const scoreData = examHistoryData.map((item) => {
+    const filteredData = examHistoryData.filter(
+      (item) => item.standard !== 'EVALUATION'
+    );
+
+    const scoreData = filteredData.map((item) => {
       if (item.standard === 'PF') {
         if (item.score === -3) {
           return 100;
@@ -184,8 +188,9 @@ function ReportDetail() {
       }
       return item.score;
     });
-    const averageData = examHistoryData.map((item) => item.average);
-    const categories = examHistoryData.map((item) => item.examName);
+
+    const averageData = filteredData.map((item) => item.average);
+    const categories = filteredData.map((item) => item.examName);
 
     setState((prevState) => {
       const updatedSeries = includeAverage
