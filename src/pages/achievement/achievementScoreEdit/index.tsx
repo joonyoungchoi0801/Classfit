@@ -78,7 +78,7 @@ function AchievementScoreEdit() {
   const handleOnChangeScoreValue = (id: number, value: string) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.studentId === id ? { ...item, score: value } : item
+        item.studentId === id ? { ...item, score: value, isEdited: true } : item
       )
     );
     setError((prevError) => ({
