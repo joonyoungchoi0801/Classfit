@@ -43,6 +43,7 @@ import FolderModal from '@/components/modal/folderModal';
 import useDriveDataStore from '@/store/driveDataStore';
 import DeleteModal from '@/components/modal/deleteModal';
 import UploadModal from '@/components/modal/uploadModal';
+import { format } from 'path';
 
 const FileType: Record<string, string> = {
   전체: '',
@@ -372,6 +373,18 @@ const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
     }
   };
 
+  const formatToKoreaTime = (date: string) => {
+    const uploadedAtKST = new Date(date);
+    const utcTime = uploadedAtKST.getTime();
+
+    const koreaTime = new Date(utcTime + 9 * 60 * 60 * 1000);
+    const year = koreaTime.getFullYear();
+    const month = String(koreaTime.getMonth() + 1).padStart(2, '0');
+    const day = String(koreaTime.getDate()).padStart(2, '0');
+
+    return `${year}.${month}.${day}`;
+  };
+
   return (
     <S.DriveListWrapper>
       {data?.map((item, index) => (
@@ -405,7 +418,7 @@ const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
             )}
 
             <S.ListText style={{ width: `8.8rem` }}>
-              {item.uploadedAt.split('T')[0].replace(/-/g, '.')}
+              {formatToKoreaTime(item.uploadedAt)}
             </S.ListText>
             <S.ListText style={{ width: `9rem` }}>
               &nbsp;&nbsp;{item.uploadedBy}
