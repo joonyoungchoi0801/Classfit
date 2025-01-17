@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as S from './ScheduleSidebar.styles';
 import downArrow from '@/assets/managesidebar/downarrow.svg';
@@ -21,19 +21,11 @@ import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
 import CategoryDeleteModal from '@/components/modal/categoryModal/categoryDeleteModal';
 import { colorMapping } from '@/utils/colorMapping';
-import { tr } from 'date-fns/locale';
 
 function ScheduleSidebar() {
   const location = useLocation();
   const url = location.pathname;
   const navigate = useNavigate();
-  // const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(
-  //   url.startsWith('/schedule/my')
-  // );
-  // const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(
-  //   url.startsWith('/schedule/shared')
-  // );
-
   const isMyCalendarExpanded = url.startsWith('/schedule/my');
   const isSharedCalExpanded = url.startsWith('/schedule/shared');
   const [personalCategories, setPersonalCategories] = useState<
@@ -58,6 +50,7 @@ function ScheduleSidebar() {
     id: number;
     name: string;
   } | null>(null);
+  const [categoriesUpdated, setCategoriesUpdated] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -77,7 +70,7 @@ function ScheduleSidebar() {
     };
 
     fetchCategories();
-  }, [isModalOpen, personalCategories]);
+  }, [isModalOpen, categoriesUpdated]);
 
   const handleButtonClick = () => {
     navigate('/schedule/register/schedule');
@@ -96,24 +89,7 @@ function ScheduleSidebar() {
     try {
       const response = await createCategory(categoryName, color, currentType);
       if (response.status === 200) {
-        const newCategory = response.data.data;
-        if (currentType === 'PERSONAL') {
-          setPersonalCategories((prev) => [
-            ...prev,
-            {
-              ...newCategory,
-              color: colorMapping[newCategory.color] || newCategory.color,
-            },
-          ]);
-        } else if (currentType === 'SHARED') {
-          setSharedCategories((prev) => [
-            ...prev,
-            {
-              ...newCategory,
-              color: colorMapping[newCategory.color] || newCategory.color,
-            },
-          ]);
-        }
+        setCategoriesUpdated((prev) => !prev);
         handleCloseModal();
       }
     } catch (error) {
@@ -175,12 +151,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
@@ -188,12 +164,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                  ...cat,
-                  name: updatedCategory.name,
-                  color:
-                    colorMapping[updatedCategory.color] ||
-                    updatedCategory.color,
-                }
+                ...cat,
+                name: updatedCategory.name,
+                color:
+                  colorMapping[updatedCategory.color] ||
+                  updatedCategory.color,
+              }
               : cat
           )
         );
