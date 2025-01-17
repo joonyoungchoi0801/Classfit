@@ -178,9 +178,9 @@ export const TextArea = styled.textarea<{
   border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
-  resize: vertical;
   outline: none;
   box-shadow: none;
+  resize: none;
 
   &:focus {
     border-color: #007bff;

@@ -164,7 +164,7 @@ export const EvaluationInput = styled.textarea<{
   border: 0.1rem solid var(--color-gray);
   border-radius: 1rem;
   font-size: 1.6rem;
-  resize: vertical;
+  resize: none;
   outline: none;
   box-shadow: none;
 
