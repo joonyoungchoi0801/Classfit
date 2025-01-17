@@ -27,65 +27,47 @@ function ReportList() {
   const [deleteList, setDeleteList] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState<searchQueryProps>({});
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     studentName: '김예은',
-  //     reportName: '11월 수학리포트',
-  //     teacherName: '김나나',
-  //     date: '24.11.15',
-  //   },
-  //   {
-  //     id: 2,
-  //     studentName: '김예은',
-  //     reportName: '11월 수학리포트',
-  //     teacherName: '김나나',
-  //     date: '24.11.15',
-  //   },
-  //   {
-  //     id: 3,
-  //     studentName: '김예은',
-  //     reportName: '11월 수학리포트',
-  //     teacherName: '김나나',
-  //     date: '24.11.15',
-  //   },
-  //   {
-  //     id: 4,
-  //     studentName: '김예은',
-  //     reportName: '11월 수학리포트',
-  //     teacherName: '김나나',
-  //     date: '24.11.15',
-  //   },
-  //   {
-  //     id: 5,
-  //     studentName: '김예은',
-  //     reportName: '11월 수학리포트',
-  //     teacherName: '김나나',
-  //     date: '24.11.15',
-  //   },
-  // ];
+  const data = [
+    {
+      studentReportId: 1,
+      studentName: '김예은',
+      reportName: '11월 수학리포트',
+      memberName: '김나나',
+      createAt: '24.11.15',
+      checked: false,
+    },
+    {
+      studentReportId: 2,
+      studentName: '김예',
+      reportName: '11월 수학리포트',
+      memberName: '김나나',
+      createAt: '24.11.15',
+      checked: false,
+    },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await getReportAll();
-        console.log(res);
         if (res.status == 200) {
           const updatedData = res.data.data.map((item: any) => ({
             ...item,
             checked: false, // checked 필드 추가
           }));
           setReportData(updatedData);
+          setIsInitialized(true);
         } else {
           alert('리포트 데이터를 불러오는데 실패했습니다.');
+          setIsInitialized(true);
         }
       } catch (e) {
         alert('리포트 데이터를 불러오는데 실패했습니다.');
+        setIsInitialized(true);
       }
     };
     if (!isInitialized) {
       fetchData();
-      setIsInitialized(true);
     }
   }, []);
 
@@ -229,7 +211,7 @@ function ReportList() {
               </PS.RegisterButton>
             </S.ReportListHeader>
             <S.ReportList>
-              {reportData.map((item) => (
+              {data.map((item) => (
                 <S.ReportItem
                   key={item.studentReportId}
                   onClick={() =>
