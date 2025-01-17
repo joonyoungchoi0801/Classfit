@@ -122,3 +122,7 @@
 .fc .fc-daygrid-day.fc-day-today {
   background-color: #dfebff;
 }
+
+.fc .fc-daygrid-day-frame {
+  cursor: pointer;
+}

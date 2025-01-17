@@ -98,8 +98,9 @@ export const SendButton = styled.button<{ $disabled?: boolean }>`
   background: ${(props) => (props.$disabled ? '#E5E5E5' : 'var(--color-blue)')};
   position: absolute;
   top: 50%;
-  transform: translateY(25%);
+  transform: translateY(-50%);
   right: 1rem;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
 `;
 export const PersonalContainer = styled.div`
   display: flex;
@@ -189,4 +190,10 @@ export const SubmitButton = styled.button<{
   line-height: normal;
   background: ${(props) =>
     props.$isDisabled ? '#dedede' : 'var(--color-blue)'};
+`;
+
+export const EmailInputWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  position: relative;
 `;

@@ -23,7 +23,8 @@ function Email() {
   const [locationInfo, setLocationInfo] = useState<boolean>(false);
   const [marketingInfo, setMarketingInfo] = useState<boolean>(false);
   const [emailToken, setEmailToken] = useState<string>('');
-
+  const [timer, setTimer] = useState(0);
+  const [isResendOccur, setIsResendOccur] = useState(false);
   const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +58,11 @@ function Email() {
 
   const handleSendEmail = async () => {
     try {
+      if (timer > 0) alert('이미 전송된 이메일이 있습니다.');
       await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
+      setIsResendOccur(true);
+      setTimer(180);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         alert(
@@ -118,6 +122,20 @@ function Email() {
       alert('회원가입에 실패했습니다.');
     }
   };
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdown);
+          setIsResendOccur(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdown);
+  }, [isResendOccur]);
 
   return (
     <S.PageWrapper>
@@ -128,21 +146,30 @@ function Email() {
             <S.LabelImg src={emailIcon} alt='email' />
             <S.InputLabel>이메일 입력</S.InputLabel>
           </S.LabelWrapper>
-          <S.Input
-            type='email'
-            placeholder='이메일을 입력해주세요'
-            value={emailValue}
-            {...register('email', { required: '이메일을 입력해주세요' })}
-            onChange={handleEmailChange}
-          />
-          <S.SendButton
-            type='button'
-            $disabled={!emailRegex.test(emailValue)}
-            onClick={() => handleSendEmail()}
-          >
-            전송
-          </S.SendButton>
+          <S.EmailInputWrapper>
+            <S.Input
+              type='email'
+              placeholder='이메일을 입력해주세요'
+              value={emailValue}
+              {...register('email', { required: '이메일을 입력해주세요' })}
+              onChange={handleEmailChange}
+            />
+            <S.SendButton
+              type='button'
+              $disabled={!emailRegex.test(emailValue) || timer > 0}
+              onClick={() => handleSendEmail()}
+            >
+              전송
+            </S.SendButton>
+          </S.EmailInputWrapper>
+
+          {timer > 0 && (
+            <S.ErrorMessage>
+              인증번호를 재전송하려면 {timer}초를 기다려주세요.
+            </S.ErrorMessage>
+          )}
         </S.InputWrapper>
+
         <S.InputWrapper>
           <S.LabelWrapper>
             <S.LabelImg src={sendemail} alt='email' />

@@ -21,13 +21,21 @@ import Popup from '@/components/popup';
 import CategoryEditModal from '@/components/modal/categoryModal/categoryEditModal';
 import CategoryDeleteModal from '@/components/modal/categoryModal/categoryDeleteModal';
 import { colorMapping } from '@/utils/colorMapping';
+import { tr } from 'date-fns/locale';
 
 function ScheduleSidebar() {
   const location = useLocation();
   const url = location.pathname;
   const navigate = useNavigate();
-  const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(url.startsWith('/schedule/my'));
-  const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(url.startsWith('/schedule/shared'));
+  // const [isMyCalendarExpanded, setIsMyCalendarExpanded] = useState(
+  //   url.startsWith('/schedule/my')
+  // );
+  // const [isSharedCalExpanded, setIsSharedCalExpanded] = useState(
+  //   url.startsWith('/schedule/shared')
+  // );
+
+  const isMyCalendarExpanded = url.startsWith('/schedule/my');
+  const isSharedCalExpanded = url.startsWith('/schedule/shared');
   const [personalCategories, setPersonalCategories] = useState<
     PersonalCategoryData[]
   >([]);
@@ -75,14 +83,6 @@ function ScheduleSidebar() {
     navigate('/schedule/register/schedule');
   };
 
-  const toggleMyCalendar = () => {
-    setIsMyCalendarExpanded(!isMyCalendarExpanded);
-  };
-
-  const toggleSharedCal = () => {
-    setIsSharedCalExpanded(!isSharedCalExpanded);
-  };
-
   const handleOpenModal = (type: 'PERSONAL' | 'SHARED') => {
     setCurrentType(type);
     setIsModalOpen(true);
@@ -123,10 +123,17 @@ function ScheduleSidebar() {
 
   // 케밥 버튼
   const togglePopup = (categoryId: number) => {
-    setPopupState((prev) => ({
-      ...prev,
-      [categoryId]: !prev[categoryId],
-    }));
+    setPopupState((prev) => {
+      const isCurrentlyOpen = prev[categoryId] || false;
+
+      const updatedState: Record<number, boolean> = {};
+      Object.keys(prev).forEach((key) => {
+        updatedState[Number(key)] = false;
+      });
+      updatedState[categoryId] = !isCurrentlyOpen;
+
+      return updatedState;
+    });
   };
 
   const handleEdit = (categoryId: number) => {
@@ -168,12 +175,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                ...cat,
-                name: updatedCategory.name,
-                color:
-                  colorMapping[updatedCategory.color] ||
-                  updatedCategory.color,
-              }
+                  ...cat,
+                  name: updatedCategory.name,
+                  color:
+                    colorMapping[updatedCategory.color] ||
+                    updatedCategory.color,
+                }
               : cat
           )
         );
@@ -181,12 +188,12 @@ function ScheduleSidebar() {
           prev.map((cat) =>
             cat.id === id
               ? {
-                ...cat,
-                name: updatedCategory.name,
-                color:
-                  colorMapping[updatedCategory.color] ||
-                  updatedCategory.color,
-              }
+                  ...cat,
+                  name: updatedCategory.name,
+                  color:
+                    colorMapping[updatedCategory.color] ||
+                    updatedCategory.color,
+                }
               : cat
           )
         );
@@ -244,7 +251,6 @@ function ScheduleSidebar() {
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
               alt='arrow'
-              onClick={toggleMyCalendar}
             />
             <S.CalendarItemText
               onClick={() => navigate('/schedule/my')}
@@ -262,9 +268,7 @@ function ScheduleSidebar() {
         {isMyCalendarExpanded && (
           <S.CategoryList>
             {personalCategories.map((item) => (
-              <S.CategoryItem
-                key={item.id}
-              >
+              <S.CategoryItem key={item.id}>
                 <S.Category>
                   <S.CategoryIcon
                     color={item.color}
@@ -301,7 +305,6 @@ function ScheduleSidebar() {
             <S.Icon
               src={isSharedCalExpanded ? downArrow : rightArrow}
               alt='arrow'
-              onClick={toggleSharedCal}
             />
             <S.CalendarItemText
               onClick={() => navigate('/schedule/shared')}
@@ -319,9 +322,7 @@ function ScheduleSidebar() {
         {isSharedCalExpanded && (
           <S.SharedList>
             {sharedCategories.map((item) => (
-              <S.SharedItem
-                key={item.id}
-              >
+              <S.SharedItem key={item.id}>
                 <S.Shared>
                   <S.CategoryIcon
                     color={item.color}

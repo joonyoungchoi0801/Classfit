@@ -61,8 +61,8 @@ function Attendance() {
     setIsPopupOpen(false);
     setIsSubClassAdd(false);
     setIsMainClassAdd(false);
+    navigate(`/manage/attendance/${grade}`);
     if (grade !== selectedGrade) {
-      navigate(`/manage/attendance/${grade}`);
       setIsSubClassShow(true);
     } else {
       setIsSubClassShow(!isSubClassShow);
