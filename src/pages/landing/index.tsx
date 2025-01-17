@@ -9,7 +9,7 @@ function Landing() {
   const handleClick = () => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      navigate('/home');
+      navigate('/manage/attendance');
     } else {
       navigate('/signin');
     }
