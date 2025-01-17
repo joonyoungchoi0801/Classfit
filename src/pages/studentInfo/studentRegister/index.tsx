@@ -94,6 +94,7 @@ function StudentRegister() {
                   value
                 )
               }
+              isInitialized={studentRegisterHandler.isInitialized}
             />
           </S.FormGroup>
         </S.Row>

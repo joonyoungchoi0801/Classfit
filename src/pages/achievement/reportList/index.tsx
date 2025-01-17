@@ -208,57 +208,66 @@ function ReportList() {
           </S.SearchWrapper>
         </S.FilterWrapper>
       </S.Header>
-      {isInitialized && reportData.length === 0 ? (
-        <S.EmptyListSection>
-          <S.ReportIcon src={ReportMainIcon} />
-          <S.ReportInfoText>
-            리포트를 생성해 자유롭게 관리하세요 !
-          </S.ReportInfoText>
-        </S.EmptyListSection>
-      ) : (
-        <S.ReportListSection>
-          <S.ReportListHeader>
-            <PS.RegisterButton
-              $color={deleteList.length == 0 ? '#E5E5E5' : 'var(--color-black)'}
-              onClick={handleOnClickAllDelete}
-            >
-              삭제
-            </PS.RegisterButton>
-          </S.ReportListHeader>
-          <S.ReportList>
-            {reportData.map((item) => (
-              <S.ReportItem
-                key={item.studentReportId}
-                onClick={() =>
-                  navigate(
-                    `/manage/achievement/report/detail/${item.studentReportId}`
-                  )
+      {isInitialized ? (
+        reportData.length === 0 ? (
+          <S.EmptyListSection>
+            <S.ReportIcon src={ReportMainIcon} />
+            <S.ReportInfoText>
+              리포트를 생성해 자유롭게 관리하세요 !
+            </S.ReportInfoText>
+          </S.EmptyListSection>
+        ) : (
+          <S.ReportListSection>
+            <S.ReportListHeader>
+              <PS.RegisterButton
+                $color={
+                  deleteList.length == 0 ? '#E5E5E5' : 'var(--color-black)'
                 }
+                onClick={handleOnClickAllDelete}
               >
-                <PS.RowWrapper>
-                  <PS.IconWrapper
-                    $alignLeft={true}
-                    onClick={() => {
-                      handleOnClickCheckBox(item.studentReportId, item.checked);
-                    }}
-                  >
-                    {item.checked ? (
-                      <PS.BtnIcon src={SelectedCheckBoxIcon} />
-                    ) : (
-                      <PS.BtnIcon src={CheckBoxIcon} />
-                    )}
-                  </PS.IconWrapper>
-                  <PS.Name>{item.studentName}</PS.Name>
-                  <S.ReportName>{item.reportName}</S.ReportName>
-                </PS.RowWrapper>
-                <S.MoreInfoWrapper>
-                  <PS.Text>{item.memberName}</PS.Text>
-                  <PS.Text>{item.createAt}</PS.Text>
-                </S.MoreInfoWrapper>
-              </S.ReportItem>
-            ))}
-          </S.ReportList>
-        </S.ReportListSection>
+                삭제
+              </PS.RegisterButton>
+            </S.ReportListHeader>
+            <S.ReportList>
+              {reportData.map((item) => (
+                <S.ReportItem
+                  key={item.studentReportId}
+                  onClick={() =>
+                    navigate(
+                      `/manage/achievement/report/detail/${item.studentReportId}`
+                    )
+                  }
+                >
+                  <PS.RowWrapper>
+                    <PS.IconWrapper
+                      $alignLeft={true}
+                      onClick={() => {
+                        handleOnClickCheckBox(
+                          item.studentReportId,
+                          item.checked
+                        );
+                      }}
+                    >
+                      {item.checked ? (
+                        <PS.BtnIcon src={SelectedCheckBoxIcon} />
+                      ) : (
+                        <PS.BtnIcon src={CheckBoxIcon} />
+                      )}
+                    </PS.IconWrapper>
+                    <PS.Name>{item.studentName}</PS.Name>
+                    <S.ReportName>{item.reportName}</S.ReportName>
+                  </PS.RowWrapper>
+                  <S.MoreInfoWrapper>
+                    <PS.Text>{item.memberName}</PS.Text>
+                    <PS.Text>{item.createAt}</PS.Text>
+                  </S.MoreInfoWrapper>
+                </S.ReportItem>
+              ))}
+            </S.ReportList>
+          </S.ReportListSection>
+        )
+      ) : (
+        <div></div>
       )}
     </S.Container>
   );
