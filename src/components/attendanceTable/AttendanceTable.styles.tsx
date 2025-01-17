@@ -107,8 +107,9 @@ export const PaginationItem = styled.div`
   width: 9rem;
 `;
 
-export const ArrowButton = styled.img`
-  cursor: pointer;
+export const ArrowButton = styled.img<{ disabled?: boolean }>`
+cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  /* cursor: pointer; */
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 1.38rem;
