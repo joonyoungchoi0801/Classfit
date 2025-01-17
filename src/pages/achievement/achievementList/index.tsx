@@ -9,6 +9,7 @@ import useClassList from '@/hooks/useClassList';
 import { ExamData } from '@/types/exam.type';
 import { findExam } from '@/api/examAPI';
 import { formatDateToYYMMDD } from '@/utils/formatDate';
+import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
 
 export const filterData: Record<string, string> = {
   전체: 'TOTAL',
@@ -39,13 +40,15 @@ function AchievementList() {
   const [subClass, setSubClass] = useState('');
   const [data, setData] = useState<ExamData[]>([]);
 
-  const { classList } = useClassList();
+  const { classList, totalMainClassList } = useClassList();
   const [isInitialized, setIsInitialized] = useState(false);
   const testSearchOptions: string[] = ['강사명', '시험명'];
+  const [mainClassId, setMainClassId] = useState(-1);
+  const [subClassId, setSubClassId] = useState(-1);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await findExam();
+      const res = await findExam({});
       if (res.status === 200) {
         setData(res.data.data);
         setDisplayData(res.data.data);
@@ -72,8 +75,17 @@ function AchievementList() {
       } else {
         matchesSearch = searchText === '' || item.examName.includes(searchText);
       }
+      const matchesMainClassName =
+        mainClass === '전체' || item.mainClassName.includes(mainClass);
+      const matchesSubClassName =
+        subClass === '전체' || item.subClassName.includes(subClass);
 
-      return matchesType && matchesSearch;
+      return (
+        matchesType &&
+        matchesSearch &&
+        matchesMainClassName &&
+        matchesSubClassName
+      );
     });
 
     setPreviousFilteredData(_data);
@@ -93,6 +105,14 @@ function AchievementList() {
         return item.subClassName === newSubClass;
       });
     }
+
+    newData = newData.filter((item) => {
+      const matchesType =
+        filter === '전체' || item.standard === filterData[filter];
+
+      return matchesType;
+    });
+
     setPreviousFilteredData(newData);
     setDisplayData(newData);
   };
@@ -106,12 +126,21 @@ function AchievementList() {
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = text === '' || item.examName.includes(text);
+        matchesSearch = text === '' || item.memberName.includes(text);
       } else {
         matchesSearch = text === '' || item.examName.includes(text);
       }
+      const matchesMainClassName =
+        mainClass === '전체' || item.mainClassName.includes(mainClass);
+      const matchesSubClassName =
+        subClass === '전체' || item.subClassName.includes(subClass);
 
-      return matchesType && matchesSearch;
+      return (
+        matchesType &&
+        matchesSearch &&
+        matchesMainClassName &&
+        matchesSubClassName
+      );
     });
 
     if (_data.length === 0) {
@@ -121,7 +150,6 @@ function AchievementList() {
       setDisplayData(_data);
     }
   };
-
   const handleOnClickSearch = async () => {
     let _data;
     _data = data.filter((item) => {
@@ -135,11 +163,34 @@ function AchievementList() {
         matchesSearch = item.examName == searchText;
       }
 
-      return matchesType && matchesSearch;
+      const matchesMainClassName =
+        mainClass === '전체' || item.mainClassName.includes(mainClass);
+      const matchesSubClassName =
+        subClass === '전체' || item.subClassName.includes(subClass);
+
+      return (
+        matchesType &&
+        matchesSearch &&
+        matchesMainClassName &&
+        matchesSubClassName
+      );
     });
 
     if (_data.length === 0) {
-      const res = await findExam(searchFilter, searchText);
+      // searchFilter, searchText
+      const requestPayload: any = {
+        searchFilter,
+        searchText,
+      };
+
+      if (mainClassId !== -1) {
+        requestPayload.mainClassId = mainClassId;
+      }
+      if (subClassId !== -1) {
+        requestPayload.subClassId = subClassId;
+      }
+
+      const res = await findExam(requestPayload);
       if (res.status === 200) {
         _data = res.data.data;
       } else {
@@ -163,23 +214,25 @@ function AchievementList() {
         </PS.RegisterWrapper>
 
         <S.SearchWrapper>
-          <DropDown
-            options={['전체', ...Object.keys(classList)]}
-            placeholder='메인 클래스'
-            onChange={(value) => {
-              setMainClass(value);
-              handleOnChangeClass(value, subClass);
+          <MainClassDropDown
+            options={totalMainClassList}
+            value={mainClass}
+            onChange2={(value1, value2) => {
+              setMainClassId(value1); // mainClassId
+              setMainClass(value2); // mainClassName
             }}
+            placeholder='메인 클래스'
           />
           <ClassDropDown
             options={[
-              { subClassId: 0, subClassName: '전체' },
+              { subClassId: -1, subClassName: '전체' },
               ...(classList[mainClass] || []),
             ]}
             placeholder='서브 클래스'
             onChange2={(value1, value2) => {
-              setSubClass(value2);
+              setSubClassId(value1);
               handleOnChangeClass(mainClass, value2);
+              setSubClass(value2);
             }}
           />
         </S.SearchWrapper>
@@ -244,7 +297,7 @@ function AchievementList() {
                   <PS.Text>
                     {item.mainClassName}-{item.subClassName}
                   </PS.Text>
-                  <PS.Text>{item.examName}</PS.Text>
+                  <PS.Text2>{item.examName}</PS.Text2>
                 </S.TitleWrapper>
                 <S.TeacherWrapper>
                   <PS.Text>{item.memberName}</PS.Text>
@@ -262,10 +315,6 @@ function AchievementList() {
           </S.EmptyListSection>
         )
       ) : (
-        // <S.EmptyListSection>
-        //   <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
-        //   <S.AchievementInfoText>조회된 성적이 없습니다.</S.AchievementInfoText>
-        // </S.EmptyListSection>
         <div></div>
       )}
     </S.Container>

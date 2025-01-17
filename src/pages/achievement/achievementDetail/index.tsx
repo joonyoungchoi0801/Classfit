@@ -38,8 +38,6 @@ function AchievementDetail() {
     const fetchData = async () => {
       if (id) {
         const res = await getExamDetail(Number(id));
-        console.log(res);
-
         if (res.status == 200) {
           const { examClassStudents, ...examInfo } = res.data.data;
           setExamInfoData(examInfo);
