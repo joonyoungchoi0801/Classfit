@@ -113,11 +113,13 @@ const DriveButtonList = ({
           path,
           (progress) => setUploadProgress(progress)
         );
-        setIsUploading(false);
         setUploadProgress(0);
         setIsNewFolder(true);
       } catch (error) {
         alert('파일 업로드에 실패했습니다.');
+      } finally {
+        e.target.value = '';
+        setIsUploading(false);
       }
     }
   };
