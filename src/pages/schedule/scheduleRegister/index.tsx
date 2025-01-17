@@ -118,7 +118,7 @@ function ScheduleRegister() {
       if (
         !eventTitle ||
         !calendarType ||
-        !calendarId ||
+        (eventType === 'schedule' && !calendarId) ||
         !startDate ||
         !repeatValue
       ) {

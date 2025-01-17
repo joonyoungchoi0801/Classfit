@@ -17,7 +17,8 @@ export const getDriveFiles = (driveType: string, folderPath: string) => {
 export const postDriveFiles = (
   driveType: string,
   multipartFiles: File[],
-  folderPath: string
+  folderPath: string,
+  onProgress: (progress: number) => void
 ) => {
   const formData = new FormData();
   formData.append('driveType', driveType);
@@ -32,6 +33,12 @@ export const postDriveFiles = (
       'Content-Type': 'multipart/form-data',
     },
     data: formData,
+    onUploadProgress: (event) => {
+      if (event.total) {
+        const percentCompleted = Math.round((event.loaded * 100) / event.total);
+        onProgress(percentCompleted);
+      }
+    },
   });
 };
 
