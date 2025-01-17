@@ -400,7 +400,7 @@ const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
           <S.DriveListBack>
             {type !== 'trash' && (
               <S.ListText style={{ marginRight: `-0.8rem` }}>
-                {item.fileSize}
+                {item.fileType === 'FOLDER' ? '' : item.fileSize}
               </S.ListText>
             )}
 
