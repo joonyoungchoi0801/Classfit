@@ -159,13 +159,17 @@ function ReportDetail() {
       .filter((item) => item.attendanceStatus === 'PRESENT')
       .reduce((sum, item) => sum + item.attendanceCount, 0);
 
-    const absentCount = data
+    const lateCount = data
       .filter((item) => item.attendanceStatus === 'LATE')
+      .reduce((sum, item) => sum + item.attendanceCount, 0);
+
+    const absentCount = data
+      .filter((item) => item.attendanceStatus === 'ABSENT')
       .reduce((sum, item) => sum + item.attendanceCount, 0);
 
     setDonutState((prevState) => ({
       ...prevState,
-      series: [presentCount, absentCount],
+      series: [presentCount, lateCount, absentCount],
     }));
   };
 
