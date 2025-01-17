@@ -42,6 +42,7 @@ import {
 import FolderModal from '@/components/modal/folderModal';
 import useDriveDataStore from '@/store/driveDataStore';
 import DeleteModal from '@/components/modal/deleteModal';
+import UploadModal from '@/components/modal/uploadModal';
 
 const FileType: Record<string, string> = {
   전체: '',
@@ -75,6 +76,7 @@ const DriveButtonList = ({
   const [searchParams] = useSearchParams();
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   const { setIsNewFolder } = useDriveDataStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -93,11 +95,23 @@ const DriveButtonList = ({
     const files = e.target.files;
     if (files && files.length > 0) {
       try {
+        const invalidFiles = Array.from(files).filter((file) =>
+          /[^a-zA-Z0-9가-힣.\s:-]/.test(file.name)
+        );
+
+        if (invalidFiles.length > 0) {
+          alert(
+            '이름에 특수 문자가 포함되어 있는 파일은 업로드할 수 없습니다.'
+          );
+          return;
+        }
+        setIsUploading(true);
         await postDriveFiles(
           type === 'my' ? 'PERSONAL' : 'SHARED',
           Array.from(files),
           path
         );
+        setIsUploading(false);
         setIsNewFolder(true);
       } catch (error) {
         alert('파일 업로드에 실패했습니다.');
@@ -230,6 +244,7 @@ const DriveButtonList = ({
         path={path}
         type={type || 'PERSONAL'}
       />
+      <UploadModal isOpen={isUploading} />
     </>
   );
 };

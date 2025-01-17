@@ -62,7 +62,7 @@ function Email() {
       await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
       setIsResendOccur(true);
-      setTimer(180);
+      setTimer(60);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         alert(
