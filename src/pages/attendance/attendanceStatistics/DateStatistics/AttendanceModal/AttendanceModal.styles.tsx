@@ -55,8 +55,19 @@ export const StudentList = styled.ul`
   list-style-type: none;
   padding: 0;
   margin-top: 1rem;
-  min-height: 10rem;
+  min-height: 8rem;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #fafafa;
+  }
 `;
 
 export const StudentItem = styled.li`
