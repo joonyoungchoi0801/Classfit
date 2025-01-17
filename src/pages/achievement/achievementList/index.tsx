@@ -71,7 +71,7 @@ function AchievementList() {
 
       if (searchFilter === '강사명') {
         matchesSearch =
-          searchText === '' || item.memberName.includes(searchText);
+          searchText === '' || item.createdByName.includes(searchText);
       } else {
         matchesSearch = searchText === '' || item.examName.includes(searchText);
       }
@@ -126,7 +126,7 @@ function AchievementList() {
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = text === '' || item.memberName.includes(text);
+        matchesSearch = text === '' || item.createdByName.includes(text);
       } else {
         matchesSearch = text === '' || item.examName.includes(text);
       }
@@ -158,7 +158,7 @@ function AchievementList() {
       let matchesSearch;
 
       if (searchFilter === '강사명') {
-        matchesSearch = item.memberName == searchText;
+        matchesSearch = item.createdByName == searchText;
       } else {
         matchesSearch = item.examName == searchText;
       }
@@ -300,8 +300,8 @@ function AchievementList() {
                   <PS.Text2>{item.examName}</PS.Text2>
                 </S.TitleWrapper>
                 <S.TeacherWrapper>
-                  <PS.Text>{item.memberName}</PS.Text>
-                  <PS.Text>{formatDateToYYMMDD(item.createdAt)}</PS.Text>
+                  <PS.Text>{item.createdByName}</PS.Text>
+                  <PS.Text>{formatDateToYYMMDD(item.examDate)}</PS.Text>
                 </S.TeacherWrapper>
               </S.ListItem>
             ))}

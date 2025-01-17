@@ -295,7 +295,7 @@ const TrashButtonList = ({
   );
 };
 
-const PopUp = ({ type, path, selectedFileName }: PopUpProps) => {
+const PopUp = ({ type, path, selectedFileName, setClickFile }: PopUpProps) => {
   const { setIsNewFolder } = useDriveDataStore();
   const handleDownload = async () => {
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
@@ -318,6 +318,8 @@ const PopUp = ({ type, path, selectedFileName }: PopUpProps) => {
         window.URL.revokeObjectURL(url);
       } catch (error) {
         alert('파일 다운로드에 실패했습니다.');
+      } finally {
+        setClickFile();
       }
     }
   };
@@ -329,6 +331,8 @@ const PopUp = ({ type, path, selectedFileName }: PopUpProps) => {
         setIsNewFolder(true);
       } catch (error) {
         alert('파일 삭제에 실패했습니다.');
+      } finally {
+        setClickFile();
       }
     }
   };
@@ -412,7 +416,12 @@ const DriveList = ({ data, onClickData, onClickFolder }: DriveDataProps) => {
                 onClick={() => handleClickedKebab(item.fileName)}
               />
               {clickedFile === item.fileName && (
-                <PopUp type={type} path={path} selectedFileName={clickedFile} />
+                <PopUp
+                  type={type}
+                  path={path}
+                  selectedFileName={clickedFile}
+                  setClickFile={() => setClickedFile(null)}
+                />
               )}
             </S.KebabIconWrapper>
           </S.DriveListBack>

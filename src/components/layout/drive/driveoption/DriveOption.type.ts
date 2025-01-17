@@ -31,4 +31,5 @@ export interface PopUpProps {
   type: string | undefined;
   path: string;
   selectedFileName: string;
+  setClickFile: () => void;
 }

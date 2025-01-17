@@ -53,13 +53,13 @@ export interface StudentScoreData {
 export interface ExamData {
   examId: number;
   memberId: number;
-  memberName: string;
+  createdByName: string;
   standard: string;
   mainClassName: string;
   subClassName: string;
   examName: string;
   examPeriod: string;
-  createdAt: string;
+  examDate: string;
 }
 
 export interface ExamInfoData {
