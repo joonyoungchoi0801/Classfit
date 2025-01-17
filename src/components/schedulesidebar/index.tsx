@@ -55,7 +55,7 @@ function ScheduleSidebar() {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        const { statusCode, data, message } = response.data;
+        const { statusCode, data } = response.data;
 
         switch (statusCode) {
           case 200:
@@ -69,7 +69,7 @@ function ScheduleSidebar() {
     };
 
     fetchCategories();
-  }, [isModalOpen]);
+  }, [isModalOpen, personalCategories]);
 
   const handleButtonClick = () => {
     navigate('/schedule/register/schedule');
@@ -240,11 +240,15 @@ function ScheduleSidebar() {
 
       <S.CalendarSection>
         <S.CalendarItem>
-          <S.MyCalendar>
+          <S.MyCalendar
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleMyCalendar();
+            }}
+          >
             <S.Icon
               src={isMyCalendarExpanded ? downArrow : rightArrow}
               alt='arrow'
-              onClick={toggleMyCalendar}
             />
             <S.CalendarItemText
               onClick={() => navigate('/schedule/my')}
@@ -297,11 +301,15 @@ function ScheduleSidebar() {
         )}
 
         <S.CalendarItem>
-          <S.SharedCalendar>
+          <S.SharedCalendar
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSharedCal();
+            }}
+          >
             <S.Icon
               src={isSharedCalExpanded ? downArrow : rightArrow}
               alt='arrow'
-              onClick={toggleSharedCal}
             />
             <S.CalendarItemText
               onClick={() => navigate('/schedule/shared')}
