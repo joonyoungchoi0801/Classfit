@@ -135,11 +135,12 @@ export const Name = styled.div<{ $size?: string }>`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  width: 10rem;
+  width: 8rem;
   text-align: left;
 `;
 
 export const Text = styled.div`
+  width: 10rem;
   text-align: left;
   font-size: 1.6rem;
   font-style: normal;

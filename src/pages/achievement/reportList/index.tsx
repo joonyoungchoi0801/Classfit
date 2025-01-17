@@ -10,6 +10,7 @@ import { ReportDataWithChecked } from '@/types/report.types';
 import CheckBoxIcon from '@/assets/info/checkBox.svg';
 import useClassList from '@/hooks/useClassList';
 import MainClassDropDown from '@/components/dropDown/mainClassDropDown';
+import { formatDateToYYMMDD } from '@/utils/formatDate';
 
 interface searchQueryProps {
   mainClassId?: number;
@@ -27,24 +28,24 @@ function ReportList() {
   const [deleteList, setDeleteList] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState<searchQueryProps>({});
 
-  const data = [
-    {
-      studentReportId: 1,
-      studentName: '김예은',
-      reportName: '11월 수학리포트',
-      memberName: '김나나',
-      createAt: '24.11.15',
-      checked: false,
-    },
-    {
-      studentReportId: 2,
-      studentName: '김예',
-      reportName: '11월 수학리포트',
-      memberName: '김나나',
-      createAt: '24.11.15',
-      checked: false,
-    },
-  ];
+  // const data = [
+  //   {
+  //     studentReportId: 1,
+  //     studentName: '김예은',
+  //     reportName: '11월 수학리포트',
+  //     memberName: '김나나',
+  //     createAt: '24.11.15',
+  //     checked: false,
+  //   },
+  //   {
+  //     studentReportId: 2,
+  //     studentName: '김예',
+  //     reportName: '11월 수학리포트',
+  //     memberName: '김나나',
+  //     createAt: '24.11.15',
+  //     checked: false,
+  //   },
+  // ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,7 +212,7 @@ function ReportList() {
               </PS.RegisterButton>
             </S.ReportListHeader>
             <S.ReportList>
-              {data.map((item) => (
+              {reportData.map((item) => (
                 <S.ReportItem
                   key={item.studentReportId}
                   onClick={() =>
@@ -241,7 +242,7 @@ function ReportList() {
                   </PS.RowWrapper>
                   <S.MoreInfoWrapper>
                     <PS.Text>{item.memberName}</PS.Text>
-                    <PS.Text>{item.createAt}</PS.Text>
+                    <PS.Text>{formatDateToYYMMDD(item.createAt)}</PS.Text>
                   </S.MoreInfoWrapper>
                 </S.ReportItem>
               ))}
