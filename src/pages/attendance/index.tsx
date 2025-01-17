@@ -36,12 +36,12 @@ function Attendance() {
           >
             통계
           </S.TabButton>
-          <S.TabButton
+          {/* <S.TabButton
             onClick={() => navigate('/manage/attendance/message')}
             $isActive={type === 'message'}
           >
             메세지함
-          </S.TabButton>
+          </S.TabButton> */}
         </S.Header>
         <S.Content>
           <Routes>
