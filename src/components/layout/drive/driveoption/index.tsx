@@ -121,7 +121,6 @@ const DriveButtonList = ({
       }
     }
   };
-  console.log('uploadprogress ' + uploadProgress);
 
   const handleDownload = async () => {
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
