@@ -69,11 +69,12 @@ export const DropdownClass = styled.div`
   cursor: pointer;
 `;
 
-export const Placeholder = styled.span`
+export const Placeholder = styled.span<{ isSelected?: boolean }>`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  color: var(--color-lightgray);
+  color: ${({ isSelected }) =>
+    isSelected ? 'var(--color-black)' : 'var(--color-lightgray)'};
 `;
 
 export const DropdownButton = styled.img`

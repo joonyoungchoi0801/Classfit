@@ -129,7 +129,9 @@ function MemberStatistics() {
       <S.Table>
         <S.TableHeader>
           <S.DropdownClass onClick={toggleDropdown}>
-            <S.Placeholder>{selectedStudent || '구분'}</S.Placeholder>
+            <S.Placeholder isSelected={!!selectedStudent}>
+              {selectedStudent || '구분'}
+            </S.Placeholder>
             <S.DropdownButton src={dropdwon} alt='dropdown icon' />
           </S.DropdownClass>
           {isDropdownOpen && (
@@ -154,26 +156,9 @@ function MemberStatistics() {
         <S.StatisticsContainer>
           {selectedStudent
             ? // 선택된 학생만 표시
-              statisticsData
-                .filter((item) => item.name === selectedStudent)
-                .map((item) => (
-                  <S.Row key={item.name}>
-                    <S.RowTitle>{item.name}</S.RowTitle>
-                    <S.ValueContainer>
-                      <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>
-                        {item.present}
-                      </S.Value>
-                      <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>
-                        {item.absent}
-                      </S.Value>
-                      <S.Value onClick={() => handleOpenModal(item, 'LATE')}>
-                        {item.late}
-                      </S.Value>
-                    </S.ValueContainer>
-                  </S.Row>
-                ))
-            : // 모든 학생의 데이터 표시
-              statisticsData.map((item) => (
+            statisticsData
+              .filter((item) => item.name === selectedStudent)
+              .map((item) => (
                 <S.Row key={item.name}>
                   <S.RowTitle>{item.name}</S.RowTitle>
                   <S.ValueContainer>
@@ -188,7 +173,24 @@ function MemberStatistics() {
                     </S.Value>
                   </S.ValueContainer>
                 </S.Row>
-              ))}
+              ))
+            : // 모든 학생의 데이터 표시
+            statisticsData.map((item) => (
+              <S.Row key={item.name}>
+                <S.RowTitle>{item.name}</S.RowTitle>
+                <S.ValueContainer>
+                  <S.Value onClick={() => handleOpenModal(item, 'PRESENT')}>
+                    {item.present}
+                  </S.Value>
+                  <S.Value onClick={() => handleOpenModal(item, 'ABSENT')}>
+                    {item.absent}
+                  </S.Value>
+                  <S.Value onClick={() => handleOpenModal(item, 'LATE')}>
+                    {item.late}
+                  </S.Value>
+                </S.ValueContainer>
+              </S.Row>
+            ))}
         </S.StatisticsContainer>
       </S.Table>
 
