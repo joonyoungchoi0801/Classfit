@@ -6,12 +6,10 @@ import { AxiosResponse } from 'axios';
 import {
   getAllAttendance,
   getAllAttendanceDetail,
-  AttendanceEdit,
 } from '@/api/attendanceAPI';
 import {
   AttendanceResponse,
   StudentData,
-  UpdateAttendanceRequest,
 } from '@/types/attendance.type';
 
 import paginationLeft from '@/assets/attendanceTable/paginationLeft.svg';
@@ -127,14 +125,6 @@ function AttendanceTable({
   };
 
   useEffect(() => {
-    if (selectedMonth !== currentDate.getMonth() + 1) {
-      const newDate = new Date();
-      newDate.setMonth(selectedMonth - 1, 1);
-      setCurrentDate(newDate);
-    }
-  }, [selectedMonth]);
-
-  useEffect(() => {
     const filteredStudents = originalStudents.filter((student) =>
       student.name.includes(keyword)
     );
@@ -210,16 +200,26 @@ function AttendanceTable({
 
   const handlePrevWeek = () => {
     const newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() - 7);
-    setCurrentDate(newDate);
-    setWeekOffset(weekOffset - 1);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() - 28);
+
+    if (newDate.toISOString().split('T')[0] > minDate.toISOString().split('T')[0]) {
+      newDate.setDate(currentDate.getDate() - 7);
+      setCurrentDate(newDate);
+      setWeekOffset((prevOffset) => (prevOffset > -4 ? prevOffset - 1 : prevOffset));
+    }
   };
 
   const handleNextWeek = () => {
     const newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() + 7);
-    setCurrentDate(newDate);
-    setWeekOffset(weekOffset + 1);
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 14);
+
+    if (newDate.toISOString().split('T')[0] < maxDate.toISOString().split('T')[0]) {
+      newDate.setDate(currentDate.getDate() + 7);
+      setCurrentDate(newDate);
+      setWeekOffset((prevOffset) => (prevOffset < 2 ? prevOffset + 1 : 2));
+    }
   };
 
   const handleStudentNameClick = (id: number) => {
@@ -241,14 +241,14 @@ function AttendanceTable({
             (attendanceRecord) =>
               attendanceRecord.date === formattedDate
                 ? {
-                    ...attendanceRecord,
-                    status:
-                      attendanceRecord.status === 'PRESENT'
-                        ? 'LATE'
-                        : attendanceRecord.status === 'LATE'
-                          ? 'ABSENT'
-                          : 'PRESENT',
-                  }
+                  ...attendanceRecord,
+                  status:
+                    attendanceRecord.status === 'PRESENT'
+                      ? 'LATE'
+                      : attendanceRecord.status === 'LATE'
+                        ? 'ABSENT'
+                        : 'PRESENT',
+                }
                 : attendanceRecord
           );
 
