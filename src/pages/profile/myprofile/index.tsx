@@ -2,14 +2,17 @@ import * as PS from '@/pages/profile/Profile.styles';
 import * as S from './MyProfile.styles';
 import ImageIcon from '@/components/imageIcon';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ProfileData } from '@/types/profile.types';
 import { Calendar } from 'react-date-range';
 import { formatDateToYYYYMMDD } from '@/utils/formatDate';
 import Button from '@/components/button';
 import Modal from '@/components/modal';
 import { getProfile, postProfile } from '@/api/profileAPI';
+import { postLogout } from '@/api/authAPI';
 
 function MyProfile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData>({
     email: '',
     name: '',
@@ -91,6 +94,22 @@ function MyProfile() {
     setOpenModal(false);
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await postLogout();
+      if (res.status === 200) {
+        localStorage.clear();
+        navigate('/');
+      } else {
+        console.error('로그아웃 실패', res.data.message || '알 수 없는 오류');
+        alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('로그아웃 요청 중 오류 발생', error);
+      alert('로그아웃 요청 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <PS.Container>
       <S.Container>
@@ -163,6 +182,16 @@ function MyProfile() {
         </S.ContentWrapper>
         <S.BottomWrapper>
           <S.ButtonWrapper>
+            {!isEdit && (
+              <Button
+                title='로그아웃'
+                textColor='var(--color-blue)'
+                backgroundColor='var(--color-white)'
+                borderColor='var(--color-blue)'
+                isBorder={true}
+                onClick={handleLogout}
+              />
+            )}
             {isEdit && (
               <Button
                 title='취소'
