@@ -29,12 +29,12 @@ function Certification() {
   const handleResend = async () => {
     if (timer > 0) return;
     try {
+      alert('인증번호를 재발송했습니다.');
       const emailData = {
         email: sessionStorage.getItem('certificateEmail') || '',
         purpose: 'PASSWORD_RESET' as const,
       };
       await postSendEmail(emailData);
-      alert('인증번호를 재발송했습니다.');
       setIsResendOccur(true);
       setTimer(60);
     } catch (error) {
@@ -90,7 +90,7 @@ function Certification() {
             <S.ResendText onClick={handleResend} $isDisabled={timer > 0}>
               재발송
             </S.ResendText>
-            을 눌러주세요.
+            을 눌러주세요. ({timer}초)
           </S.Resend>
         </S.ResendWrapper>
 

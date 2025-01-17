@@ -59,10 +59,10 @@ function Email() {
   const handleSendEmail = async () => {
     try {
       if (timer > 0) alert('이미 전송된 이메일이 있습니다.');
-      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
       alert('이메일로 전송된 코드를 입력해주세요');
       setIsResendOccur(true);
       setTimer(180);
+      await postSendEmail({ email: emailValue, purpose: 'SIGN_UP' });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         alert(

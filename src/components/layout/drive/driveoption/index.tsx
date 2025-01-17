@@ -75,6 +75,7 @@ const DriveButtonList = ({
   const [searchParams] = useSearchParams();
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { setIsNewFolder } = useDriveDataStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,14 +97,17 @@ const DriveButtonList = ({
         await postDriveFiles(
           type === 'my' ? 'PERSONAL' : 'SHARED',
           Array.from(files),
-          path
+          path,
+          (progress) => setUploadProgress(progress)
         );
+        setUploadProgress(0);
         setIsNewFolder(true);
       } catch (error) {
         alert('파일 업로드에 실패했습니다.');
       }
     }
   };
+  console.log('uploadprogress ' + uploadProgress);
 
   const handleDownload = async () => {
     const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
@@ -544,78 +548,6 @@ function DriveOption() {
     fetchSearchData,
     fetchTrashData,
   ]);
-
-  useEffect(() => {
-    const fetchDriveData = async () => {
-      try {
-        const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
-        const response = await getDriveFiles(driveType, path);
-        const updatedData: DriveData[] = response.data.data.map(
-          (item: any) => ({
-            ...item,
-            isChecked: false,
-          })
-        );
-        if (fileType !== '전체' && fileType) {
-          const filteredData = updatedData?.filter(
-            (item) => item.fileType === FileType[fileType]
-          );
-          setDriveData(filteredData);
-        } else {
-          setDriveData(updatedData);
-        }
-        setIsNewFolder(false);
-      } catch (error) {
-        alert('파일을 불러오는데 실패했습니다.');
-      }
-    };
-
-    const fetchSearchData = async () => {
-      try {
-        const driveType = type === 'my' ? 'PERSONAL' : 'SHARED';
-        const response = await getSearchedDriveFiles(driveType, input, path);
-        const updatedData: DriveData[] = response.data.data.map(
-          (item: any) => ({
-            ...item,
-            isChecked: false,
-          })
-        );
-        if (fileType !== '전체' && fileType) {
-          const filteredData = updatedData?.filter(
-            (item) => item.fileType === FileType[fileType]
-          );
-          setDriveData(filteredData);
-        } else {
-          setDriveData(updatedData);
-        }
-      } catch (error) {
-        alert('파일을 불러오는데 실패했습니다.');
-      }
-    };
-    const fetchTrashData = async () => {
-      try {
-        const driveType = subtype === 'my' ? 'PERSONAL' : 'SHARED';
-        const response = await getTrashFiles(driveType);
-        const updatedData = response.data.data.map((item: any) => ({
-          ...item,
-          isChecked: false,
-        }));
-        setDriveData(updatedData);
-        setIsNewFolder(false);
-      } catch (error) {
-        alert('삭제된 파일을 불러오는데 실패했습니다.');
-      }
-    };
-    if (isNewFolder) {
-      if (type === 'trash') {
-        fetchTrashData();
-      } else if (input) {
-        fetchSearchData();
-      } else {
-        fetchDriveData();
-      }
-    }
-  }, [type, subtype, isNewFolder, input, fileType, path]);
 
   useEffect(() => {
     setFileType(null);
