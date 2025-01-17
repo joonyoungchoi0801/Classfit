@@ -28,6 +28,8 @@ function useStudentRegister() {
   const [studentData, setStudentData] =
     useState<StudentData>(initialStudentData);
 
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
   const {
     data: tempClassInfo,
     error: getClassInfoError,
@@ -72,6 +74,7 @@ function useStudentRegister() {
     onSuccess: () => {
       setModalMessage('학생 등록이 완료되었습니다.');
       setStudentData(initialStudentData);
+      setIsInitialized(true);
       setIsModalVisible(true);
     },
   });
@@ -138,6 +141,7 @@ function useStudentRegister() {
 
   const handleOnModalClose = () => {
     setIsModalVisible(false);
+    setIsInitialized(false);
   };
 
   const handleOnCancel = () => {
@@ -157,6 +161,7 @@ function useStudentRegister() {
     handleOnSave,
     handleOnModalClose,
     handleOnCancel,
+    isInitialized,
   };
 }
 

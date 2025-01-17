@@ -9,6 +9,7 @@ function ClassDropDown({
   value = '',
   onChange,
   onChange2,
+  isInitialized = false,
 }: ClassDropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number[]>([]);
@@ -27,6 +28,12 @@ function ClassDropDown({
       setSelectedOption([option.subClassId]);
     }
   }, [value]);
+
+  useEffect(() => {
+    if (isInitialized) {
+      setSelectedOption([]);
+    }
+  }, [isInitialized]);
 
   // useEffect(() => {
   //   if (options.length === 0) {
