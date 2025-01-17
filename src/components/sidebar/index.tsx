@@ -24,7 +24,7 @@ function Sidebar() {
 
   return (
     <S.SidebarWrapper>
-      <S.SidebarItem onClick={() => navigate('/manage')}>
+      <S.SidebarItem onClick={() => navigate('/manage/attendance')}>
         <S.Icon src={manage} alt='manage' />
         <S.SidebarText $isSelected={url.startsWith('/manage')}>
           학생관리
