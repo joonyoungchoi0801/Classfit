@@ -48,16 +48,21 @@ function AchievementList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await findExam({});
-      if (res.status === 200) {
-        setData(res.data.data);
-        setDisplayData(res.data.data);
-        setIsInitialized(true);
-      } else {
-        alert('성적 정보를 불러오는 데 실패했습니다.');
+      try {
+        const res = await findExam({});
+        if (res.status === 200) {
+          setData(res.data.data);
+          setDisplayData(res.data.data);
+          setIsInitialized(true);
+        } else {
+          alert('데이터를 불러오는 데 실패했습니다. 다시 시도해주세요.');
+          setIsInitialized(true);
+        }
+      } catch (e) {
         setIsInitialized(true);
       }
     };
+
     fetchData();
   }, []);
 
@@ -310,7 +315,7 @@ function AchievementList() {
           <S.EmptyListSection>
             <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
             <S.AchievementInfoText>
-              검색된 결과가 없습니다.
+              조회된 결과가 없습니다.
             </S.AchievementInfoText>
           </S.EmptyListSection>
         )
