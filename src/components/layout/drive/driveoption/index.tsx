@@ -98,7 +98,7 @@ const DriveButtonList = ({
     if (files && files.length > 0) {
       try {
         const invalidFiles = Array.from(files).filter((file) =>
-          /[^a-zA-Z0-9가-힣.\s:-]/.test(file.name)
+          /[^a-zA-Z0-9가-힣.\s:_-]/.test(file.name)
         );
 
         if (invalidFiles.length > 0) {
