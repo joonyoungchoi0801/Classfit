@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as S from './DropDown.styles';
 import type { DropDownProps } from './DropDown.types';
+import ImageIcon from '../imageIcon';
 
 function DropDown({
   style,
@@ -39,6 +40,7 @@ function DropDown({
         $selectedOption={selectedOption}
       >
         {selectedOption.length > 0 ? selectedOption : placeholder}
+        <ImageIcon name='ArrowBottom' size='1.6rem' />
       </S.SelectButton>
       {isOpen && (
         <S.OptionsList>

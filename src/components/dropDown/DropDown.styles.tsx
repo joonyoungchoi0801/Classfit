@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ArrowBottomIcon from '@/assets/info/arrowBottom.svg';
 
 export const SelectWrapper = styled.div`
   position: relative;
@@ -24,13 +23,6 @@ export const SelectButton = styled.div<{ $selectedOption?: string }>`
     props.$selectedOption && props.$selectedOption.length > 0
       ? 'var(--color-black)'
       : 'var(--color-lightgray)'};
-
-  &:after {
-    content: url(${ArrowBottomIcon});
-    font-size: 1rem;
-    color: #666;
-    margin-left: 0.5rem;
-  }
 `;
 
 export const OptionsList = styled.ul`

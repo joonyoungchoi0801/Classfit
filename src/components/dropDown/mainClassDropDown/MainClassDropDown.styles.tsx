@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ArrowBottomIcon from '@/assets/info/arrowBottom.svg';
 
 export const SelectButton = styled.div<{ $isPlaceholder: boolean }>`
   width: 100%;
@@ -17,11 +16,4 @@ export const SelectButton = styled.div<{ $isPlaceholder: boolean }>`
   justify-content: space-between;
   color: ${(props) =>
     props.$isPlaceholder ? 'var(--color-lightgray)' : 'var(--color-black)'};
-
-  &:after {
-    content: url(${ArrowBottomIcon});
-    font-size: 1rem;
-    color: #666;
-    margin-left: 0.5rem;
-  }
 `;

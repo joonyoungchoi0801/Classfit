@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { MainClassDropDownProps } from './MainClassDropDown.types';
 import * as PS from '@/components/dropDown/DropDown.styles';
 import * as S from './MainClassDropDown.styles';
+import ImageIcon from '@/components/imageIcon';
 
 function MainClassDropDown({
   options = [],
@@ -46,6 +47,7 @@ function MainClassDropDown({
             ? options.find((option) => option.mainClassId === selectedOption[0])
                 ?.mainClassName || placeholder
             : placeholder}
+        <ImageIcon name='ArrowBottom' size='1.6rem' />
       </S.SelectButton>
       {isOpen && (
         <PS.OptionsList>

@@ -10,3 +10,4 @@ export { default as Logo } from '@/assets/header/logo.svg';
 export { default as ProfileImage } from '@/assets/profile/profileimage.svg';
 export { default as Calendar } from '@/assets/achievement/calendar.svg';
 export { default as CalendarFilled } from '@/assets/achievement/calendarFilled.svg';
+export { default as ArrowBottom } from '@/assets/info/arrowBottom.svg';
