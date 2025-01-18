@@ -36,12 +36,13 @@ const ScheduleRegisterModal = ({
   });
 
   useEffect(() => {
+    const formattedDate = `${selectedDate}T00:00:00`;
     setFormData({
       name: '',
       eventType: isSchedule ? EventType.SCHEDULE : EventType.TASK,
       calendarType: '',
       categoryId: null,
-      startDate: selectedDate,
+      startDate: formattedDate,
       endDate: '',
       isAllDay: false,
       eventRepeatType: null, // 반복 타입
