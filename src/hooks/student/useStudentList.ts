@@ -145,9 +145,9 @@ function useStudentList() {
     setStudentIds([]);
     setStudentListData(updatedStudentListData);
     setStudentVisibleData(updatedStudentListData);
-    setTimeout(() => {
-      alert('삭제되었습니다.');
-    }, 500);
+    // setTimeout(() => {
+    //   alert('삭제되었습니다.');
+    // }, 500);
   };
 
   const handleOnName = async (studentId: number) => {
