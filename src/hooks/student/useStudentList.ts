@@ -128,27 +128,20 @@ function useStudentList() {
     navigate(`/manage/studentinfo/edit?studentId=${studentId}`);
   };
 
-  // const _handleOnDelete = async () => {
-  //   // await deleteStudentData(studentIds);
-  //   // await refetchStudentList();
-  //   const updatedStudentListData = studentListData.filter(
-  //     (student) => !targetStudentIds.includes(student.studentId)
-  //   );
-
-  // };
-
-  const _handleOnDelete = () => {
-    const updatedStudentListData = studentListData.filter(
-      (student) => !studentIds.includes(student.studentId)
-    );
-    setIsQuestionModalVisible(false);
-    setStudentIds([]);
-    setStudentListData(updatedStudentListData);
-    setStudentVisibleData(updatedStudentListData);
-    // setTimeout(() => {
-    //   alert('삭제되었습니다.');
-    // }, 500);
+  const _handleOnDelete = async () => {
+    await deleteStudentData(studentIds);
+    await refetchStudentList();
   };
+
+  // const _handleOnDelete = () => {
+  //   const updatedStudentListData = studentListData.filter(
+  //     (student) => !studentIds.includes(student.studentId)
+  //   );
+  //   setIsQuestionModalVisible(false);
+  //   setStudentIds([]);
+  //   setStudentListData(updatedStudentListData);
+  //   setStudentVisibleData(updatedStudentListData);
+  // };
 
   const handleOnName = async (studentId: number) => {
     setStudentId(studentId);
