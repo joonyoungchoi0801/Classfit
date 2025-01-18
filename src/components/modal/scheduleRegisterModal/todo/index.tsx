@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './Todo.styles';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
-import { RegisterModal } from '@/types/schedule.type';
+import { RegisterModal, EventType } from '@/types/schedule.type';
 
 interface TodoProps {
   formData: RegisterModal;
@@ -62,7 +62,10 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
     setIsRepeatOpen(false);
-    updateFormData('eventRepeatType', RepeatOptionsAPI[value] as EventRepeatType);
+    updateFormData(
+      'eventRepeatType',
+      RepeatOptionsAPI[value] as EventRepeatType
+    );
   };
   //
   const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,8 +101,8 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
       <S.FormGroup>
         <S.Label>일정명</S.Label>
         <S.Input
-          type="text"
-          placeholder="일정명 입력"
+          type='text'
+          placeholder='일정명 입력'
           value={formData.name}
           onChange={(e) => updateFormData('name', e.target.value)}
         />
@@ -109,10 +112,13 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
         <S.FormGroup>
           <S.Label>캘린더</S.Label>
           <S.SelectWrapper>
-            <S.Select onClick={() => setIsCalendarOpen(!isCalendarOpen)} $hasValue={!!calendarValue}>
+            <S.Select
+              onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+              $hasValue={!!calendarValue}
+            >
               {calendarValue || '캘린더 선택'}
             </S.Select>
-            <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+            <S.DropdownIcon src={dropdown} alt='dropdown icon' />
             {isCalendarOpen && (
               <S.Options>
                 <S.Option onClick={() => handleCalendarChange('내 캘린더')}>
@@ -142,9 +148,9 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
           <S.DateWrapper>
             <S.DateInputWrapper>
               <S.DateSelect
-                type="datetime-local"
+                type='datetime-local'
                 value={startTime}
-                placeholder="선택한 날짜"
+                placeholder='선택한 날짜'
                 onChange={(e) => handleTimeChange(e.target.value)}
               />
             </S.DateInputWrapper>
@@ -160,7 +166,7 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
             >
               {repeatValue || '반복 선택'}
             </S.Select>
-            <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+            <S.DropdownIcon src={dropdown} alt='dropdown icon' />
             {isRepeatOpen && (
               <S.Options>
                 {RepeatOptions.map((option) => (
@@ -175,7 +181,7 @@ const Todo = ({ formData, setFormData, selectedDate }: TodoProps) => {
             )}
           </S.SelectWrapper>
         </S.FormGroup>
-      </S.Row >
+      </S.Row>
       <S.FormGroup>
         <S.Label>반복 종료 일자</S.Label>
         <S.RepeatWrapper>

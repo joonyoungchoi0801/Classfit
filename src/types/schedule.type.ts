@@ -2,11 +2,11 @@ export interface RegisterModal {
   name: string;
   eventType: EventType;
   calendarType: string;
-  categoryId: number;
+  categoryId: number | null;
   startDate: string;
   endDate: string;
   isAllDay: boolean;
-  eventRepeatType?: EventRepeatType;
+  eventRepeatType?: EventRepeatType | null;
   repeatEndDate?: string;
 }
 

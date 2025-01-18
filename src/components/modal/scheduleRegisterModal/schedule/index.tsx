@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import dropdown from '@/assets/buttonIcon/dropdown.svg';
 import * as S from './Schedule.styles';
-import { RegisterModal } from '@/types/schedule.type';
-import { PersonalCategoryData, SharedCategoryData } from '@/types/category.type';
+import { EventType, RegisterModal } from '@/types/schedule.type';
+import {
+  PersonalCategoryData,
+  SharedCategoryData,
+} from '@/types/category.type';
 import { getCategories } from '@/api/categoryAPI';
 
 const RepeatOptions = ['반복 안함', '매일', '매주', '매월', '매년'];
@@ -32,16 +35,19 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [isAllDay, setIsAllDay] = useState(formData.isAllDay);;
+  const [isAllDay, setIsAllDay] = useState(formData.isAllDay);
   const [startTime, setStartTime] = useState(formData.startDate || '');
   const [endTime, setEndTime] = useState(formData.endDate || '');
-  const [personalCategories, setPersonalCategories] = useState<PersonalCategoryData[]>([]);
-  const [sharedCategories, setSharedCategories] = useState<SharedCategoryData[]>([]);
+  const [personalCategories, setPersonalCategories] = useState<
+    PersonalCategoryData[]
+  >([]);
+  const [sharedCategories, setSharedCategories] = useState<
+    SharedCategoryData[]
+  >([]);
   const [isRepeatOpen, setIsRepeatOpen] = useState(false);
   const [repeatValue, setRepeatValue] = useState('');
   const [repeatStopValue, setRepeatStopValue] = useState(''); // 반복 종료 (날짜 지정, 없음)
   const [repeatStopDate, setRepeatStopDate] = useState(''); //반복종료일자
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -49,12 +55,16 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
         const response = await getCategories();
         const { data } = response.data;
 
-        const mappedPersonalCategories = data.personalCategories.map((category: PersonalCategoryData) => ({
-          ...category,
-        }));
-        const mappedSharedCategories = data.sharedCategories.map((category: SharedCategoryData) => ({
-          ...category,
-        }));
+        const mappedPersonalCategories = data.personalCategories.map(
+          (category: PersonalCategoryData) => ({
+            ...category,
+          })
+        );
+        const mappedSharedCategories = data.sharedCategories.map(
+          (category: SharedCategoryData) => ({
+            ...category,
+          })
+        );
 
         setPersonalCategories(mappedPersonalCategories);
         setSharedCategories(mappedSharedCategories);
@@ -150,7 +160,10 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
   const handleRepeatChange = (value: string) => {
     setRepeatValue(value);
     setIsRepeatOpen(false);
-    updateFormData('eventRepeatType', RepeatOptionsAPI[value] as EventRepeatType);
+    updateFormData(
+      'eventRepeatType',
+      RepeatOptionsAPI[value] as EventRepeatType
+    );
   };
 
   const handleRepeatStopChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,8 +193,8 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
       <S.FormGroup>
         <S.Label>일정명</S.Label>
         <S.Input
-          type="text"
-          placeholder="일정명 입력"
+          type='text'
+          placeholder='일정명 입력'
           value={formData.name}
           onChange={(e) => updateFormData('name', e.target.value)}
         />
@@ -194,7 +207,7 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
             <S.Select $hasValue={!!calendarValue}>
               {calendarValue || '캘린더 선택'}
             </S.Select>
-            <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+            <S.DropdownIcon src={dropdown} alt='dropdown icon' />
             {isCalendarOpen && (
               <S.Options>
                 <S.Option onClick={() => handleCalendarChange('내 캘린더')}>
@@ -214,28 +227,30 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
             <S.Select $hasValue={!!categoryName}>
               {categoryName || '카테고리 선택'}
             </S.Select>
-            <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+            <S.DropdownIcon src={dropdown} alt='dropdown icon' />
             {isCategoryOpen && (
               <S.Options>
-                {calendarValue === '내 캘린더' ? (
-                  personalCategories.map((category) => (
-                    <S.Option
-                      key={category.name}
-                      onClick={() => handleCategoryChange(category.name, category.id)}
-                    >
-                      {category.name}
-                    </S.Option>
-                  ))
-                ) : (
-                  sharedCategories.map((category) => (
-                    <S.Option
-                      key={category.name}
-                      onClick={() => handleCategoryChange(category.name, category.id)}
-                    >
-                      {category.name}
-                    </S.Option>
-                  ))
-                )}
+                {calendarValue === '내 캘린더'
+                  ? personalCategories.map((category) => (
+                      <S.Option
+                        key={category.name}
+                        onClick={() =>
+                          handleCategoryChange(category.name, category.id)
+                        }
+                      >
+                        {category.name}
+                      </S.Option>
+                    ))
+                  : sharedCategories.map((category) => (
+                      <S.Option
+                        key={category.name}
+                        onClick={() =>
+                          handleCategoryChange(category.name, category.id)
+                        }
+                      >
+                        {category.name}
+                      </S.Option>
+                    ))}
               </S.Options>
             )}
           </S.SelectWrapper>
@@ -247,26 +262,26 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
         <S.DateWrapper>
           <S.DateInputWrapper>
             <S.DateInput
-              type="datetime-local"
+              type='datetime-local'
               value={startTime || `${selectedDate}T00:00`}
               onChange={(e) => handleTimeChange(e.target.value, true)}
-              placeholder="시작 날짜와 시간 선택"
+              placeholder='시작 날짜와 시간 선택'
             />
           </S.DateInputWrapper>
           <S.SpanTag>—</S.SpanTag>
           <S.DateInputWrapper>
             <S.DateInput
-              type="datetime-local"
+              type='datetime-local'
               value={endTime}
               onChange={(e) => handleTimeChange(e.target.value, false)}
-              placeholder="종료 날짜와 시간 선택"
+              placeholder='종료 날짜와 시간 선택'
             />
           </S.DateInputWrapper>
         </S.DateWrapper>
       </S.FormGroup>
       <S.CheckboxGroup>
         <S.Checkbox
-          type="checkbox"
+          type='checkbox'
           checked={isAllDay}
           onChange={(e) => handleAllDayChange(e.target.checked)}
         />
@@ -282,7 +297,7 @@ const Schedule = ({ formData, setFormData, selectedDate }: ScheduleProps) => {
           >
             {repeatValue || '반복 선택'}
           </S.Select>
-          <S.DropdownIcon src={dropdown} alt="dropdown icon" />
+          <S.DropdownIcon src={dropdown} alt='dropdown icon' />
           {isRepeatOpen && (
             <S.Options>
               {RepeatOptions.map((option) => (

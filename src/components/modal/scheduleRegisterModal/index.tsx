@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as S from './ScheduleRegisterModal.styles';
 import type { ScheduleRegisterModalProps } from './ScheduleRegisterModal.types';
 import Button from '@/components/button';
 import Schedule from './schedule';
 import Todo from './todo';
-import { RegisterModal, EventType, EventRepeatType } from '@/types/schedule.type';
+import {
+  RegisterModal,
+  EventType,
+  EventRepeatType,
+} from '@/types/schedule.type';
 import { postRegisterModal } from '@/api/scheduleAPI';
 
-const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegisterModalProps) => {
+const ScheduleRegisterModal = ({
+  isOpen,
+  onClose,
+  selectedDate,
+}: ScheduleRegisterModalProps) => {
+  const location = useLocation();
+  const url = location.pathname;
+  console.log(url);
   const [isSchedule, setIsSchedule] = useState(true);
   const navigate = useNavigate();
 
@@ -16,13 +27,27 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
     name: '',
     eventType: isSchedule ? EventType.SCHEDULE : EventType.TASK,
     calendarType: '',
-    categoryId: 0,
+    categoryId: null,
     startDate: '',
     endDate: '',
     isAllDay: false,
-    eventRepeatType: EventRepeatType.NONE, // 반복 타입
+    eventRepeatType: null, // 반복 타입
     repeatEndDate: '',
   });
+
+  useEffect(() => {
+    setFormData({
+      name: '',
+      eventType: isSchedule ? EventType.SCHEDULE : EventType.TASK,
+      calendarType: '',
+      categoryId: null,
+      startDate: selectedDate,
+      endDate: '',
+      isAllDay: false,
+      eventRepeatType: null, // 반복 타입
+      repeatEndDate: '',
+    });
+  }, [isSchedule]);
 
   if (!isOpen) return null;
 
@@ -33,7 +58,6 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
       navigate('/schedule/register/task');
     }
   };
-
   const handleSave = async () => {
     try {
       const response = await postRegisterModal(formData);
@@ -54,21 +78,34 @@ const ScheduleRegisterModal = ({ isOpen, onClose, selectedDate }: ScheduleRegist
           <S.Button $isActive={isSchedule} onClick={() => setIsSchedule(true)}>
             스케줄
           </S.Button>
-          <S.Button $isActive={!isSchedule} onClick={() => setIsSchedule(false)}>
+          <S.Button
+            $isActive={!isSchedule}
+            onClick={() => setIsSchedule(false)}
+          >
             할일
           </S.Button>
         </S.OptionGroup>
         {isSchedule ? (
-          <Schedule formData={formData} setFormData={setFormData} selectedDate={selectedDate} />
+          <Schedule
+            formData={formData}
+            setFormData={setFormData}
+            selectedDate={selectedDate}
+          />
         ) : (
-          <Todo formData={formData} setFormData={setFormData} selectedDate={selectedDate} />
+          <Todo
+            formData={formData}
+            setFormData={setFormData}
+            selectedDate={selectedDate}
+          />
         )}
         <S.ButtonGroup>
           <S.TextLink onClick={handleNavigateToDetails}>
             일정 상세등록
           </S.TextLink>
-          <S.CloseButton title="취소" onClick={onClose}>취소</S.CloseButton>
-          <Button title="저장" onClick={handleSave} />
+          <S.CloseButton title='취소' onClick={onClose}>
+            취소
+          </S.CloseButton>
+          <Button title='저장' onClick={handleSave} />
         </S.ButtonGroup>
       </S.ModalContainer>
     </S.ModalWrapper>
