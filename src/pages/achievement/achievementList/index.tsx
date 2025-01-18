@@ -264,7 +264,12 @@ function AchievementList() {
                   }
                 }}
               />
-              <S.Button onClick={handleOnClickSearch}>검색</S.Button>
+              <S.Button
+                $isActive={searchText.length > 0}
+                onClick={handleOnClickSearch}
+              >
+                검색
+              </S.Button>
             </S.SearchBox>
           </S.SearchWrapper>
         </S.FilterWrapper>

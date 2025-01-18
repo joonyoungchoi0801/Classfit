@@ -61,16 +61,23 @@ export const Input = styled.input`
   }
 `;
 
-export const Button = styled.button`
+// export const Button = styled.button`
+//   padding: 1rem 2rem;
+//   border-radius: 0 1rem 1rem 0;
+//   background-color: var(--color-blue);
+//   color: var(--color-white);
+//   cursor: pointer;
+//   font-size: 1.6rem;
+// `;
+
+export const Button = styled.button<{ $isActive: boolean }>`
   padding: 1rem 2rem;
   border-radius: 0 1rem 1rem 0;
-  background-color: var(--color-blue);
+  background-color: ${({ $isActive }) =>
+    $isActive ? 'var(--color-blue)' : '#E5E5E5'};
   color: var(--color-white);
   cursor: pointer;
   font-size: 1.6rem;
-  &:hover {
-    background-color: #0056b3;
-  }
 `;
 
 export const FilterTabs = styled.div`

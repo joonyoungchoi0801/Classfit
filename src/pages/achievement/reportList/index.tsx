@@ -111,6 +111,9 @@ function ReportList() {
   };
 
   const handleOnSearch = async (searchText: string) => {
+    if (searchText.length === 0) {
+      return;
+    }
     try {
       const res = await getFindReport(
         searchQuery.mainClassId,

@@ -55,9 +55,6 @@ export const Button = styled.button<{ $isActive: boolean }>`
   color: var(--color-white);
   cursor: pointer;
   font-size: 1.6rem;
-  &:hover {
-    background-color: #0056b3;
-  }
 `;
 
 export const ReportListSection = styled.div`
