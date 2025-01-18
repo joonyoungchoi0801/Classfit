@@ -320,7 +320,7 @@ function AchievementList() {
           <S.EmptyListSection>
             <ImageIcon name='AchievementEmptyMain' size='15.6rem' />
             <S.AchievementInfoText>
-              조회된 결과가 없습니다.
+              조회된 성적이 없습니다.
             </S.AchievementInfoText>
           </S.EmptyListSection>
         )
